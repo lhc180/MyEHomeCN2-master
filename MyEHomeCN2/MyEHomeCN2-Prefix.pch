@@ -1,0 +1,204 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+//
+// Close all NSLog()    下面的这段代码相当的有用，很是值得注意
+
+//#ifdef __OPTIMIZE__
+//# define NSLog(...) {}
+//#else
+//# define NSLog(...) NSLog(__VA_ARGS__)
+//#endif
+
+//#ifdef DEBUG
+//#define NSLog(...) NSLog(__VA_ARGS__)
+//#define debugMethod() NSLog(@"%s", __func__)
+//#else
+//#define NSLog(...)
+//#define debugMethod()
+//#endif
+
+#ifndef __IPHONE_5_0
+// "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <AVFoundation/AVFoundation.h>
+#import <Availability.h>
+
+#import "MyEAppDelegate.h"
+#import "MyEDataLoader.h"
+#import "MBProgressHUD.h"
+#import "SBJson.h"
+#import "MyEUtil.h"
+#import "MyEUniversal.h"
+#import "ZBarSDK.h"
+#import "WTReTextField.h"
+#import "MZFormSheetController.h"
+#import "APService.h"
+#import "NSString+MD5.h"
+#import "DXAlertView.h"
+#import "IQActionSheetPickerView.h"
+#import "KAProgressLabel.h"
+#import "MZTimerLabel.h"
+#import "MultiSelectSegmentedControl.h"
+
+#import "MyEQRScanViewController.h"
+/*-------------------------DATA MODELS-------------------------------*/
+#import "MyESettings.h"
+#import "MyEAccountData.h"
+#import "MyEDevice.h"
+#import "MyEDeviceType.h"
+#import "MyEDeviceStatus.h"
+#import "MyERoom.h"
+#import "MyEIrKey.h"
+#import "MyEIrKeySet.h"
+#import "MyETerminal.h"
+/*-------------------------AUTO CONTROL DATA MODELS-------------------------------*/
+#import "MyEAutoControlPeriod.h"
+#import "MyEAutoControlProcess.h"
+#import "MyEAutoControlProcessList.h"
+
+/*-------------------------AC DATA MODELS-------------------------------*/
+#import "MyEAcComfort.h"
+#import "MyEAcTempMonitor.h"
+#import "MyEAcInstruction.h"
+#import "MyEAcInstructionSet.h"
+#import "MyEAcUtil.h"
+#import "MyEAcBrand.h"
+#import "MyEAcModel.h"
+#import "MyEAcBrandsAndModels.h"
+#import "MyEAcStudyInstruction.h"
+#import "MyEAcStudyInstructionList.h"
+/*-------------------------MyEScence DATA MODELS-------------------------------*/
+#import "MyEControlKey.h"
+#import "MyEDeviceControl.h"
+#import "MyEScene.h"
+#import "MyESceneList.h"
+#import "MyESceneDeviceInstruction.h"
+#import "MyESceneInstructionRecived.h"
+#import "MyESceneDevice.h"
+
+/*-----------------------------provinceAndCity--------------------------------*/
+#import "MyEProvinceAndCity.h"
+
+/*-------------------------------switch data model-------------------*/
+#import "MyESwitchInfo.h"
+#import "MyESwitchManualControl.h"
+#import "MyESwitchAutoControl.h"
+#import "MyESwitchElec.h"
+
+#endif
+
+
+#define IOS_NEWER_OR_EQUAL_TO_7 ( [ [ [ UIDevice currentDevice ] systemVersion ] floatValue ] >= 7.0 )
+
+
+#define screenHigh [UIScreen mainScreen].bounds.size.height
+#define screenwidth [UIScreen mainScreen].bounds.size.width
+
+#define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height-568)?NO:YES)
+#define IS_IOS6 (([[UIDevice currentDevice].systemVersion intValue]-6)?NO:YES)
+
+
+/*-------------------------LOGIN-------------------------------*/
+#define URL_FOR_LOGIN  @"http://www.myenergydomain.com.cn/phone/user_login.jhtml"
+
+/*-------------------------SETTINGS-------------------------------*/
+#define URL_FOR_SETTINGS_LOCATION @"http://www.myenergydomain.com.cn/phone/settings_location_save.jhtml"
+#define URL_FOR_SETTINGS_VIEW @"http://www.myenergydomain.com.cn/phone/system_settings_view.jhtml"
+#define URL_FOR_SETTINGS_ENABLE_NOTIFICATION @"http://www.myenergydomain.com.cn/phone/enable_notification_save.jhtml"
+#define URL_FOR_SETTINGS_BIND_MEDIATOR @"http://www.myenergydomain.com.cn/phone/bind_mediator_save.jhtml"
+#define URL_FOR_SETTINGS_ENABLE_DATA_COLLECT @"http://www.myenergydomain.com.cn/phone/system_enable_data_collect.jhtml"
+#define URL_FOR_SETTINGS_TERMINAL_SAVE @"http://www.myenergydomain.com.cn/phone/settings_terminal_save.jhtml"
+#define URL_FOR_SETTINGS_TERMINAL_DELETE @"http://www.myenergydomain.com.cn/phone/system_settings_delete_terminal.jhtml"
+#define URL_FOR_SETTINGS_TERMINAL_DELETE_CHECK @"http://www.myenergydomain.com.cn/phone/find_delete_terminal.jhtml"
+#define URL_FOR_SETTINGS_USER_FEEDBACK @"http://www.myenergydomain.com.cn/phone/member_feedback.jhtml"
+#define URL_FOR_SETTINGS_SYSTEM_EXIT @"http://www.myenergydomain.com.cn/phone/system_exit.jhtml"
+#define URL_FOR_SETTINGS_CHANGE_PASSWORD  @"http://www.myenergydomain.com.cn/phone/settings_password_save.jhtml"
+#define URL_FOR_SETTINGS_CHANGE_USERNAME @"http://www.myenergydomain.com.cn/phone/system_update_username.jhtml"
+
+/*-------------------------DEVICE  ROOM-------------------------------*/
+#define URL_FOR_DEVICE_ROOM_LIST @ "http://www.myenergydomain.com.cn/phone/device_room_list_view.jhtml"
+#define URL_FOR_ROOM_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/room_save.jhtml"
+#define URL_FOR_DEVICE_IR_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/ir_device_save.jhtml"
+#define URL_FOR_ROOM_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/room_save.jhtml"
+#define URL_FOR_DEVICE_IR_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/ir_device_save.jhtml"
+#define URL_FOR_DEVICE_CONTROL_BY_CLICK_BUTTON @"http://www.myenergydomain.com.cn/phone/ir_Icon_control.jhtml"
+#define URL_FOR_DEVICE_REORDER_DEVICE @"http://www.myenergydomain.com.cn/phone/ir_device_sort.jhtml"
+
+/*-------------------------AC-------------------------------*/
+#define URL_FOR_AC_TEMPERATURE_HUMIDITY_VIEW @"http://www.myenergydomain.com.cn/phone/ac_device_status_view.jhtml"
+#define URL_FOR_AC_CONTROL_SAVE @"http://www.myenergydomain.com.cn/phone/ac_manual_control.jhtml"
+#define URL_FOR_AC_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/ac_device_save.jhtml"
+#define URL_FOR_AC_DOWNLOAD_AC_AUTO_CONTROL_VIEW @"http://www.myenergydomain.com.cn/phone/ac_auto_control_view.jhtml"
+#define URL_FOR_AC_UPLOAD_AC_AUTO_PROCESS_SAVE @"http://www.myenergydomain.com.cn/phone/ac_auto_control_save.jhtml"
+#define URL_FOR_AC_ENABLE_AC_AUTO_PROCESS_SAVE @"http://www.myenergydomain.com.cn/phone/ac_auto_control_enable_save.jhtml"
+#define URL_FOR_AC_PERIOD_VALIDATE_INSTRUCTION @"http://www.myenergydomain.com.cn/phone/validACInstruction.jhtml"
+#define URL_FOR_AC_INIT @"http://www.myenergydomain.com.cn/phone/ac_device_init.jhtml"
+#define URL_FOR_AC_FEEDBACK_TONE_SWITCH @"http://www.myenergydomain.com.cn/phone/ac_FeedbackToneSwitch.jhtml"
+
+#define URL_FOR_AC_CONTROL_SAVE @"http://www.myenergydomain.com.cn/phone/ac_manual_control.jhtml"
+#define URL_FOR_AC_COMFORT_VIEW @"http://www.myenergydomain.com.cn/phone/ac_comfort_view.jhtml"
+#define URL_FOR_AC_COMFORT_SAVE @"http://www.myenergydomain.com.cn/phone/ac_comfort_save.jhtml"
+#define URL_FOR_AC_TEMP_MONITOR_VIEW @"http://www.myenergydomain.com.cn/phone/ac_view_temperatureRange.jhtml"
+#define URL_FOR_AC_TEMP_MONITOR_SAVE @"http://www.myenergydomain.com.cn/phone/ac_save_temperatureRange.jhtml"
+
+#define URL_FOR_IR_LIST_AC_MODELS @"http://www.myenergydomain.com.cn/phone/ir_list_ac_models_view.jhtml"
+//空调指令部分
+#define URL_FOR_AC_BRAND_MODEL_EDIT @"http://www.myenergydomain.com.cn/phone/ac_brand_model_save.jhtml"
+#define URL_FOR_USER_AC_INSTRUCTION_SET_VIEW  @"http://www.myenergydomain.com.cn/phone/ac_instruction_list_view.jhtml"
+#define URL_FOR_AC_INSTRUCTION_EDIT @"http://www.myenergydomain.com.cn/phone/ac_instruction_add.jhtml"
+#define URL_FOR_AC_INSTRUCTION_DELETE @"http://www.myenergydomain.com.cn/phone/ac_instruction_delete.jhtml"
+#define URL_FOR_AC_INSTRUCTION_STUDY @"http://www.myenergydomain.com.cn/phone/ac_instruction_study_save.jhtml"
+
+#define URL_FOR_AC_INSTRUCTION_STUDY2 @"http://www.myenergydomain.com.cn/phone/ac_instruction_study_save_ver2.jhtml"
+
+#define URL_FOR_AC_INSTRUCTION_STUDY_FEEDBACK @"http://www.myenergydomain.com.cn/phone/ac_instruction_study_view.jhtml"
+#define URL_FOR_AC_INSTRUCTION_VALIDATE @"http://www.myenergydomain.com.cn/phone/ac_instruction_study_validate.jhtml"
+#define URL_FOR_AC_AUTO_CHECK_MODULE @"http://www.myenergydomain.com.cn/phone/ac_autoChkModule.jhtml"
+#define URL_FOR_COMMAND_SEND_TIMEOUT @"http://www.myenergydomain.com.cn/phone/sendTimeoutCommand.jhtml"
+/*-------------------------smart socket-------------------------------*/
+#define URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/smart_socket_save.jhtml"
+#define URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL @"http://www.myenergydomain.com.cn/phone/smart_socket_timerControl.jhtml"
+#define URL_FOR_SOCKET_SWITCH_CONTROL @"http://www.myenergydomain.com.cn/phone/smart_socket_control.jhtml"
+#define URL_FOR_DOWNLOAD_SOCKET_AUTO_CONTROL_VIEW @"http://www.myenergydomain.com.cn/phone/smart_socket_control_view.jhtml"
+#define URL_FOR_UPLOAD_SOCKET_AUTO_PROCESS_SAVE  @"http://www.myenergydomain.com.cn/phone/socket_auto_control_save.jhtml"
+#define URL_FOR_ENABLE_SOCKET_AUTO_PROCESS_SAVE @"http://www.myenergydomain.com.cn/phone/socket_auto_control_enable_save.jhtml"
+#define URL_FOR_SOCKET_ELEC_INFO @"http://www.myenergydomain.com.cn/phone/socket_elec_stat.jhtml"
+
+/*-------------------------SCENCE-------------------------------*/
+#define URL_FOR_SCENES_VIEW  @"http://www.myenergydomain.com.cn/phone/scene_list_view.jhtml"
+#define URL_FOR_SCENES_DOWNLOAD_ALL_DEVICE_INSTRUCTION @"http://www.myenergydomain.com.cn/phone/all_device_instruction_view.jhtml"
+#define URL_FOR_SCENES_APPLY @"http://www.myenergydomain.com.cn/phone/scene_apply_save.jhtml"
+#define URL_FOR_SCENES_EDIT @"http://www.myenergydomain.com.cn/phone/scene_save.jhtml"
+
+
+/*-------------------------KEY STUDY-------------------------------*/
+#define URL_FOR_KEY_SET_VIEW  @"http://www.myenergydomain.com.cn/phone/ir_device_instruction_view_v2.jhtml"
+#define URL_FOR_IR_DEVICE_ADD_EDIT_KEY_SAVE @"http://www.myenergydomain.com.cn/phone/ir_instruction_save.jhtml"
+#define URL_FOR_IR_DEVICE_SEND_CONTROL_KEY @"http://www.myenergydomain.com.cn/phone/ir_control.jhtml"
+#define URL_FOR_IR_DEVICE_STUDY_KEY @"http://www.myenergydomain.com.cn/phone/ir_instruction_study_v2.jhtml"
+#define URL_FOR_IR_DEVICE_STUDY_KEY_QUERY_PROGRESS @"http://www.myenergydomain.com.cn/phone/ir_instruction_study_view.jhtml"
+#define URL_FOR_IR_DEVICE_GET_STATUS @"http://www.myenergydomain.com.cn/phone/ir_treminal_device_status_v2.jhtml"
+#define URL_FOR_IR_DEVICE_SEND_STUDY_TIMEOUT @"http://www.myenergydomain.com.cn/phone/sendTimeoutCommand.jhtml"
+#define URL_FOR_IR_DEVICE_VALIDATE_KEY @"http://www.myenergydomain.com.cn/phone/ir_instruction_study_validate.jhtml"
+
+/*--------------------------smart switch-----------------------------------*/
+
+#define URL_FOR_SWITCH_CONTROL   @"http://www.myenergydomain.com.cn/phone/switch_control.jhtml"
+#define URL_FOR_SWITCH_VIEW      @"http://www.myenergydomain.com.cn/phone/switch_view.jhtml"
+#define URL_FOR_SWITCH_SAVE      @"http://www.myenergydomain.com.cn/phone/switch_save.jhtml"
+#define URL_FOR_SWITCH_FIND_SWITCH_CHANNERL          @"http://www.myenergydomain.com.cn/phone/find_switch_channel_list.jhtml"
+#define URL_FOR_SWITCH_TIME_DELAY  @"http://www.myenergydomain.com.cn/phone/switch_delay_time.jhtml"
+#define URL_FOR_SWITCH_TIME_DELAY_SAVE    @"http://www.myenergydomain.com.cn/phone/switch_delay_save.jhtml"
+#define URL_FOR_SWITCH_SCHEDULE_LIST   @"http://www.myenergydomain.com.cn/phone/find_switch_schedule_list.jhtml"
+#define URL_FOR_SWITCH_SCHEDULE_SAVE   @"http://www.myenergydomain.com.cn/phone/switch_schedule_save.jhtml"
+#define URL_FOR_SWITCH_SCHEDULE_ENABLE  @"http://www.myenergydomain.com.cn/phone/switch_auto_control_enable_save.jhtml"
+#define URL_FOR_SWITCH_ELECT_STATUS   @"http://www.myenergydomain.com.cn/phone/switch_elec_stat.jhtml"
