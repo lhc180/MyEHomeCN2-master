@@ -264,11 +264,6 @@
 - (void)keyboardWillHide:(NSNotification *)notification {
     
     NSDictionary* userInfo = [notification userInfo];
-    
-    /*
-     Restore the size of the text view (fill self's view).
-     Animate the resize so that it's in sync with the disappearance of the keyboard.
-     */
     NSValue *animationDurationValue = [userInfo objectForKey:UIKeyboardAnimationDurationUserInfoKey];
     NSTimeInterval animationDuration;
     [animationDurationValue getValue:&animationDuration];
@@ -393,9 +388,6 @@
 - (IBAction)showUsers:(UIButton *)sender {
     if ([sender isSelected]) {   //isSelected 就是selected
         [UIView animateWithDuration:0.3 animations:^{
-            //            UIImage *closeImage=[UIImage imageNamed:@"dropdown.png"];
-            //            [_showBtn setImage:closeImage forState:UIControlStateNormal];
-            
             CGRect frame=_usersTableView.frame;
             
             frame.size.height=0;
@@ -406,9 +398,6 @@
         }];
     }else{
         [UIView animateWithDuration:0.3 animations:^{
-            //            UIImage *openImage=[UIImage imageNamed:@"dropup.png"];
-            //            [_showBtn setImage:openImage forState:UIControlStateNormal];
-            
             CGRect frame=_usersTableView.frame;
             
             NSMutableArray *array = [self getUsersFromPlist];
