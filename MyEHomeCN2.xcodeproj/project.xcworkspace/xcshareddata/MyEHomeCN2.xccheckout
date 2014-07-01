@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>2B20BEDE-41FE-4DC3-94B8-0752F782D1DD</string>
+	<string>2669A570-5CDB-445E-B054-6B996CE6FFFD</string>
 	<key>IDESourceControlProjectName</key>
 	<string>MyEHomeCN2</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>8FDF6E81-E8FA-4843-8D4F-5A621177C540</key>
-		<string>https://github.com/snyuan/MyEHomeCN2.git</string>
+		<key>9600DB3A-A380-4E75-9ABE-BA365F1DB1EA</key>
+		<string>https://github.com/zq4950411/MyEHomeCN2-master</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>MyEHomeCN2.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>8FDF6E81-E8FA-4843-8D4F-5A621177C540</key>
+		<key>9600DB3A-A380-4E75-9ABE-BA365F1DB1EA</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/snyuan/MyEHomeCN2.git</string>
+	<string>https://github.com/zq4950411/MyEHomeCN2-master</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>8FDF6E81-E8FA-4843-8D4F-5A621177C540</string>
+	<string>9600DB3A-A380-4E75-9ABE-BA365F1DB1EA</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>8FDF6E81-E8FA-4843-8D4F-5A621177C540</string>
+			<string>9600DB3A-A380-4E75-9ABE-BA365F1DB1EA</string>
 			<key>IDESourceControlWCCName</key>
-			<string>MyEHomeCN2-master 12</string>
+			<string>MyEHomeCN2-master</string>
 		</dict>
 	</array>
 </dict>

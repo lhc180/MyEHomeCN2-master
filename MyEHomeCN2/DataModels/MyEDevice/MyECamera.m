@@ -15,8 +15,8 @@
     if (self = [super init]) {
         _UID = @"";
         _name = @"";
-        _username = @"";
-        _password = @"";
+        _username = @"admin";
+        _password = @"888888";
         _imageData = [@"" dataUsingEncoding:NSASCIIStringEncoding];
         _isOnline = NO;
         _status = @"";
@@ -65,7 +65,7 @@
 }
 #pragma mark - NSLog methods
 -(NSString *)description{
-    return [NSString stringWithFormat:@"%@  %@  %@  %@",self.name,self.UID,self.username,self.password];
+    return [NSString stringWithFormat:@"name:%@  UID:%@  userName:%@  password:%@",self.name,self.UID,self.username,self.password];
 }
 //#pragma mark - NSCoding delegate methods
 //-(id)initWithCoder:(NSCoder *)aDecoder{
@@ -131,4 +131,31 @@
     return string;
 }
 
+@end
+
+@implementation MyECameraWifi
+
+-(id)init{
+    if (self = [super init]) {
+        self.UID = @"";
+        self.name = @"";
+        self.security = 0;
+        self.signal = 0;
+    }
+    return self;
+}
+-(UIImage *)changeSignalToImage{
+    NSString *imageName = nil;
+    if (self.signal < 20) {
+        imageName = @"signal0";
+    }else if (self.signal < 40){
+        imageName = @"signal1";
+    }else if (self.signal < 60){
+        imageName = @"signal2";
+    }else if (self.signal < 80){
+        imageName = @"signal3";
+    }else
+        imageName = @"signal4";
+    return [UIImage imageNamed:imageName];
+}
 @end

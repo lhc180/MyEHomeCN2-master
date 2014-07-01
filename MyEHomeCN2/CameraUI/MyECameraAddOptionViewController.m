@@ -12,7 +12,7 @@
 #import "PPPP_API.h"
 @interface MyECameraAddOptionViewController ()
 {
-    NSMutableArray *_wlanSearchDevices;
+    NSMutableArray *_wlanSearchDevices,*_wlanUsefullDevices;  //局域网扫描到的设备
     BOOL _hasAdd; //表示该设备已经添加
     NSInteger count;
     NSTimer *_timer;
@@ -93,27 +93,40 @@
 
 - (void)handleTimer:(NSTimer *)timer{
     [self stopSearch];
-    NSLog(@"count of new device is %i",[_wlanSearchDevices count]);
+    NSLog(@"%@",_wlanSearchDevices);
+    _wlanUsefullDevices = _wlanSearchDevices;
     BOOL hasNew = NO;
     if ([_wlanSearchDevices count]) {
         if ([self.cameraList count]) {
+            BOOL hasOne = NO;
             for (MyECamera *c in _wlanSearchDevices) {
                 for (MyECamera *c1 in self.cameraList) {
-                    if (![c.UID isEqualToString:c1.UID]) {  //只有所有都不一样的时候才能够新增设备
-                        hasNew = YES;
-                        _camera = c;
-                        break;
+                    if ([c.UID isEqualToString:c1.UID]) {
+                        hasOne = YES;
                     }
+//                    if (![c.UID isEqualToString:c1.UID]) {  //只有所有都不一样的时候才能够新增设备
+//                        hasNew = YES;
+//                        _camera = c;
+//                        break;
+//                    }
                 }
+                if (hasOne) {
+                    [_wlanUsefullDevices removeObject:c];
+                }
+            }
+            if ([_wlanUsefullDevices count]) {
+                hasNew = YES;
             }
         }else{
             hasNew = YES;
-            _camera = _wlanSearchDevices[0];
+//            _camera = _wlanSearchDevices[0];
         }
     }
     [HUD hide:YES];
     if (hasNew) {
-        [self presentVCToAddDeviceWithTag:1];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"局域网检测到[%i]个设备,已成功完成添加",[_wlanSearchDevices count]] delegate:self cancelButtonTitle:nil otherButtonTitles:@"知道了", nil];
+        [alert show];
+//        [self presentVCToAddDeviceWithTag:1];
     }else{
         [MyEUtil showThingsSuccessOn:self.view WithMessage:@"未找到新设备" andTag:NO];
     }
@@ -186,5 +199,10 @@
 -(void)passCameraUID:(NSString *)UID{
     self.camera.UID = UID;
     [self presentVCToAddDeviceWithTag:2];
+}
+
+#pragma mark - UIAlertView delegate methods
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    [self.cameraList addObjectsFromArray:_wlanUsefullDevices];
 }
 @end

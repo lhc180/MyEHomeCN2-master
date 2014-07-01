@@ -14,7 +14,7 @@
 #import "MyECamera.h"
 #import "MyEQRScanViewController.h"
 
-@interface MyECameraAddOptionViewController : UIViewController<SearchCameraResultProtocol,MyEQRScanViewControllerDelegate>{
+@interface MyECameraAddOptionViewController : UIViewController<SearchCameraResultProtocol,MyEQRScanViewControllerDelegate,UIAlertViewDelegate>{
     CSearchDVS* dvs;
     MBProgressHUD *HUD;
 }

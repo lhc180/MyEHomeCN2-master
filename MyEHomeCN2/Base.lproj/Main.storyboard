@@ -1581,7 +1581,7 @@
             </objects>
             <point key="canvasLocation" x="-3448" y="-12"/>
         </scene>
-        <!--MyE Camera Table View Controller - 摄像头-->
+        <!--MyE Camera Table View Controller - 摄像机-->
         <scene sceneID="Mfj-Fu-D2i">
             <objects>
                 <tableViewController id="N0U-ee-D76" customClass="MyECameraTableViewController" sceneMemberID="viewController">
@@ -1628,7 +1628,7 @@
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                         </imageView>
-                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="正在初始化..." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aux-YK-KcL">
+                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="3" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="未知" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="aux-YK-KcL">
                                             <rect key="frame" x="130" y="37" width="123" height="21"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
@@ -1659,7 +1659,7 @@
                             <outlet property="delegate" destination="N0U-ee-D76" id="8CT-WK-sE8"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="摄像头" id="fBN-LW-1Uh">
+                    <navigationItem key="navigationItem" title="摄像机" id="fBN-LW-1Uh">
                         <barButtonItem key="leftBarButtonItem" title="详细" id="cDw-P7-2Qx">
                             <connections>
                                 <action selector="cameraDetailInfo:" destination="N0U-ee-D76" id="06v-Lf-JKk"/>

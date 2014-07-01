@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "PPPPChannelManagement.h"
+
 @interface MyECamera : NSObject <NSCopying>
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *UID;
+@property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *status;
@@ -29,4 +32,12 @@
 - (MyEMainCamera *)initWithJSONString:(NSString *)jsonString;
 - (NSString *)JSONDictionary;
 
+@end
+
+@interface MyECameraWifi : NSObject
+@property (nonatomic, strong) NSString *UID;
+@property (nonatomic, copy) NSString *name;
+@property (nonatomic, assign) NSInteger security;
+@property (nonatomic, assign) NSInteger signal;
+-(UIImage *)changeSignalToImage;
 @end

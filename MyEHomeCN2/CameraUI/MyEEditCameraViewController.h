@@ -8,10 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MyECamera.h"
-
-@interface MyEEditCameraViewController : UIViewController<UITextFieldDelegate>
+#import "MyECameraWIFISetViewController.h"
+#import "MyECameraPasswordSetTableViewController.h"
+#import "MyECameraSDSetViewController.h"
+@interface MyEEditCameraViewController : UITableViewController<UITextFieldDelegate,UIAlertViewDelegate>
 @property (nonatomic, retain) MyECamera *camera;
-@property (nonatomic, retain) NSIndexPath *indexPath;
-- (IBAction)confirm:(id)sender;
+@property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
+@property (weak, nonatomic) IBOutlet UILabel *UIDlbl;
+@property (weak, nonatomic) IBOutlet UITextField *nameTxt;
 
 @end

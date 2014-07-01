@@ -203,7 +203,7 @@ private:
     
     NSCondition *m_WifiParamsLock;
     id <WifiParamsProtocol> m_WifiParamsDelegate;
-    
+
     NSCondition *m_UserPwdParamsLock;
     id <UserPwdProtocol> m_UserPwdParamsDelegate;
     

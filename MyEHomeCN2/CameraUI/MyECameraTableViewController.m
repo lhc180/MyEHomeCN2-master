@@ -51,8 +51,19 @@
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.cameraList = [NSMutableArray array];
     // 这里的代码可以被替换成从服务器获取camera数据的代码.
-    
-    [self _loadData];
+    MyECamera *camera = [[MyECamera alloc] init];
+    camera.UID = @"VSTC134699JBVUB";
+    camera.name = @"Camera";
+    camera.username = @"admin";
+    camera.password = @"888888";
+    [self.cameraList addObject:camera];
+    MyECamera *camera1 = [[MyECamera alloc] init];
+    camera1.UID = @"VSTC323869KTUZJ";
+    camera1.name = @"MovingCamera";
+    camera1.username = @"admin";
+    camera1.password = @"888888";
+    [self.cameraList addObject:camera1];
+//    [self _loadData];
     
     UIRefreshControl *rc = [[UIRefreshControl alloc] init];
     rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
@@ -115,7 +126,7 @@
         for (int i = 0; i < [self.cameraList count]; i++) {
             MyECamera *c = self.cameraList[i];
             [self ConnectCamWithCamera:c];
-            _m_PPPPChannelMgt->Snapshot([c.UID UTF8String]);
+            c.m_PPPPChannelMgt->Snapshot([c.UID UTF8String]);
         }
     });
 }
@@ -129,14 +140,14 @@
         [self initialize];
     });
     [_m_PPPPChannelMgtCondition lock];
-    _m_PPPPChannelMgt = new CPPPPChannelManagement();
-    _m_PPPPChannelMgt->pCameraViewController = self;
+    camera.m_PPPPChannelMgt = new CPPPPChannelManagement();
+    camera.m_PPPPChannelMgt->pCameraViewController = self;
     
-    if (_m_PPPPChannelMgt == NULL) {
+    if (camera.m_PPPPChannelMgt == NULL) {
         [_m_PPPPChannelMgtCondition unlock];
         return;
     }
-    _m_PPPPChannelMgt->Start([camera.UID UTF8String], [camera.username UTF8String], [camera.password UTF8String]);
+    camera.m_PPPPChannelMgt->Start([camera.UID UTF8String], [camera.username UTF8String], [camera.password UTF8String]);
     [_m_PPPPChannelMgtCondition unlock];
 }
 #pragma mark - IBAction methods
@@ -150,14 +161,17 @@
     [self.tableView reloadData];
 }
 - (IBAction)editCamera:(UIButton *)sender {
-    MyEEditCameraViewController *viewController = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"cameraEdit"];
     CGPoint hit = [sender convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:hit];
     MyECamera *c = self.cameraList[indexPath.row];
     NSLog(@"%i",indexPath.row);
-    viewController.camera = c;
-    viewController.indexPath = indexPath;
-    [self.navigationController pushViewController:viewController animated:YES];
+    if (c.isOnline) {
+        MyEEditCameraViewController *viewController = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"edit"];
+        viewController.camera = c;
+        viewController.m_PPPPChannelMgt = c.m_PPPPChannelMgt;
+        [self.navigationController pushViewController:viewController animated:YES];
+    }else
+        [MyEUtil showMessageOn:nil withMessage:@"摄像头不在线"];
 }
 
 #pragma mark - Notification methods
@@ -216,13 +230,11 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     MyECamera *camera = self.cameraList[indexPath.row];
     if (!camera.isOnline) {
-        [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
         [MyEUtil showMessageOn:nil withMessage:@"摄像头不在线"];
         return;
     }
     MyECameraViewController *viewController = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"cameraInfo"];
-    MyECamera *c = self.cameraList[self.tableView.indexPathForSelectedRow.row];
-    viewController.camera = c;
+    viewController.camera = camera;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
@@ -270,7 +282,6 @@
         MyECamera *c = self.cameraList[[self.tableView indexPathForCell:sender].row];
 //        NSLog(@"%i",indexPath.row);
         viewController.camera = c;
-        viewController.indexPath = self.tableView.indexPathForSelectedRow;
     }
 }
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{

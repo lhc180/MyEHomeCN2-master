@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyECameraDetailViewController : UIViewController
+@interface MyECameraDetailViewController : UITableViewController
 
 @end
