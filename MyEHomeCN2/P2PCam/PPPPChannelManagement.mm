@@ -346,7 +346,25 @@ int CPPPPChannelManagement::CameraControl(const char *szDID, int param, int valu
     [m_Lock unlock];
     return 0;
 }
-
+int CPPPPChannelManagement::SetSnapshotDelegate(char *szDID, id delegate)
+{
+    [m_Lock lock];
+    
+    int i;
+    for(i = 0; i < MAX_PPPP_CHANNEL_NUM; i++)
+    {
+        if(m_PPPPChannel[i].bValid == 1 && strcmp(m_PPPPChannel[i].szDID, szDID) == 0)
+        {
+            m_PPPPChannel[i].pPPPPChannel->SetSnapshotDelegate(delegate);
+            [m_Lock unlock];
+            return 1;
+            
+        }
+    }
+    
+    [m_Lock unlock];
+    return 0;
+}
 int CPPPPChannelManagement::Snapshot(const char *szDID)
 {
     [m_Lock lock];
@@ -357,7 +375,7 @@ int CPPPPChannelManagement::Snapshot(const char *szDID)
         if(m_PPPPChannel[i].bValid == 1 && strcmp(m_PPPPChannel[i].szDID, szDID) == 0)
         {            
             m_PPPPChannel[i].pPPPPChannel->Snapshot();
-            m_PPPPChannel[i].pPPPPChannel->m_CameraViewSnapshotDelegate = pCameraViewController;
+//            m_PPPPChannel[i].pPPPPChannel->m_CameraViewSnapshotDelegate = pCameraViewController;
             [m_Lock unlock];
             return 1;
         }

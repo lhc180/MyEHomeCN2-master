@@ -57,7 +57,8 @@ public:
     int SetWifi(int enable, char *szSSID, int channel, int mode, int authtype, int encrypt, int keyformat, int defkey, char *strKey1, char *strKey2, char *strKey3, char *strKey4, int key1_bits, int key2_bits, int key3_bits, int key4_bits, char *wpa_psk);
     int SendWifiSetting(char *msg, int len);
     int GetResult(char *pbuf, int len);
-
+    
+    void SetSnapshotDelegate (id delegate);
     void SetUserPwdParamsDelegate(id delegate);
     int SetUserPwd(char *user1,char *pwd1,char *user2,char *pwd2,char *user3,char *pwd3);
 

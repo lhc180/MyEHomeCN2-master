@@ -34,6 +34,9 @@
 {
     [super viewDidLoad];
     self.camera = [[MyECamera alloc] init];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self Initialize];
+    });
     for (UIButton *btn in self.view.subviews) {
         if ([btn isKindOfClass:[UIButton class]]) {
             
@@ -59,8 +62,9 @@
     formSheet.transitionStyle = MZFormSheetTransitionStyleSlideFromTop;
     formSheet.shadowRadius = 2.0;
     formSheet.shadowOpacity = 0.3;
+    formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsMoveToTop;
     formSheet.shouldDismissOnBackgroundViewTap = NO;
-    formSheet.preferredContentSize = CGSizeMake(280, 233);
+    formSheet.preferredContentSize = CGSizeMake(280, 300);
     
     formSheet.willPresentCompletionHandler = ^(UIViewController *presentedFSViewController) {
         // Passing data
@@ -150,10 +154,6 @@
     
     _wlanSearchDevices = [NSMutableArray arrayWithCapacity:20];
     dispatch_async(dispatch_get_main_queue(), ^{
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self Initialize];
-        });
         
         [self stopSearch];
         

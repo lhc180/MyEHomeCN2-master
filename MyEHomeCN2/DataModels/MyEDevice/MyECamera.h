@@ -10,13 +10,13 @@
 #import "PPPPChannelManagement.h"
 
 @interface MyECamera : NSObject <NSCopying>
+@property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
 @property (nonatomic, copy) NSString *name;
 @property (nonatomic, copy) NSString *UID;
-@property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
 @property (nonatomic, copy) NSString *username;
 @property (nonatomic, copy) NSString *password;
 @property (nonatomic, copy) NSString *status;
-@property (nonatomic, copy) NSData *imageData;
+@property (nonatomic, copy) NSString *imagePath;  //本地存储图片
 @property (nonatomic) BOOL isOnline;
 
 - (MyECamera *)initWithDictionary:(NSDictionary *)dictionary;

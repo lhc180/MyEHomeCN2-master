@@ -92,7 +92,6 @@
 		8C81F9D41961595600A980D8 /* MyECameraSDSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C81F9D31961595600A980D8 /* MyECameraSDSetViewController.m */; };
 		8C81F9D7196164A600A980D8 /* MyECameraWIFIConnectViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C81F9D6196164A600A980D8 /* MyECameraWIFIConnectViewController.m */; };
 		8C8B4CCF18C6C316000B1A50 /* MZTimerLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C8B4CCE18C6C316000B1A50 /* MZTimerLabel.m */; };
-		8C9A0176191A3AED00BF6FAB /* MyECameraDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C9A0175191A3AED00BF6FAB /* MyECameraDetailViewController.m */; };
 		8CA4B28D1926124F003DF2B6 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CA4B28C1926124F003DF2B6 /* CoreLocation.framework */; };
 		8CA6C1D318C5D279004A10D8 /* EColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA6C1BC18C5D279004A10D8 /* EColor.m */; };
 		8CA6C1D418C5D279004A10D8 /* EColumn.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA6C1BE18C5D279004A10D8 /* EColumn.m */; };
@@ -165,7 +164,6 @@
 		8CEC605B1828C91200DED60B /* MyETvDefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CEC60541828C91200DED60B /* MyETvDefaultViewController.m */; };
 		8CEC64C91921ACFF005953FB /* MyESocketElecViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CEC64C81921ACFF005953FB /* MyESocketElecViewController.m */; };
 		8CF1EAB219108C5E00A326DC /* MyECameraAddNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF1EAB119108C5E00A326DC /* MyECameraAddNewViewController.m */; };
-		8CF1EAB519108C8900A326DC /* MyECameraEnterUserInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF1EAB419108C8900A326DC /* MyECameraEnterUserInfoViewController.m */; };
 		8CF1EAB91910C4ED00A326DC /* IpCameraClient.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1EAB81910C4ED00A326DC /* IpCameraClient.strings */; };
 		8CF76C3818C8450D004BA3C7 /* MyESwitchAutoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF76C3718C8450D004BA3C7 /* MyESwitchAutoViewController.m */; };
 		8CF76C3B18C8455B004BA3C7 /* MyESwitchScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF76C3A18C8455B004BA3C7 /* MyESwitchScheduleViewController.m */; };
@@ -433,8 +431,6 @@
 		8C81F9D6196164A600A980D8 /* MyECameraWIFIConnectViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraWIFIConnectViewController.m; sourceTree = "<group>"; };
 		8C8B4CCD18C6C316000B1A50 /* MZTimerLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MZTimerLabel.h; sourceTree = "<group>"; };
 		8C8B4CCE18C6C316000B1A50 /* MZTimerLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MZTimerLabel.m; sourceTree = "<group>"; };
-		8C9A0174191A3AED00BF6FAB /* MyECameraDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraDetailViewController.h; sourceTree = "<group>"; };
-		8C9A0175191A3AED00BF6FAB /* MyECameraDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraDetailViewController.m; sourceTree = "<group>"; };
 		8CA4B28C1926124F003DF2B6 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		8CA6C1BB18C5D279004A10D8 /* EColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EColor.h; sourceTree = "<group>"; };
 		8CA6C1BC18C5D279004A10D8 /* EColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EColor.m; sourceTree = "<group>"; };
@@ -666,8 +662,6 @@
 		8CEC64C81921ACFF005953FB /* MyESocketElecViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESocketElecViewController.m; sourceTree = "<group>"; };
 		8CF1EAB019108C5E00A326DC /* MyECameraAddNewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraAddNewViewController.h; sourceTree = "<group>"; };
 		8CF1EAB119108C5E00A326DC /* MyECameraAddNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraAddNewViewController.m; sourceTree = "<group>"; };
-		8CF1EAB319108C8900A326DC /* MyECameraEnterUserInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraEnterUserInfoViewController.h; sourceTree = "<group>"; };
-		8CF1EAB419108C8900A326DC /* MyECameraEnterUserInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraEnterUserInfoViewController.m; sourceTree = "<group>"; };
 		8CF1EAB81910C4ED00A326DC /* IpCameraClient.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = IpCameraClient.strings; sourceTree = "<group>"; };
 		8CF76C3618C8450D004BA3C7 /* MyESwitchAutoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESwitchAutoViewController.h; sourceTree = "<group>"; };
 		8CF76C3718C8450D004BA3C7 /* MyESwitchAutoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESwitchAutoViewController.m; sourceTree = "<group>"; };
@@ -1201,10 +1195,6 @@
 				8CC6D6D1190FA21600532A05 /* MyEEditCameraViewController.m */,
 				8CF1EAB019108C5E00A326DC /* MyECameraAddNewViewController.h */,
 				8CF1EAB119108C5E00A326DC /* MyECameraAddNewViewController.m */,
-				8CF1EAB319108C8900A326DC /* MyECameraEnterUserInfoViewController.h */,
-				8CF1EAB419108C8900A326DC /* MyECameraEnterUserInfoViewController.m */,
-				8C9A0174191A3AED00BF6FAB /* MyECameraDetailViewController.h */,
-				8C9A0175191A3AED00BF6FAB /* MyECameraDetailViewController.m */,
 				8C81F9CC196158CB00A980D8 /* MyECameraWIFISetViewController.h */,
 				8C81F9CD196158CB00A980D8 /* MyECameraWIFISetViewController.m */,
 				8C81F9CF1961593D00A980D8 /* MyECameraPasswordSetTableViewController.h */,
@@ -2100,7 +2090,6 @@
 				8CC6D6D5190FA21600532A05 /* MyEEditCameraViewController.m in Sources */,
 				C3A1026D18013C500086F529 /* MyEScenesViewController.m in Sources */,
 				C3A51ADC18063B78007145FE /* MyEPasswordResetViewController.m in Sources */,
-				8CF1EAB519108C8900A326DC /* MyECameraEnterUserInfoViewController.m in Sources */,
 				C39862F51804EEA10001C16A /* MyEAcInstruction.m in Sources */,
 				C35149551810EC4500C5F422 /* MyEAcManualControlViewController.m in Sources */,
 				8CA6C1D418C5D279004A10D8 /* EColumn.m in Sources */,
@@ -2144,7 +2133,6 @@
 				8CA6C1DE18C5D27A004A10D8 /* UICountingLabel.m in Sources */,
 				8C0E11E918ACBEDB00954B7A /* SUNSlideSwitchView.m in Sources */,
 				8C03BF7918434F6B00B749D2 /* MyEAcTempMonitor.m in Sources */,
-				8C9A0176191A3AED00BF6FAB /* MyECameraDetailViewController.m in Sources */,
 				8C81F9D7196164A600A980D8 /* MyECameraWIFIConnectViewController.m in Sources */,
 				8CEC605B1828C91200DED60B /* MyETvDefaultViewController.m in Sources */,
 				8C2DEB34186AC23F00A5BCA8 /* MyESigeUpViewController.m in Sources */,

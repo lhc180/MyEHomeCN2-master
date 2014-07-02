@@ -14,6 +14,7 @@
 #import "SearchDVS.h"
 #import "ParamNotifyProtocol.h"
 #import "MyECamera.h"
+#import "SnapshotProtocol.h"
 
 @interface MyECameraViewController : UIViewController
 <ImageNotifyProtocol,ParamNotifyProtocol,DateTimeProtocol,SdcardScheduleProtocol,WifiParamsProtocol> {

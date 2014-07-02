@@ -336,6 +336,14 @@
 /*--------------------------action view methods---------------------*/
 #pragma mark - IBAction camera control methods
 - (IBAction)snapImage:(UIButton *)sender {
+    UIGraphicsBeginImageContext(_playView.bounds.size);
+    [_playView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    UIImageWriteToSavedPhotosAlbum(temp, nil, nil, nil);
+    [MyEUtil showMessageOn:nil withMessage:@"截图已保存到照片库"];
+//    _m_PPPPChannelMgt->SetSnapshotDelegate((char*)[_camera.UID UTF8String], self);
+//    _m_PPPPChannelMgt->Snapshot([_camera.UID UTF8String]);
 }
 - (IBAction)openLight:(UIButton *)sender {
     _m_PPPPChannelMgt->CameraControl([self.camera.UID UTF8String], 14, sender.selected);
@@ -369,6 +377,14 @@
     }else
         _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_UP_DOWN);
     sender.selected = !sender.selected;
+}
+
+-(void)SnapshotNotify:(NSString *)strDID data:(char *)data length:(int)length{
+    UIGraphicsBeginImageContext(_playView.bounds.size);
+    [_playView.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    UIImageWriteToSavedPhotosAlbum(temp, nil, nil, nil);
 }
 
 @end

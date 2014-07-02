@@ -2574,7 +2574,9 @@ int CPPPPChannel::SetWifi(int enable, char *szSSID, int channel, int mode, int a
     return SetSystemParams(MSG_TYPE_SET_WIFI, (char*)&wifiParams, sizeof(wifiParams));
 
 }
-
+void CPPPPChannel::SetSnapshotDelegate(id delegate){
+    m_CameraViewSnapshotDelegate = delegate;
+}
 void CPPPPChannel::SetUserPwdParamsDelegate(id delegate)
 {
     [m_UserPwdParamsLock lock];

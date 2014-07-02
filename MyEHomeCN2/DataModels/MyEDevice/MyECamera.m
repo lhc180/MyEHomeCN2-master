@@ -14,12 +14,12 @@
 - (id)init {
     if (self = [super init]) {
         _UID = @"";
-        _name = @"";
+        _name = @"IPCAM";
         _username = @"admin";
         _password = @"888888";
-        _imageData = [@"" dataUsingEncoding:NSASCIIStringEncoding];
+        _imagePath = @"";
         _isOnline = NO;
-        _status = @"";
+        _status = @"未知";
         return self;
     }
     return nil;
@@ -31,9 +31,9 @@
         self.name = [dictionary objectForKey:@"name"];
         self.username = [dictionary objectForKey:@"username"];
         self.password = [dictionary objectForKey:@"password"];
-        self.imageData = [dictionary[@"image"] dataUsingEncoding:NSASCIIStringEncoding];
+        self.imagePath = dictionary[@"imagePath"];
         self.isOnline = dictionary[@"isOnline"]?[dictionary[@"isOnline"] boolValue]:NO;
-        self.status = dictionary[@"status"]?dictionary[@"status"]:@"";
+        self.status = dictionary[@"status"]?dictionary[@"status"]:@"未知";
         return self;
     }
     return nil;
@@ -49,15 +49,11 @@
     return camera;
 }
 - (NSDictionary *)JSONDictionary {
-//    NSLog(@"%@%@%@%@",self.UID,self.name,self.password,self.username);
-//    NSLog(@"%@",self.imageData);
-    NSString *string = [[NSString alloc] initWithData:self.imageData encoding:NSASCIIStringEncoding];
-//    NSLog(@"%@",string);
     return @{@"UID": self.UID,
              @"name": self.name,
              @"username": self.username,
              @"password": self.password,
-             @"image":string?string:@""};
+             @"imagePath":self.imagePath==nil?@"":self.imagePath};
 }
 #pragma mark - NSCopying delegate methods
 -(id)copyWithZone:(NSZone *)zone {
@@ -67,29 +63,6 @@
 -(NSString *)description{
     return [NSString stringWithFormat:@"name:%@  UID:%@  userName:%@  password:%@",self.name,self.UID,self.username,self.password];
 }
-//#pragma mark - NSCoding delegate methods
-//-(id)initWithCoder:(NSCoder *)aDecoder{
-//    if (self = [super init]) {
-//        self.UID = [aDecoder decodeObjectForKey:@"UID"];
-//        self.name = [aDecoder decodeObjectForKey:@"name"];
-//        self.username = [aDecoder decodeObjectForKey:@"username"];
-//        self.password = [aDecoder decodeObjectForKey:@"password"];
-//        self.image = [aDecoder decodeObjectForKey:@"image"];
-//        self.isOnline = [aDecoder decodeBoolForKey:@"isOnline"];
-//        self.status = [aDecoder decodeObjectForKey:@"status"];
-//        return self;
-//    }
-//    return nil;
-//}
-//-(void)encodeWithCoder:(NSCoder *)aCoder{
-//    [aCoder encodeObject:self.UID forKey:@"UID"];
-//    [aCoder encodeObject:self.name forKey:@"name"];
-//    [aCoder encodeObject:self.username forKey:@"username"];
-//    [aCoder encodeObject:self.password forKey:@"password"];
-//    [aCoder encodeObject:self.image forKey:@"image"];
-//    [aCoder encodeObject:self.status forKey:@"status"];
-//    [aCoder encodeBool:self.isOnline forKey:@"isOnline"];
-//}
 @end
 
 

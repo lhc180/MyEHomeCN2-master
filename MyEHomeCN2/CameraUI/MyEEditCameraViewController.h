@@ -16,5 +16,6 @@
 @property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
 @property (weak, nonatomic) IBOutlet UILabel *UIDlbl;
 @property (weak, nonatomic) IBOutlet UITextField *nameTxt;
+@property (weak, nonatomic) IBOutlet UITextField *passwordTxt;
 
 @end

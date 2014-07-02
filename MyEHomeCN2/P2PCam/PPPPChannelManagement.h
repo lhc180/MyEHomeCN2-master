@@ -46,6 +46,7 @@ public:
     int SetWifiParamDelegate(char *szDID, id delegate);
     int SetWifi(char *szDID, int enable, char *szSSID, int channel, int mode, int authtype, int encrypt, int keyformat, int defkey, char *strKey1, char *strKey2, char *strKey3, char *strKey4, int key1_bits, int key2_bits, int key3_bits, int key4_bits, char *wpa_psk);
     
+    int SetSnapshotDelegate(char *szDID, id delegate);
     int SetSDCardSearchDelegate(char *szDID, id delegate);
     int PPPPGetSDCardRecordFileList(char *szDID, int startTime, int endTime);
     
