@@ -26,6 +26,7 @@
 		8C17BAB2182D0889005DA1EB /* AcDevice.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C17BAAC182D0889005DA1EB /* AcDevice.storyboard */; };
 		8C17BAB3182D0889005DA1EB /* IrDevice.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C17BAAE182D0889005DA1EB /* IrDevice.storyboard */; };
 		8C17BAB4182D0889005DA1EB /* Socket.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C17BAB0182D0889005DA1EB /* Socket.storyboard */; };
+		8C1A494C1964DEF90012B566 /* MyECameraLandscapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1A494B1964DEF90012B566 /* MyECameraLandscapeViewController.m */; };
 		8C1BE1971892348500439CFC /* MZFormSheetBackgroundWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1BE18A1892348500439CFC /* MZFormSheetBackgroundWindow.m */; };
 		8C1BE1981892348500439CFC /* MZFormSheetBackgroundWindowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1BE18C1892348500439CFC /* MZFormSheetBackgroundWindowViewController.m */; };
 		8C1BE1991892348500439CFC /* MZFormSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1BE18E1892348500439CFC /* MZFormSheetController.m */; };
@@ -292,6 +293,8 @@
 		8C17BAAD182D0889005DA1EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/AcDevice.storyboard; sourceTree = "<group>"; };
 		8C17BAAF182D0889005DA1EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/IrDevice.storyboard; sourceTree = "<group>"; };
 		8C17BAB1182D0889005DA1EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Socket.storyboard; sourceTree = "<group>"; };
+		8C1A494A1964DEF90012B566 /* MyECameraLandscapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraLandscapeViewController.h; sourceTree = "<group>"; };
+		8C1A494B1964DEF90012B566 /* MyECameraLandscapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraLandscapeViewController.m; sourceTree = "<group>"; };
 		8C1BE1891892348500439CFC /* MZFormSheetBackgroundWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MZFormSheetBackgroundWindow.h; sourceTree = "<group>"; };
 		8C1BE18A1892348500439CFC /* MZFormSheetBackgroundWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MZFormSheetBackgroundWindow.m; sourceTree = "<group>"; };
 		8C1BE18B1892348500439CFC /* MZFormSheetBackgroundWindowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MZFormSheetBackgroundWindowViewController.h; sourceTree = "<group>"; };
@@ -1203,6 +1206,8 @@
 				8C81F9D31961595600A980D8 /* MyECameraSDSetViewController.m */,
 				8C81F9D5196164A600A980D8 /* MyECameraWIFIConnectViewController.h */,
 				8C81F9D6196164A600A980D8 /* MyECameraWIFIConnectViewController.m */,
+				8C1A494A1964DEF90012B566 /* MyECameraLandscapeViewController.h */,
+				8C1A494B1964DEF90012B566 /* MyECameraLandscapeViewController.m */,
 			);
 			path = CameraUI;
 			sourceTree = "<group>";
@@ -2149,6 +2154,7 @@
 				8CC6D790190FA22100532A05 /* RecPathManagement.m in Sources */,
 				C3A70E15180B13B700521615 /* MyERoomAddOrEditViewController.m in Sources */,
 				C39503411813A2AE00950771 /* SBJsonWriter.m in Sources */,
+				8C1A494C1964DEF90012B566 /* MyECameraLandscapeViewController.m in Sources */,
 				C3A63F5C18248FE20076E7A9 /* WTReTextField.m in Sources */,
 				8CC6D782190FA22100532A05 /* CameraDBUtils.mm in Sources */,
 				8C24C8D8183A039500BBC180 /* MyESocketEditViewController.m in Sources */,

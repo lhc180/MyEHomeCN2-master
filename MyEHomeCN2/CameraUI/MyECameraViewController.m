@@ -11,9 +11,13 @@
 #include "APICommon.h"
 #import "PPPPDefine.h"
 #import "obj_common.h"
-#import "MyECameraDetailViewController.h"
+#import "MyECameraLandscapeViewController.h"
+
+#define deg2rad (M_PI/180.0)
+
 @interface MyECameraViewController (){
     BOOL _isFullScreen;
+    BOOL _isLandscape;
     MBProgressHUD *HUD;
     CPPPPChannel *_cameraChannel;
     NSTimer *_timer;
@@ -41,6 +45,7 @@
     [super viewWillDisappear:YES];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
     [_timer invalidate];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
 -(void)viewDidDisappear:(BOOL)animated{
     [super viewDidDisappear:YES];
@@ -86,6 +91,12 @@
     }
     [self refreshUIWithArray:@[@0,_camera.name]];
     _timer = [NSTimer scheduledTimerWithTimeInterval:10*60 target:self selector:@selector(popUpTop) userInfo:nil repeats:NO];
+    
+    //初始化各个方向的view
+    MyECameraLandscapeViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"landscape"];
+    self.mainLandscapeView = vc.view;
+    self.mainPortraitView = self.view;
+    [self addNotificationToThisView];
 }
 - (BOOL)prefersStatusBarHidden{
         return YES;//隐藏为YES，显示为NO
@@ -113,6 +124,59 @@
 }
 
 #pragma mark - private methods
+-(void)addNotificationToThisView{
+    [[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *noti){
+        UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+        switch (deviceOrientation) {
+            case UIDeviceOrientationUnknown:
+                NSLog(@"Unknown");
+                break;
+            case UIDeviceOrientationFaceUp:
+                NSLog(@"Device oriented flat, face up");
+                break;
+            case UIDeviceOrientationFaceDown:
+                NSLog(@"Device oriented flat, face down");
+                break;
+            case UIDeviceOrientationLandscapeLeft:
+                if (_isLandscape) {
+                    return ;
+                }
+                _isLandscape = YES;
+                self.view=self.mainLandscapeView;
+                self.view.transform=CGAffineTransformMakeRotation(deg2rad*(90));
+                self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
+                NSLog(@"Device oriented horizontally, home button on the right");
+                break;
+            case UIDeviceOrientationLandscapeRight:
+                if (_isLandscape) {
+                    return ;
+                }
+                _isLandscape = YES;
+                self.view=self.mainLandscapeView;
+                self.view.transform=CGAffineTransformMakeRotation(deg2rad*(-90));
+                self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
+                NSLog(@"Device oriented horizontally, home button on the left");
+                break;
+            case UIDeviceOrientationPortrait:
+                _isLandscape = NO;
+                self.view=self.mainPortraitView;
+                self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
+                self.view.bounds=CGRectMake(0.0, 0.0, 320.0, 480.0);
+                NSLog(@"Device oriented vertically, home button on the bottom");
+                break;
+            case UIDeviceOrientationPortraitUpsideDown:
+                NSLog(@"Device oriented vertically, home button on the top");
+                break;
+            default:
+                NSLog(@"cannot distinguish");
+                break;
+        }
+        //        if (UIDeviceOrientationIsLandscape(deviceOrientation))
+        //            NSLog(@"The orientation is landscape");
+        //        else if(UIDeviceOrientationIsPortrait(deviceOrientation))
+        //            NSLog(@"The orientation is portrait");
+    }];
+}
 -(void)getCameraInfo{
     _m_PPPPChannelMgt->SetDateTimeDelegate((char*)[_camera.UID UTF8String], self);
     _m_PPPPChannelMgt->SetSDcardScheduleDelegate((char*)[_camera.UID UTF8String], self);
@@ -285,7 +349,11 @@
 - (void) refreshImage:(UIImage* ) image{
     if (image != nil) {
         dispatch_async(dispatch_get_main_queue(),^{
-            _playView.image = image;
+            if ([self.view isEqual:self.mainLandscapeView]) {
+                UIImageView *imageV = (UIImageView *)[self.mainLandscapeView viewWithTag:100];
+                imageV.image = image;
+            }else
+                _playView.image = image;
         });
     }
 }
@@ -321,10 +389,16 @@
 }
 #pragma mark - IBAction Methods
 - (IBAction)showFullScreenView:(UIButton *)sender {
-//    self.playView.frame = CGRectMake(0, 0, 320, 480);
-//    self.playView.transform = CGAffineTransformMakeRotation(M_PI_2);
-//    self.playView.frame = CGRectMake(0, 0, 320, 480);
-//    NSLog(@"%f %f%f %f",self.playView.frame.origin.x,self.playView.frame.origin.y, self.playView.frame.size.width,self.playView.frame.size.height);
+    _isLandscape = !_isLandscape;
+    if (_isLandscape) {
+        self.view=self.mainLandscapeView;
+        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(90));
+        self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
+    }else{
+        self.view=self.mainPortraitView;
+        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
+        self.view.bounds=CGRectMake(0.0, 0.0, 320.0, 480.0);
+    }
 }
 - (IBAction)popUp:(UIButton *)sender {
     [self.navigationController popViewControllerAnimated:YES];

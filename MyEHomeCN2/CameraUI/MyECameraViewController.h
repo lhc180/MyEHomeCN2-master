@@ -22,13 +22,17 @@
     /*镜像参数*/
     int flip;
 }
-@property (nonatomic, retain) IBOutlet UIImageView* playView;
 @property CPPPPChannelManagement* m_PPPPChannelMgt;
 @property (nonatomic, weak) MyECamera *camera;
+@property (nonatomic, strong) UIView *mainPortraitView;
+@property (nonatomic, strong) UIView *mainLandscapeView;
+
 /*----------------info view---------------------*/
 @property (weak, nonatomic) IBOutlet UIView *infoView;
 /*-------------actionView--------------*/
 @property (weak, nonatomic) IBOutlet UIView *actionView;
+
+@property (nonatomic, retain) IBOutlet UIImageView* playView;
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *infoLabels;
 
 @end
