@@ -110,11 +110,15 @@ void CPPPPChannelManagement::StopAll()
     
     NSLog(@"StopAll begin....");
     
-    int i;
+    int i=0;
     for(i = 0; i < MAX_PPPP_CHANNEL_NUM; i++)
     {
         if(m_PPPPChannel[i].bValid == 1)
         {
+            if (m_PPPPChannel[i].pPPPPChannel == NULL) {
+                NSLog(@"PPPPChannel 不存在");
+                return;
+            }
             m_PPPPChannel[i].pPPPPChannel->SetStop();
         }
     }  
@@ -128,6 +132,10 @@ void CPPPPChannelManagement::StopAll()
         if(m_PPPPChannel[i].bValid == 1)
         {
             NSLog(@"StopAll  channel: %d", i);
+            if (m_PPPPChannel[i].pPPPPChannel == NULL) {
+                NSLog(@"PPPPChannel 不存在");
+                return;
+            }
             memset(m_PPPPChannel[i].szDID, 0, sizeof(m_PPPPChannel[i].szDID));
             NSLog(@"0011");
             SAFE_DELETE(m_PPPPChannel[i].pPPPPChannel);

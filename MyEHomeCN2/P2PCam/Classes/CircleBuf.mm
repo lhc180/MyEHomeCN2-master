@@ -75,7 +75,6 @@ char* CCircleBuf::ReadOneFrame1(int &len, VIDEO_BUF_HEAD & videobufhead)
     if(m_nStock == 0)
     {
         [m_Lock unlock];
-        NSLog(@"111111111");
         return NULL;
     }
     
@@ -85,7 +84,6 @@ char* CCircleBuf::ReadOneFrame1(int &len, VIDEO_BUF_HEAD & videobufhead)
     if(nRet == 0)
     {
         [m_Lock unlock];
-        NSLog(@"22222222");
         return NULL;
     }
     
@@ -95,7 +93,6 @@ char* CCircleBuf::ReadOneFrame1(int &len, VIDEO_BUF_HEAD & videobufhead)
     {
         delete pbuf;
         [m_Lock unlock];
-        NSLog(@"333333");
         return NULL;
     }
     

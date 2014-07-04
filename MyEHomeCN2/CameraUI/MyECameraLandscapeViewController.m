@@ -34,7 +34,6 @@
         [self performSelector:@selector(setNeedsStatusBarAppearanceUpdate)];
     }
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

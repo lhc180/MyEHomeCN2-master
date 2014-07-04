@@ -33,6 +33,7 @@
 @property (weak, nonatomic) IBOutlet UIView *actionView;
 
 @property (nonatomic, retain) IBOutlet UIImageView* playView;
+@property (nonatomic, strong) UIImageView *landscapePlayView;
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *infoLabels;
 
 @end

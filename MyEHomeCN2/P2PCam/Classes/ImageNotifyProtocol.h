@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @protocol ImageNotifyProtocol <NSObject>
-
+@optional
 - (void) ImageNotify: (UIImage *)image timestamp: (NSInteger)timestamp DID:(NSString *)did;
 - (void) YUVNotify: (Byte*) yuv length:(int)length width: (int) width height:(int)height timestamp:(unsigned int)timestamp DID:(NSString *)did;
 - (void) H264Data: (Byte*) h264Frame length: (int) length type: (int) type timestamp: (NSInteger) timestamp;

@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#include "PPPPChannelManagement.h"
+#import "MyECamera.h"
 
 @interface MyECameraLandscapeViewController : UIViewController
-
+@property (nonatomic) CPPPPChannelManagement* m_PPPPChannelMgt;
+@property (nonatomic, weak) MyECamera *camera;
 @end

@@ -27,14 +27,6 @@
 
 @implementation MyECameraViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 #pragma mark - life circle methods
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
@@ -47,24 +39,19 @@
     [_timer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
--(void)viewDidDisappear:(BOOL)animated{
-    [super viewDidDisappear:YES];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self _stopCamera];
-     });
-
-////        _m_PPPPChannelMgt->StopAll();
-////        _playView.image = nil;
-//    });
-}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
+
+    _m_PPPPChannelMgtCondition = [[NSCondition alloc] init];
     _m_PPPPChannelMgt = new CPPPPChannelManagement();
     _m_PPPPChannelMgt->pCameraViewController = self;
+    InitAudioSession();
 
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self _initialize];
+    });
+    [self _startAll];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didEnterBackground)
                                                  name:UIApplicationDidEnterBackgroundNotification
@@ -73,11 +60,7 @@
                                              selector:@selector(willEnterForeground)
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
-    InitAudioSession();
-    
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self _startAll];
-    });
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUserInterface) name:UIDeviceOrientationDidChangeNotification object:nil];
     if ([self respondsToSelector:@selector(setNeedsStatusBarAppearanceUpdate)]) {
         // iOS 7
         [self prefersStatusBarHidden];
@@ -94,9 +77,14 @@
     
     //初始化各个方向的view
     MyECameraLandscapeViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"landscape"];
+    vc.m_PPPPChannelMgt = _m_PPPPChannelMgt;
     self.mainLandscapeView = vc.view;
     self.mainPortraitView = self.view;
-    [self addNotificationToThisView];
+    UIImageView *image = (UIImageView *)[self.mainLandscapeView viewWithTag:100];
+    [self addGestureOnImageView:image];
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showFullScreenView:)];
+    tap.numberOfTapsRequired = 2;
+    [_playView addGestureRecognizer:tap];
 }
 - (BOOL)prefersStatusBarHidden{
         return YES;//隐藏为YES，显示为NO
@@ -106,15 +94,16 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
 #pragma mark - Notification methods
 - (void) didEnterBackground{
-    [_m_PPPPChannelMgtCondition lock];
-    if (_m_PPPPChannelMgt == NULL) {
-        [_m_PPPPChannelMgtCondition unlock];
-        return;
-    }
-    _m_PPPPChannelMgt->StopAll();
-    [_m_PPPPChannelMgtCondition unlock];
+//    [_m_PPPPChannelMgtCondition lock];
+//    if (_m_PPPPChannelMgt == NULL) {
+//        [_m_PPPPChannelMgtCondition unlock];
+//        return;
+//    }
+//    _m_PPPPChannelMgt->StopAll();
+//    [_m_PPPPChannelMgtCondition unlock];
 }
 
 - (void) willEnterForeground{
@@ -124,58 +113,71 @@
 }
 
 #pragma mark - private methods
--(void)addNotificationToThisView{
-    [[NSNotificationCenter defaultCenter] addObserverForName:UIDeviceOrientationDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *noti){
-        UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
-        switch (deviceOrientation) {
-            case UIDeviceOrientationUnknown:
-                NSLog(@"Unknown");
-                break;
-            case UIDeviceOrientationFaceUp:
-                NSLog(@"Device oriented flat, face up");
-                break;
-            case UIDeviceOrientationFaceDown:
-                NSLog(@"Device oriented flat, face down");
-                break;
-            case UIDeviceOrientationLandscapeLeft:
-                if (_isLandscape) {
-                    return ;
-                }
-                _isLandscape = YES;
-                self.view=self.mainLandscapeView;
-                self.view.transform=CGAffineTransformMakeRotation(deg2rad*(90));
-                self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
-                NSLog(@"Device oriented horizontally, home button on the right");
-                break;
-            case UIDeviceOrientationLandscapeRight:
-                if (_isLandscape) {
-                    return ;
-                }
-                _isLandscape = YES;
-                self.view=self.mainLandscapeView;
-                self.view.transform=CGAffineTransformMakeRotation(deg2rad*(-90));
-                self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
-                NSLog(@"Device oriented horizontally, home button on the left");
-                break;
-            case UIDeviceOrientationPortrait:
-                _isLandscape = NO;
-                self.view=self.mainPortraitView;
-                self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
-                self.view.bounds=CGRectMake(0.0, 0.0, 320.0, 480.0);
-                NSLog(@"Device oriented vertically, home button on the bottom");
-                break;
-            case UIDeviceOrientationPortraitUpsideDown:
-                NSLog(@"Device oriented vertically, home button on the top");
-                break;
-            default:
-                NSLog(@"cannot distinguish");
-                break;
-        }
-        //        if (UIDeviceOrientationIsLandscape(deviceOrientation))
-        //            NSLog(@"The orientation is landscape");
-        //        else if(UIDeviceOrientationIsPortrait(deviceOrientation))
-        //            NSLog(@"The orientation is portrait");
-    }];
+-(void)addGestureOnImageView:(UIImageView *)image{
+    UISwipeGestureRecognizer *recognizer;
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
+    [image addGestureRecognizer:recognizer];
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+    [image addGestureRecognizer:recognizer];
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionUp)];
+    [image addGestureRecognizer:recognizer];
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionDown)];
+    [image addGestureRecognizer:recognizer];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(endShowFullScreenView)];
+    tap.numberOfTapsRequired = 2;
+    [image addGestureRecognizer:tap];
+}
+-(void)changeUserInterface{
+    UIDeviceOrientation deviceOrientation = [UIDevice currentDevice].orientation;
+    switch (deviceOrientation) {
+        case UIDeviceOrientationUnknown:
+            NSLog(@"Unknown");
+            break;
+        case UIDeviceOrientationFaceUp:
+            NSLog(@"Device oriented flat, face up");
+            break;
+        case UIDeviceOrientationFaceDown:
+            NSLog(@"Device oriented flat, face down");
+            break;
+        case UIDeviceOrientationLandscapeLeft:
+            if (_isLandscape) {
+                return ;
+            }
+            _isLandscape = YES;
+            self.view=self.mainLandscapeView;
+            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(90));
+            self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
+            NSLog(@"Device oriented horizontally, home button on the right");
+            break;
+        case UIDeviceOrientationLandscapeRight:
+            if (_isLandscape) {
+                return ;
+            }
+            _isLandscape = YES;
+            self.view=self.mainLandscapeView;
+            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(-90));
+            self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
+            NSLog(@"Device oriented horizontally, home button on the left");
+            break;
+        case UIDeviceOrientationPortrait:
+            _isLandscape = NO;
+            self.view=self.mainPortraitView;
+            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
+            self.view.bounds=CGRectMake(0.0, 0.0, 320.0, 480.0);
+            NSLog(@"Device oriented vertically, home button on the bottom");
+            break;
+        case UIDeviceOrientationPortraitUpsideDown:
+            NSLog(@"Device oriented vertically, home button on the top");
+            break;
+        default:
+            NSLog(@"cannot distinguish");
+            break;
+    }
 }
 -(void)getCameraInfo{
     _m_PPPPChannelMgt->SetDateTimeDelegate((char*)[_camera.UID UTF8String], self);
@@ -195,15 +197,44 @@
     UILabel *label = self.infoLabels[[array[0] intValue]];
     label.text = array[1];
 }
+
+#pragma mark UIScreenEdgePanGesture methods
+-(void)handleSwipeFrom:(UISwipeGestureRecognizer *)recognizer{
+    if(recognizer.direction==UISwipeGestureRecognizerDirectionDown) {
+        _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_DOWN);
+        NSLog(@"swipe down");
+    }
+    if(recognizer.direction==UISwipeGestureRecognizerDirectionUp) {
+        _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_UP);
+        NSLog(@"swipe up");
+    }
+    if(recognizer.direction==UISwipeGestureRecognizerDirectionLeft) {
+        _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_LEFT);
+        NSLog(@"swipe left");
+    }
+    if(recognizer.direction==UISwipeGestureRecognizerDirectionRight) {
+        _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_RIGHT);
+        NSLog(@"swipe right");
+    }
+}
+- (void)handleSwipeRight:(UIScreenEdgePanGestureRecognizer*)gesture{
+    _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_RIGHT);
+}
+- (void)handleSwipeLeft:(UIScreenEdgePanGestureRecognizer*)gesture{
+    _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_LEFT);
+}
+- (void)handleSwipeUp:(UIScreenEdgePanGestureRecognizer*)gesture{
+    _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_UP);
+}
+- (void)handleSwipeDown:(UIScreenEdgePanGestureRecognizer*)gesture{
+    _m_PPPPChannelMgt->PTZ_Control([self.camera.UID UTF8String], CMD_PTZ_DOWN);
+}
 #pragma mark - camera control methods
 - (void)_startAll {
     if (HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.playView animated:YES];
     }
     [HUD show:YES];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self _initialize];
-    });
     [self _connectCam];
 }
 - (void)_initialize{
@@ -230,9 +261,7 @@
         if (_m_PPPPChannelMgt->StartPPPPLivestream([self.camera.UID UTF8String], 10, self) == 0) {
             _m_PPPPChannelMgt->StopPPPPAudio([self.camera.UID UTF8String]);
             _m_PPPPChannelMgt->StopPPPPLivestream([self.camera.UID UTF8String]);
-            
         }
-        _m_PPPPChannelMgt->GetCGI([self.camera.UID UTF8String], CGI_IEGET_CAM_PARAMS);
     }
 }
 /*---------------------AUDIO---------------------------*/
@@ -262,30 +291,20 @@
         [_m_PPPPChannelMgtCondition unlock];
         return;
     }
-    _m_PPPPChannelMgt->StopAll();
-    [_m_PPPPChannelMgtCondition lock];
+    _m_PPPPChannelMgt->StopPPPPTalk([_camera.UID UTF8String]);
+    _m_PPPPChannelMgt->StopPPPPAudio([_camera.UID UTF8String]);
+    _m_PPPPChannelMgt->StopPPPPLivestream([_camera.UID UTF8String]);
+//    _m_PPPPChannelMgt->StopAll();
     dispatch_async(dispatch_get_main_queue(),^{
         _playView.image = nil;
     });
+    [_m_PPPPChannelMgtCondition unlock];
 }
 -(BOOL)shouldAutorotate{
     return YES;
 }
 -(NSUInteger)supportedInterfaceOrientations{
     return UIInterfaceOrientationMaskAllButUpsideDown;
-}
--(void)willAnimateRotationToInterfaceOrientation:(UIInterfaceOrientation)toInterfaceOrientation duration:(NSTimeInterval)duration{
-    if (toInterfaceOrientation == UIInterfaceOrientationLandscapeRight) {
-//        self.view = _mainLandscapeView;
-        self.view.transform = CGAffineTransformMakeRotation(M_PI_2);
-    }else if (toInterfaceOrientation == UIInterfaceOrientationLandscapeLeft){
-//        self.view = _mainLandscapeView;
-        self.view.transform = CGAffineTransformMakeRotation(-M_PI_2);
-    }else{
-//        self.view = _mainPortraitView;
-        self.view.transform = CGAffineTransformMakeRotation(0);
-    }
-    [super willRotateToInterfaceOrientation:toInterfaceOrientation duration:duration];
 }
 #pragma mark - ImageNotifyProtocol methods
 - (void) ImageNotify: (UIImage *)image timestamp: (NSInteger)timestamp DID:(NSString *)did{
@@ -294,13 +313,13 @@
     }
     [self performSelector:@selector(refreshImage:) withObject:image];
 }
-- (void) YUVNotify: (Byte*) yuv length:(int)length width: (int) width height:(int)height timestamp:(unsigned int)timestamp DID:(NSString *)did{
-    UIImage* image = [APICommon YUV420ToImage:yuv width:width height:height];
-    [self performSelector:@selector(refreshImage:) withObject:image];
-}
-- (void) H264Data: (Byte*) h264Frame length: (int) length type: (int) type timestamp: (NSInteger) timestamp{
-    
-}
+//- (void) YUVNotify: (Byte*) yuv length:(int)length width: (int) width height:(int)height timestamp:(unsigned int)timestamp DID:(NSString *)did{
+////    UIImage* image = [APICommon YUV420ToImage:yuv width:width height:height];
+//    [self performSelector:@selector(refreshImage:) withObject:[APICommon YUV420ToImage:yuv width:width height:height]];
+//}
+//- (void) H264Data: (Byte*) h264Frame length: (int) length type: (int) type timestamp: (NSInteger) timestamp{
+//    
+//}
 #pragma mark - PPPPStatusDelegate methods
 - (void) PPPPStatus: (NSString*) strDID statusType:(NSInteger) statusType status:(NSInteger) status{
     NSString* strPPPPStatus;
@@ -325,6 +344,8 @@
             break;
         case PPPP_STATUS_ON_LINE:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusOnline", @STR_LOCALIZED_FILE_NAME, nil);
+            [self _startVideo];
+            [self getCameraInfo];
             break;
         case PPPP_STATUS_DEVICE_NOT_ON_LINE:
             strPPPPStatus = NSLocalizedStringFromTable(@"CameraIsNotOnline", @STR_LOCALIZED_FILE_NAME, nil);
@@ -341,8 +362,6 @@
     }
     NSLog(@"PPPPStatus  %@",strPPPPStatus);
     [self performSelectorOnMainThread:@selector(refreshUIWithArray:) withObject:@[@1,strPPPPStatus] waitUntilDone:YES];
-    [self _startVideo];
-    [self getCameraInfo];
 }
 
 //refreshImage
@@ -352,8 +371,9 @@
             if ([self.view isEqual:self.mainLandscapeView]) {
                 UIImageView *imageV = (UIImageView *)[self.mainLandscapeView viewWithTag:100];
                 imageV.image = image;
-            }else
+            }else{
                 _playView.image = image;
+            }
         });
     }
 }
@@ -388,6 +408,14 @@
     }
 }
 #pragma mark - IBAction Methods
+-(void)endShowFullScreenView{
+    if (_isLandscape) {
+        _isLandscape = NO;
+        self.view=self.mainPortraitView;
+        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
+        self.view.bounds=CGRectMake(0.0, 0.0, 320.0, 480.0);
+    }
+}
 - (IBAction)showFullScreenView:(UIButton *)sender {
     _isLandscape = !_isLandscape;
     if (_isLandscape) {
@@ -401,7 +429,8 @@
     }
 }
 - (IBAction)popUp:(UIButton *)sender {
-    [self.navigationController popViewControllerAnimated:YES];
+    [self _stopCamera];
+    [self performSelector:@selector(popUpTop) withObject:nil afterDelay:0.5];
 }
 - (IBAction)changeView:(UISegmentedControl *)sender {
     self.infoView.hidden = !self.infoView.hidden;
@@ -416,12 +445,13 @@
     UIGraphicsEndImageContext();
     UIImageWriteToSavedPhotosAlbum(temp, nil, nil, nil);
     [MyEUtil showMessageOn:nil withMessage:@"截图已保存到照片库"];
+    //之前的功能是截取摄像头的图片保存，现在的功能是截取当前看到的图片保存
 //    _m_PPPPChannelMgt->SetSnapshotDelegate((char*)[_camera.UID UTF8String], self);
 //    _m_PPPPChannelMgt->Snapshot([_camera.UID UTF8String]);
 }
 - (IBAction)openLight:(UIButton *)sender {
-    _m_PPPPChannelMgt->CameraControl([self.camera.UID UTF8String], 14, sender.selected);
     sender.selected = !sender.selected;
+    _m_PPPPChannelMgt->CameraControl([self.camera.UID UTF8String], 14, sender.selected);
 }
 
 - (IBAction)talkToCamera:(UIButton *)sender {
