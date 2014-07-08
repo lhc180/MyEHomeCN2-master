@@ -81,16 +81,16 @@
 //}
 #pragma mark - IBAction methods
 - (IBAction)studyKey:(id)sender {
-    HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    HUD.removeFromSuperViewOnHide = YES;
-    HUD.userInteractionEnabled = YES;
-    HUD.delegate = self;
+    learnHUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    learnHUD.removeFromSuperViewOnHide = YES;
+    learnHUD.userInteractionEnabled = YES;
+    learnHUD.delegate = self;
     //初始化label
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,320,500)];
     //设置自动行数与字符换行
     [label setNumberOfLines:0];
     label.lineBreakMode = NSLineBreakByWordWrapping;
-    label.text = @"当智控星屏幕显示Lr--时，请按下遥控器按键进行学习。";
+    label.text = @"当智控星屏幕显示Lr--时,请按下遥控器按键进行学习";
 
     UIFont *font = [UIFont fontWithName:@"Arial" size:12];
     //设置一个行高上限
@@ -105,9 +105,11 @@
     label.textColor = [UIColor whiteColor];
     label.textAlignment = NSTextAlignmentCenter;
     
-    HUD.customView = label;
+    learnHUD.customView = label;
     //	HUD.color = [UIColor whiteColor];
-    HUD.mode = MBProgressHUDModeCustomView;
+    learnHUD.mode = MBProgressHUDModeCustomView;
+    learnHUD.cornerRadius = 2;
+    learnHUD.margin = 10;
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&keyName=%@&tId=%@&irType=%ld&instructionType=%ld",
                         URL_FOR_IR_DEVICE_STUDY_KEY,
                         self.accountData.userId,
@@ -272,7 +274,7 @@
     if([name isEqualToString:IR_DEVICE_STUDY_KEY_LOADER_NMAE]) {
         if ([MyEUtil getResultFromAjaxString:string] == -1) {
             [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"发送按键学习请求时发生错误！"];
-            [HUD hide:YES];
+            [learnHUD hide:YES];
         } else if ([MyEUtil getResultFromAjaxString:string] == 1){
             self.key.keyName = self.keyNameTextfield.text;
             SBJsonParser *parser = [[SBJsonParser alloc] init];
@@ -289,7 +291,7 @@
     if([name isEqualToString:IR_DEVICE_QUERY_STUDY_KEY_LOADER_NMAE]) {
         NSLog(@"ajax json = %@", string);
         if ([MyEUtil getResultFromAjaxString:string] == 1){
-            [HUD hide:YES];
+            [learnHUD hide:YES];
             [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令学习成功"];
             // 把这个指令的学习成功标志在数据model里面修改了
             self.key.status = 1;
@@ -299,7 +301,7 @@
             self.accountData.needDownloadInstructionsForScene = YES;
         } else{
             if(studyQueryTimes >= 6){
-                [HUD hide:YES];
+                [learnHUD hide:YES];
                 [self sendInstructionStudyTimeout];
                 studyQueryTimes = 0;
                 [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"学习超时，请重新开始!"];
@@ -320,7 +322,7 @@
     }
     if([name isEqualToString:IR_DEVICE_SEND_KEY_STUDY_TIMEOUT_LOADER_NMAE]) {
         [HUD hide:YES];
-        self.key.status = 	0;
+        self.key.status = 0;
     }
     if([name isEqualToString:IR_DEVICE_VALIDATE_KEY_LOADER_NMAE]) {
         [HUD hide:YES];

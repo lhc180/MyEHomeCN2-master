@@ -342,6 +342,10 @@
 }
 - (IBAction)saveUserInfo:(UIButton *)sender {
     sender.selected = !sender.selected;
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    [prefs setBool:sender.selected forKey:@"rememberme"];
+    [prefs synchronize];
+
 }
 -(NSString *)dataFilePath{
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);

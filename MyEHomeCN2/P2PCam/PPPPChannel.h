@@ -287,9 +287,7 @@ private:
     //CVideoPlayer *m_pPlayBackVideoPlayer;
     int m_bPlayBackStreamOK;
     int m_bPlaybackStarted;
-    
-    
-
+    UIImage *_oldImage;
 };
 
 #endif

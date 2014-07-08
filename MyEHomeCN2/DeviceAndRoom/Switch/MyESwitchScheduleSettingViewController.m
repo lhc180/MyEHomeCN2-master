@@ -14,33 +14,33 @@
 
 @implementation MyESwitchScheduleSettingViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
+#pragma mark - life circle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    if (!IS_IOS6) {
-        for (UIButton *btn in self.view.subviews) {
-            if ([btn isKindOfClass:[UIButton class]]) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-            }
-        }
-    }else{
-        for (UIButton *btn in self.view.subviews) {
-            if ([btn isKindOfClass:[UIButton class]]) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-            }
+//    NSString *string = IS_IOS6?@"detailBtn-ios6":@"detailBtn";
+    for (UIButton *btn in self.view.subviews) {
+        if ([btn isKindOfClass:[UIButton class]]) {
+            [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
+            [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
         }
     }
+
+//    if (!IS_IOS6) {
+//        for (UIButton *btn in self.view.subviews) {
+//            if ([btn isKindOfClass:[UIButton class]]) {
+//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
+//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//            }
+//        }
+//    }else{
+//        for (UIButton *btn in self.view.subviews) {
+//            if ([btn isKindOfClass:[UIButton class]]) {
+//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//            }
+//        }
+//    }
 
     self.channelSeg.mydelegate = self;
     self.weekSeg.mydelegate = self;
@@ -61,23 +61,22 @@
     _headTimeArray = array1;
     _tailTimeArray = array2;
 
-    _scheduleNew = [[MyESwitchSchedule alloc] init];
-    if (self.actionType == 1) {  //新增时段
-        self.schedule = [[MyESwitchSchedule alloc] init];
-        [self.startBtn setTitle:@"12:00" forState:UIControlStateNormal];
-        [self.endBtn setTitle:@"12:30" forState:UIControlStateNormal];
-    }else{
-        _scheduleNew = [_schedule copy];
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-        [self.startBtn setTitle:_schedule.onTime forState:UIControlStateNormal];
-        [self.endBtn setTitle:_schedule.offTime forState:UIControlStateNormal];
-        [self refreshSegment];
-        _initArray = @[self.startBtn.currentTitle,self.endBtn.currentTitle,[self changeIndexSetToArrayWithIndexSet:self.channelSeg.selectedSegmentIndexes],[self changeIndexSetToArrayWithIndexSet:self.weekSeg.selectedSegmentIndexes]];   //这里进行初始化，作为比较的基准
+    if (self.control.numChannel == 1) {
+        [self.channelSeg removeSegmentAtIndex:1 animated:YES];
+        [self.channelSeg removeSegmentAtIndex:2 animated:YES];
+    }else if(self.control.numChannel == 2){
+        [self.channelSeg removeSegmentAtIndex:2 animated:YES];
     }
- }
--(void)viewWillDisappear:(BOOL)animated{
-    MyESwitchAutoViewController *vc = self.navigationController.childViewControllers[0];
-    vc.jumpFromSubView = YES;
+    for (int idx = 0; idx < self.control.channelDisabledStatus.count; idx++) {
+        NSInteger i = [self.control.channelDisabledStatus[idx] intValue];
+        if (i == 1) {
+            [self.channelSeg setEnabled:NO forSegmentAtIndex:idx];
+        }
+    }
+    _scheduleNew = [_schedule copy];
+    [self.startBtn setTitle:_schedule.onTime forState:UIControlStateNormal];
+    [self.endBtn setTitle:_schedule.offTime forState:UIControlStateNormal];
+    [self refreshSegment];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -96,7 +95,7 @@
 }
 -(void)uploadInfoToServer{
     // 估计这里会有问题，因为数组没有转变为字符串(特别注意这里是怎么样转化为字符串的)
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&scheduleId=%li&onTime=%@&offTime=%@&channels=%@&weeks=%@&action=%li",
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&scheduleId=%li&onTime=%@&offTime=%@&channels=%@&weeks=%@&runFlag=%i&action=%li",
                                                            URL_FOR_SWITCH_SCHEDULE_SAVE,
                                                            (long)self.device.deviceId,
                                                            (long)_scheduleNew.scheduleId,
@@ -104,6 +103,7 @@
                                                            _scheduleNew.offTime,
                                                            [_scheduleNew.channels componentsJoinedByString:@","],
                                                            [_scheduleNew.weeks componentsJoinedByString:@","],
+                                                           _scheduleNew.runFlag,
                                                            (long)self.actionType] andName:@"scheduleEdit"];
 }
 -(NSMutableArray *)changeIndexSetToArrayWithIndexSet:(NSIndexSet *)indexSet{
@@ -149,13 +149,6 @@
     }
     return YES;
 }
--(void)changeBarBtnEnable{
-    NSArray *array = @[self.startBtn.currentTitle,self.endBtn.currentTitle,[self changeIndexSetToArrayWithIndexSet:self.channelSeg.selectedSegmentIndexes],[self changeIndexSetToArrayWithIndexSet:self.weekSeg.selectedSegmentIndexes]];
-    if (![array isEqualToArray:_initArray]) {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-    }else
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-}
 //-(void)changeBtnTitleWithIndex:(NSInteger)tag{
 //    NSInteger onTime = [MyEUtil hhidForTimeString:self.startBtn.currentTitle];
 //    NSInteger offTime = [MyEUtil hhidForTimeString:self.endBtn.currentTitle];
@@ -184,8 +177,8 @@
 -(NSArray *)changeStringToInt:(NSString *)title{
     NSArray *array = [NSArray array];
     if (title.length !=5) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"Warning" contentText:@"time is off" leftButtonTitle:nil rightButtonTitle:@"OK"];
-        [alert show];
+//        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"time is off" leftButtonTitle:nil rightButtonTitle:@"OK"];
+//        [alert show];
         array = @[@1,@1];
     }else{
         NSInteger i = [_headTimeArray indexOfObject:[title substringToIndex:2]];
@@ -241,9 +234,6 @@
     if ([anIndexSet count] == 0) {
         [MyEUtil showMessageOn:self.view withMessage:multiSelecSegmendedControl == self.channelSeg?@"必须指定开关路数":@"必须指定星期"];
     }
-    if (self.actionType == 2) {
-        [self changeBarBtnEnable];
-    }
 }
 #pragma mark - IQActionSheetPickerView delegate methods
 -(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didSelectTitles:(NSArray *)titles{
@@ -252,9 +242,6 @@
         [self.startBtn setTitle:[titles componentsJoinedByString:@":"] forState:UIControlStateNormal];
     }else{
         [self.endBtn setTitle:[titles componentsJoinedByString:@":"] forState:UIControlStateNormal];
-    }
-    if (self.actionType == 2) {
-        [self changeBarBtnEnable];
     }
 }
 #pragma mark - url delegate methods
@@ -272,11 +259,7 @@
                 UINavigationController *nav = self.tabBarController.childViewControllers[0];
                 MyESwitchManualControlViewController *vc = nav.childViewControllers[0];
                 vc.needRefresh = YES;
-
                 [self uploadInfoToServer];
-            };
-            alert.leftBlock = ^{
-                [self.navigationController popViewControllerAnimated:YES];
             };
             [alert show];
         }
@@ -293,13 +276,13 @@
             if (self.actionType == 1) {
                 MyESwitchSchedule *schedule = [[MyESwitchSchedule alloc] initWithString:string];
                 _scheduleNew.scheduleId = schedule.scheduleId;
-                _schedule = [_scheduleNew copy];
-                [self.control.SSList addObject:self.schedule];
+                [self.control.SSList addObject:_scheduleNew];
             }else{
-                self.schedule.onTime = _scheduleNew.onTime;
-                self.schedule.offTime = _scheduleNew.offTime;
-                _schedule.weeks = _scheduleNew.weeks;
-                _schedule.channels = _scheduleNew.channels;
+                if ([self.control.SSList containsObject:_schedule]) {
+                    NSInteger i = [self.control.SSList indexOfObject:_schedule];
+                    [self.control.SSList removeObject:_schedule];
+                    [self.control.SSList insertObject:_scheduleNew atIndex:i];
+                }
             }
             [self.navigationController popViewControllerAnimated:YES];
         }
@@ -310,5 +293,8 @@
             [MyEUtil showMessageOn:nil withMessage:[NSString stringWithFormat:self.actionType == 1?@"新增时段时发生错误":@"编辑时段时发生错误"]];
         }
     }
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
+    [MyEUtil showMessageOn:nil withMessage:@"与服务器通讯失败"];
 }
 @end

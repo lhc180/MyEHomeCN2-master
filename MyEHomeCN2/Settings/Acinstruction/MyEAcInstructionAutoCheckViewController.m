@@ -61,6 +61,10 @@
     NSLog(@"%@%@",moduleNameArray,moduleIdArray);
 }
 -(void)doThisWhenInstructionSendSuccess{
+#warning 这里修改了,当用户点击停止的时候，不再继续显示下一个品牌和型号
+    if (autoCheckStop) {
+        return;
+    }
     failureTimes = 0; //一旦成功,就将失败次数清零
     if (moduleIdIndex >= [moduleIdArray count] - 1) {
         moduleIdIndex = 0;

@@ -56,7 +56,7 @@
 //    [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
 //    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
 
-    if (!IS_IOS6) {
+//    if (!IS_IOS6) {
         for (UIButton *btn in self.view.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 if (btn.tag == 100 || btn.tag == 101) {
@@ -70,14 +70,14 @@
                 }
             }
         }
-    }else{
-        for (UIButton *btn in self.view.subviews) {
-            if (btn.tag !=100 && btn.tag !=101) {
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-            }
-        }
-    }
+//    }else{
+//        for (UIButton *btn in self.view.subviews) {
+//            if (btn.tag !=100 && btn.tag !=101) {
+//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+//            }
+//        }
+//    }
     
     if (jumpFromBarBtn) {
 //#warning 这里新增一个随机数，从而使得每次新增指令时都会不一样

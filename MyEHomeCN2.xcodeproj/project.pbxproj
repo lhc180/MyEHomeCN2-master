@@ -63,6 +63,7 @@
 		8C2C13DC183CB26400134256 /* MyEAcCustomInstructionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2C13DB183CB26400134256 /* MyEAcCustomInstructionViewController.m */; };
 		8C2DEB34186AC23F00A5BCA8 /* MyESigeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2DEB33186AC23F00A5BCA8 /* MyESigeUpViewController.m */; };
 		8C2EBF1D18ADE988000AB585 /* MyEUniversal.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C2EBF1C18ADE987000AB585 /* MyEUniversal.m */; };
+		8C35435A196A43ED00E5A6C2 /* MyEScheduleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C354359196A43ED00E5A6C2 /* MyEScheduleCell.m */; };
 		8C37A4961846FD84005F6830 /* libzbar.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C37A4901846FD84005F6830 /* libzbar.a */; };
 		8C37A4971846FD84005F6830 /* zbar-back.png in Resources */ = {isa = PBXBuildFile; fileRef = 8C37A4921846FD84005F6830 /* zbar-back.png */; };
 		8C37A4981846FD84005F6830 /* zbar-help.html in Resources */ = {isa = PBXBuildFile; fileRef = 8C37A4931846FD84005F6830 /* zbar-help.html */; };
@@ -167,7 +168,6 @@
 		8CF1EAB219108C5E00A326DC /* MyECameraAddNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF1EAB119108C5E00A326DC /* MyECameraAddNewViewController.m */; };
 		8CF1EAB91910C4ED00A326DC /* IpCameraClient.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1EAB81910C4ED00A326DC /* IpCameraClient.strings */; };
 		8CF76C3818C8450D004BA3C7 /* MyESwitchAutoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF76C3718C8450D004BA3C7 /* MyESwitchAutoViewController.m */; };
-		8CF76C3B18C8455B004BA3C7 /* MyESwitchScheduleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF76C3A18C8455B004BA3C7 /* MyESwitchScheduleViewController.m */; };
 		8CF76C3E18C84590004BA3C7 /* MyESwitchScheduleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF76C3D18C84590004BA3C7 /* MyESwitchScheduleSettingViewController.m */; };
 		8CFCD3EE186FC3B6006C1C73 /* SwipeView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CFCD3ED186FC3B6006C1C73 /* SwipeView.m */; };
 		C32CF2AD183B39280054DB15 /* MyEAutoControlPeriod.m in Sources */ = {isa = PBXBuildFile; fileRef = C32CF2A8183B39280054DB15 /* MyEAutoControlPeriod.m */; };
@@ -362,6 +362,8 @@
 		8C2DEB33186AC23F00A5BCA8 /* MyESigeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESigeUpViewController.m; sourceTree = "<group>"; };
 		8C2EBF1B18ADE987000AB585 /* MyEUniversal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEUniversal.h; sourceTree = "<group>"; };
 		8C2EBF1C18ADE987000AB585 /* MyEUniversal.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEUniversal.m; sourceTree = "<group>"; };
+		8C354358196A43ED00E5A6C2 /* MyEScheduleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEScheduleCell.h; sourceTree = "<group>"; };
+		8C354359196A43ED00E5A6C2 /* MyEScheduleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEScheduleCell.m; sourceTree = "<group>"; };
 		8C37A47C1846FD84005F6830 /* Decoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Decoder.h; sourceTree = "<group>"; };
 		8C37A47D1846FD84005F6830 /* Exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Exception.h; sourceTree = "<group>"; };
 		8C37A47E1846FD84005F6830 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
@@ -668,8 +670,6 @@
 		8CF1EAB81910C4ED00A326DC /* IpCameraClient.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = IpCameraClient.strings; sourceTree = "<group>"; };
 		8CF76C3618C8450D004BA3C7 /* MyESwitchAutoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESwitchAutoViewController.h; sourceTree = "<group>"; };
 		8CF76C3718C8450D004BA3C7 /* MyESwitchAutoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESwitchAutoViewController.m; sourceTree = "<group>"; };
-		8CF76C3918C8455B004BA3C7 /* MyESwitchScheduleViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESwitchScheduleViewController.h; sourceTree = "<group>"; };
-		8CF76C3A18C8455B004BA3C7 /* MyESwitchScheduleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESwitchScheduleViewController.m; sourceTree = "<group>"; };
 		8CF76C3C18C84590004BA3C7 /* MyESwitchScheduleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESwitchScheduleSettingViewController.h; sourceTree = "<group>"; };
 		8CF76C3D18C84590004BA3C7 /* MyESwitchScheduleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESwitchScheduleSettingViewController.m; sourceTree = "<group>"; };
 		8CFCD3EC186FC3B6006C1C73 /* SwipeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SwipeView.h; sourceTree = "<group>"; };
@@ -965,6 +965,8 @@
 		8C2A534018C470460039AF00 /* Switch */ = {
 			isa = PBXGroup;
 			children = (
+				8C354358196A43ED00E5A6C2 /* MyEScheduleCell.h */,
+				8C354359196A43ED00E5A6C2 /* MyEScheduleCell.m */,
 				8C2A534218C4707D0039AF00 /* MyESwitchEditViewController.h */,
 				8C2A534318C4707D0039AF00 /* MyESwitchEditViewController.m */,
 				8C2A534818C4716F0039AF00 /* MyESwitchElecInfoViewController.h */,
@@ -973,8 +975,6 @@
 				8CB070D418C72C0800DB18B6 /* MyEDelayTimeSetViewController.m */,
 				8CF76C3618C8450D004BA3C7 /* MyESwitchAutoViewController.h */,
 				8CF76C3718C8450D004BA3C7 /* MyESwitchAutoViewController.m */,
-				8CF76C3918C8455B004BA3C7 /* MyESwitchScheduleViewController.h */,
-				8CF76C3A18C8455B004BA3C7 /* MyESwitchScheduleViewController.m */,
 				8CF76C3C18C84590004BA3C7 /* MyESwitchScheduleSettingViewController.h */,
 				8CF76C3D18C84590004BA3C7 /* MyESwitchScheduleSettingViewController.m */,
 				8CE6E77A18E02F9E008764CA /* MyESwitchManualControlViewController.h */,
@@ -2074,7 +2074,6 @@
 				8CD706A0188915AC006A4F20 /* DXAlertView.m in Sources */,
 				8CA6C1D518C5D279004A10D8 /* EColumnChart.m in Sources */,
 				C3A63F7318248FF10076E7A9 /* MyESettingsViewController.m in Sources */,
-				8CF76C3B18C8455B004BA3C7 /* MyESwitchScheduleViewController.m in Sources */,
 				8CC6D78D190FA22100532A05 /* PicPathDBUtils.mm in Sources */,
 				C3A0D42B1820B29E00AB12FE /* MyEScene.m in Sources */,
 				C39503401813A2AE00950771 /* SBJsonStreamWriterState.m in Sources */,
@@ -2183,6 +2182,7 @@
 				C3A0D42C1820B29E00AB12FE /* MyESceneList.m in Sources */,
 				8CFCD3EE186FC3B6006C1C73 /* SwipeView.m in Sources */,
 				8C1BE19A1892348500439CFC /* MZFormSheetSegue.m in Sources */,
+				8C35435A196A43ED00E5A6C2 /* MyEScheduleCell.m in Sources */,
 				8C17BAA5182D0700005DA1EB /* MyEIrDefaultViewController.m in Sources */,
 				8CC6D780190FA22100532A05 /* Adpcm.mm in Sources */,
 				8CC6D78A190FA22100532A05 /* mytoast.m in Sources */,
@@ -2392,6 +2392,8 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
@@ -2424,6 +2426,8 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;

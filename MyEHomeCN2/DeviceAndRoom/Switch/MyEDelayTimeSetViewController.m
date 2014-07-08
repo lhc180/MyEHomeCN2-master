@@ -68,9 +68,10 @@
             alert.rightBlock = ^{
                 [self doThisToChangeStatus];
             };
-            alert.leftBlock = ^{
-                [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
-            };
+//            alert.leftBlock = ^{
+//                [self performSelector:@selector(mz_dismissFormSheetControllerAnimated:completionHandler:) withObject:nil afterDelay:0.1];
+////                [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+//            };
             [alert show];
         }
         if ([MyEUtil getResultFromAjaxString:string] == 2) {

@@ -26,13 +26,12 @@
 @property (nonatomic, weak) MyECamera *camera;
 @property (nonatomic, strong) UIView *mainPortraitView;
 @property (nonatomic, strong) UIView *mainLandscapeView;
-
 /*----------------info view---------------------*/
 @property (weak, nonatomic) IBOutlet UIView *infoView;
 /*-------------actionView--------------*/
 @property (weak, nonatomic) IBOutlet UIView *actionView;
 
-@property (nonatomic, retain) IBOutlet UIImageView* playView;
+@property (nonatomic, weak) IBOutlet UIImageView* playView;
 @property (nonatomic, strong) UIImageView *landscapePlayView;
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *infoLabels;
 

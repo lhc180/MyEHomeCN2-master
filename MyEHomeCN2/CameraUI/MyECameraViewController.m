@@ -36,6 +36,7 @@
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
     [self.navigationController setNavigationBarHidden:NO animated:YES];
+    [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationNone];
     [_timer invalidate];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
 }
@@ -48,9 +49,10 @@
     _m_PPPPChannelMgt->pCameraViewController = self;
     InitAudioSession();
 
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self _initialize];
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self _initialize];
+//    });
+//    [self _initialize];
     [self _startAll];
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didEnterBackground)
@@ -73,7 +75,7 @@
         [btn setTitleColor:[UIColor colorWithRed:69/255 green:220/255 blue:200/255 alpha:1] forState:UIControlStateSelected];
     }
     [self refreshUIWithArray:@[@0,_camera.name]];
-    _timer = [NSTimer scheduledTimerWithTimeInterval:10*60 target:self selector:@selector(popUpTop) userInfo:nil repeats:NO];
+    _timer = [NSTimer scheduledTimerWithTimeInterval:10*60 target:self selector:@selector(popUp:) userInfo:nil repeats:NO];
     
     //初始化各个方向的view
     MyECameraLandscapeViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"landscape"];
@@ -311,7 +313,13 @@
     if ([self.playView.subviews count]) {
         [self performSelectorOnMainThread:@selector(hideHUD) withObject:nil waitUntilDone:YES];
     }
-    [self performSelector:@selector(refreshImage:) withObject:image];
+    NSLog(@"代理传值");
+    NSLog(@"delegate image %@",image);
+    [self performSelectorOnMainThread:@selector(refreshImage:) withObject:image waitUntilDone:YES];
+//    [self performSelector:@selector(refreshImage:) withObject:image];
+    NSLog(@"传值完成");
+//    image = nil;
+//    NSLog(@"delegate end image is %@",image);
 }
 //- (void) YUVNotify: (Byte*) yuv length:(int)length width: (int) width height:(int)height timestamp:(unsigned int)timestamp DID:(NSString *)did{
 ////    UIImage* image = [APICommon YUV420ToImage:yuv width:width height:height];
@@ -364,18 +372,37 @@
     [self performSelectorOnMainThread:@selector(refreshUIWithArray:) withObject:@[@1,strPPPPStatus] waitUntilDone:YES];
 }
 
+//-(void)changeImage:(UIImage *)image{
+//    if (image != nil) {
+//        if ([self.view isEqual:self.mainLandscapeView]) {
+//            UIImageView *imageV = (UIImageView *)[self.mainLandscapeView viewWithTag:100];
+//            imageV.image = image;
+//        }else{
+//            _playView.image = image;
+//        }
+//    }
+//}
 //refreshImage
-- (void) refreshImage:(UIImage* ) image{
+- (void) refreshImage:(UIImage*)image{
+    NSLog(@"开始刷新UI");
+    NSLog(@"init image %@",image);
+//    _oldImage = image;
     if (image != nil) {
+//        [self performSelectorOnMainThread:@selector(changeImage:) withObject:_oldImage waitUntilDone:YES];
         dispatch_async(dispatch_get_main_queue(),^{
             if ([self.view isEqual:self.mainLandscapeView]) {
                 UIImageView *imageV = (UIImageView *)[self.mainLandscapeView viewWithTag:100];
+                imageV.image = nil;
                 imageV.image = image;
             }else{
+                NSLog(@"palyView image is %@",_playView.image);
+                _playView.image = nil;
                 _playView.image = image;
             }
         });
     }
+//    image = nil;
+//    NSLog(@"nil image %@",image);
 }
 #pragma mark - DateTimeProtocol
 

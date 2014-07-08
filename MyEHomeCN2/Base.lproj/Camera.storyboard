@@ -14,10 +14,10 @@
                         <viewControllerLayoutGuide type="bottom" id="YWL-rg-fYg"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="Kl7-c2-bdg">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gig-ly-5PT">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gig-ly-5PT">
                                 <rect key="frame" x="0.0" y="230" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -44,9 +44,9 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GCm-mX-QNL">
-                                        <rect key="frame" x="265" y="6" width="46" height="30"/>
+                                        <rect key="frame" x="268" y="2" width="40" height="40"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="全屏">
+                                        <state key="normal" image="DMVideoFullScreen">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
@@ -55,8 +55,11 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.27058823529999998" green="0.7843137255" blue="0.86274509799999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="c8U-nc-xEk"/>
+                                </constraints>
                             </view>
-                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="4QC-cb-78i">
+                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4QC-cb-78i">
                                 <rect key="frame" x="0.0" y="274" width="320" height="206"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -135,8 +138,11 @@
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="206" id="Ke5-Ze-OuC"/>
+                                </constraints>
                             </view>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="RJk-Yn-Vxb">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="RJk-Yn-Vxb">
                                 <rect key="frame" x="0.0" y="274" width="320" height="206"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
@@ -201,14 +207,34 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="206" id="BMp-Zy-IoF"/>
+                                </constraints>
                             </view>
-                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="njc-Oe-mZo">
+                            <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="njc-Oe-mZo">
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="230"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="230" id="ghX-Mc-D9b"/>
+                                </constraints>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="njc-Oe-mZo" firstAttribute="top" secondItem="zxr-Lg-EPF" secondAttribute="bottom" id="2XB-oG-Krn"/>
+                            <constraint firstAttribute="trailing" secondItem="4QC-cb-78i" secondAttribute="trailing" id="57b-it-DkI"/>
+                            <constraint firstItem="RJk-Yn-Vxb" firstAttribute="top" secondItem="gig-ly-5PT" secondAttribute="bottom" id="ELy-hB-ZLO"/>
+                            <constraint firstAttribute="trailing" secondItem="RJk-Yn-Vxb" secondAttribute="trailing" id="HtK-5G-e7D"/>
+                            <constraint firstItem="RJk-Yn-Vxb" firstAttribute="leading" secondItem="Kl7-c2-bdg" secondAttribute="leading" id="KV9-En-rNt"/>
+                            <constraint firstAttribute="trailing" secondItem="gig-ly-5PT" secondAttribute="trailing" id="Oam-Hz-naS"/>
+                            <constraint firstAttribute="trailing" secondItem="njc-Oe-mZo" secondAttribute="trailing" id="On4-kr-xwe"/>
+                            <constraint firstItem="4QC-cb-78i" firstAttribute="top" secondItem="gig-ly-5PT" secondAttribute="bottom" id="PH1-CB-zzU"/>
+                            <constraint firstItem="gig-ly-5PT" firstAttribute="top" secondItem="njc-Oe-mZo" secondAttribute="bottom" id="cSD-0n-L0Q"/>
+                            <constraint firstItem="njc-Oe-mZo" firstAttribute="leading" secondItem="Kl7-c2-bdg" secondAttribute="leading" id="chx-sq-TVz"/>
+                            <constraint firstItem="gig-ly-5PT" firstAttribute="leading" secondItem="Kl7-c2-bdg" secondAttribute="leading" id="dxT-yH-wVU"/>
+                            <constraint firstItem="4QC-cb-78i" firstAttribute="leading" secondItem="Kl7-c2-bdg" secondAttribute="leading" id="jMb-lh-y2h"/>
+                        </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <navigationItem key="navigationItem" title="监控实录" id="WGc-bw-snF"/>
@@ -227,7 +253,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Tm7-fj-roA" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-7169" y="-5176"/>
+            <point key="canvasLocation" x="-7156" y="-5181"/>
         </scene>
         <!--MyE Camera Landscape View Controller-->
         <scene sceneID="Hbx-kY-dqr">
@@ -238,12 +264,13 @@
                         <viewControllerLayoutGuide type="bottom" id="AGf-wB-h4M"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="O6E-XG-EF1">
-                        <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
+                        <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <imageView tag="100" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="PcD-3T-ZY8">
-                                <rect key="frame" x="0.0" y="0.0" width="480" height="320"/>
+                                <rect key="frame" x="0.0" y="0.0" width="568" height="320"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                             </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
@@ -383,7 +410,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Qg6-g9-1MU"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="39o-fD-V3g">
-                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="2kr-YV-Bv3">
@@ -433,7 +460,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="edit" hidesBottomBarWhenPushed="YES" id="2b6-2W-Mp1" customClass="MyEEditCameraViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="t0I-jC-gR6">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -634,7 +661,7 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="J7k-Aq-ejY" customClass="MyECameraWIFISetViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="H5M-zG-ebQ">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <prototypes>
@@ -691,7 +718,7 @@
             <objects>
                 <tableViewController id="3Vt-6Q-JhH" customClass="MyECameraWIFIConnectViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="yTP-PD-tYf">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -741,13 +768,13 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="HWy-rK-D8a" customClass="MyECameraPasswordSetTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="e0N-c5-RIp">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
                             <tableViewSection id="Yf2-Ox-BAg">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="soK-gh-7FA">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="soK-gh-7FA">
                                         <rect key="frame" x="0.0" y="99" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="soK-gh-7FA" id="mrE-PO-qFo">
@@ -770,7 +797,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="D40-fR-QIT">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="D40-fR-QIT">
                                         <rect key="frame" x="0.0" y="143" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="D40-fR-QIT" id="yc3-Ue-l1J">
@@ -793,7 +820,7 @@
                                             </subviews>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ZJk-zu-iXO">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ZJk-zu-iXO">
                                         <rect key="frame" x="0.0" y="187" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZJk-zu-iXO" id="SkP-aC-61R">
@@ -846,7 +873,7 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="Wou-Xt-LaW" customClass="MyECameraSDSetViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="XF9-wV-2pJ">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <sections>
@@ -968,7 +995,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="zSr-HN-adn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6633" y="-4025"/>
+            <point key="canvasLocation" x="-6633" y="-3977"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="4LJ-Ik-Y0v">
@@ -990,6 +1017,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="DMVideoFullScreen" width="24" height="19"/>
         <image name="back" width="48" height="30"/>
         <image name="lock" width="20" height="20"/>
         <image name="video-control-off" width="75" height="45"/>
@@ -997,6 +1025,6 @@
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
-        <simulatedScreenMetrics key="destination"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
 </document>

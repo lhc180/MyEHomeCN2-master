@@ -2122,7 +2122,8 @@ void CPPPPChannel::StopVideoPlay()
 }
 
 void CPPPPChannel::PlayProcess()
-{ 
+{
+    int runFlag = 1;
     CH264Decoder *pH264Decoder = new CH264Decoder();//创建h264的解码库
     while(m_bPlayThreadRuning)
     {
@@ -2184,24 +2185,39 @@ void CPPPPChannel::PlayProcess()
             H264DataNotify((unsigned char*)pbuf, videoLen, videohead.frametype, untimestamp);
             
             [pool release];
-            
-            
-        }      
+            SAFE_DELETE(pbuf) ;
+        }
         else /* JPEG */
         {
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-            NSData *image = [[NSData alloc] initWithBytes:pbuf length:videoLen];
-            UIImage *img = [[UIImage alloc] initWithData:image];  
+            NSData *image = [NSData dataWithBytesNoCopy:pbuf length:videoLen freeWhenDone:YES];
+            UIImage *img = [UIImage imageWithData:image];
+            NSLog(@"创建图像 %i",[img retainCount]);
+            NSLog(@"new image %@",img);
+//            [img retain];
             ImageNotify(img, untimestamp);
-            [img release];
-            [image release];
-            
+//            if (_oldImage != img) {
+//                ImageNotify(img, untimestamp);
+//            }else{
+//                [_oldImage release];
+//                _oldImage = nil;
+//            }
+            if (runFlag == 0) {
+                runFlag = 1;
+//                [_oldImage release];
+                _oldImage = nil;
+            }else
+                runFlag = 0;
+            _oldImage = img;
+            NSLog(@"传输完成");
+//            NSLog(@"end image %@",img);
+//            [img release];
+//            NSLog(@"image %@",img);
             [pool release];
-            
         }
         
-        SAFE_DELETE(pbuf) ;         
-        usleep(10000);       
+//        SAFE_DELETE(pbuf) ;
+        usleep(300000);
         
     }
     
@@ -2233,7 +2249,9 @@ void CPPPPChannel::YUVNotify(unsigned char *yuv, int len, int width, int height,
 void CPPPPChannel::ImageNotify(UIImage *image, unsigned int timestamp)
 {
     [m_PlayViewAVDataDelegateLock lock];
-    [m_PlayViewImageNotifyDelegate ImageNotify:image timestamp:timestamp DID:[NSString stringWithUTF8String:szDID]];
+    if (image != nil) {
+        [m_PlayViewImageNotifyDelegate ImageNotify:image timestamp:timestamp DID:[NSString stringWithUTF8String:szDID]];
+    }
     [m_PlayViewAVDataDelegateLock unlock];
 
 }

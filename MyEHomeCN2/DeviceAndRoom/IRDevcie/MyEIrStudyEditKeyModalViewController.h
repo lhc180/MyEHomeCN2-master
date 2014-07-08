@@ -12,6 +12,7 @@
 
 @interface MyEIrStudyEditKeyModalViewController : UIViewController<UITextFieldDelegate,MyEDataLoaderDelegate,MBProgressHUDDelegate>{
     MBProgressHUD *HUD;
+    MBProgressHUD *learnHUD;
     NSInteger studyQueryTimes;
 }
 @property (nonatomic, weak) MyEAccountData *accountData;

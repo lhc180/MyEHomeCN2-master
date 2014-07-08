@@ -314,21 +314,22 @@ sceneIndex,saveEditorBtn;
 {
     [super viewDidLoad];
      //这部分代码主要用于更新带picker的btn的UI
-    if (!IS_IOS6) {
+//    if (!IS_IOS6) {
         for (UIButton *btn in self.view.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
+                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateDisabled];
                 [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
             }
         }
-    }else{
-        for (UIButton *btn in self.view.subviews) {
-            if ([btn isKindOfClass:[UIButton class]]) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-            }
-        }
-    }
+//    }else{
+//        for (UIButton *btn in self.view.subviews) {
+//            if ([btn isKindOfClass:[UIButton class]]) {
+//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//            }
+//        }
+//    }
 
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];

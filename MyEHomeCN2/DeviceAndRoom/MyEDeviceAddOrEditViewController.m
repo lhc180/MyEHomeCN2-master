@@ -55,7 +55,7 @@
         self.downloadInstructionBtn.enabled = YES;
     }
     //这里是用来更新button的UI
-    if (!IS_IOS6) {
+//    if (!IS_IOS6) {
         for (UIButton *btn in self.view.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 if (btn.tag == 103) {
@@ -65,20 +65,21 @@
                     [btn.layer setBorderColor:btn.tintColor.CGColor];
                 }else if (btn.tag != 100 && btn.tag != 102){
                     [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
+                    [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateDisabled];
                     [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
                 }
             }
         }
-    }else{
-        for (UIButton *btn in self.view.subviews) {
-            if ([btn isKindOfClass:[UIButton class]]) {
-                if (btn.tag != 103 && btn.tag != 101 && btn.tag != 102) {
-                    [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-                    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-                }
-            }
-        }
-    }
+//    }else{
+//        for (UIButton *btn in self.view.subviews) {
+//            if ([btn isKindOfClass:[UIButton class]]) {
+//                if (btn.tag != 103 && btn.tag != 101 && btn.tag != 102) {
+//                    [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+//                    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//                }
+//            }
+//        }
+//    }
     
     //以下是对所有的数组进行初始化，对数据进行支持
     

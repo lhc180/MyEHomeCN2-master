@@ -7,14 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MyESwitchScheduleViewController.h"
+#import "MyEScheduleCell.h"
 #import "MyESwitchScheduleSettingViewController.h"
-@interface MyESwitchAutoViewController : UIViewController<MyEDataLoaderDelegate>{
+@interface MyESwitchAutoViewController : UITableViewController<MyEDataLoaderDelegate>{
     MBProgressHUD *HUD;
 }
 @property(strong, nonatomic) MyEDevice *device;
 @property(strong, nonatomic) MyESwitchAutoControl *control;
-@property (weak, nonatomic) IBOutlet UISegmentedControl *enableSeg;
-@property(nonatomic) BOOL jumpFromSubView;
 @property(nonatomic) BOOL needRefresh;
 @end

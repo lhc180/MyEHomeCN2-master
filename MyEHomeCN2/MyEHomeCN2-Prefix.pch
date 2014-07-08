@@ -105,6 +105,7 @@
 
 #define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height-568)?NO:YES)
 #define IS_IOS6 (([[UIDevice currentDevice].systemVersion intValue]-6)?NO:YES)
+#define MainColor [UIColor colorWithRed:0.27 green:0.78 blue:0.86 alpha:1]
 
 
 /*-------------------------LOGIN-------------------------------*/

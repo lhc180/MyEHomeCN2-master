@@ -61,8 +61,11 @@
 //    self.navigationController.topViewController.title = @"标准库";
 //    vc.navigationController.navigationBar.topItem.title = @"标准库";
     [self downloadAcBrandsAndModules];
-    
-    if (!IS_IOS6) {
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didEnterBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+//    if (!IS_IOS6) {
         for (UIButton *btn in self.view.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 if (btn.tag == 100 || btn.tag == 101) {
@@ -76,17 +79,33 @@
                 }
             }
         }
-    }else{
-        for (UIButton *btn in self.view.subviews) {
-            if (btn.tag == 100 || btn.tag == 101) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-            }
-        }
-    }
+//    }else{
+//        for (UIButton *btn in self.view.subviews) {
+//            if (btn.tag == 100 || btn.tag == 101) {
+//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//            }
+//        }
+//    }
 }
 
 #pragma mark - private methods
+-(void)didEnterBackground{
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
+    [cancelButton removeFromSuperview];
+    [timer invalidate];
+    [HUD hide:YES];
+    self.device.brand = @"";
+    self.device.brandId = 0;
+    self.device.model = @"";
+    self.device.modelId = 0;
+    //特别注意此处对于label内容更新的处理
+    for (UILabel *l in self.view.superview.superview.subviews) {
+        if ([l isKindOfClass:[UILabel class]] && l.tag == 100) {
+            l.text = @"空调未初始化";
+        }
+    }
+}
 //这个不能删掉。是用来取消HUD的
 -(void)defineTapGestureRecognizerOnWindow{
     tapGestureToHideHUD = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideHUD)];
@@ -174,6 +193,7 @@
     };
 }
 -(void)cancelAcInit{
+    [UIApplication sharedApplication].idleTimerDisabled = NO;
 //    //写这个是为了取消初始化点击后，后台不在进行请求
 //    requestCircles = 4;
     [timer invalidate]; //取消初始化的时候就把timer注销掉
@@ -191,11 +211,13 @@
         NSLog(@"%@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [HUD hide:YES];
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
             return;
         }
         if ([MyEUtil getResultFromAjaxString:string] != 1) {
             [HUD hide:YES];
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
             HUD.detailsLabelText = @"进度查询失败!";
 //            [MyEUtil showMessageOn:self.navigationController.view withMessage:@"初始化进度查询失败"];
         }else{
@@ -220,12 +242,14 @@
                     [cancelButton removeFromSuperview];
 //#warning 这里添加一个下载失败的笑脸图案
                     HUD.detailsLabelText = @"空调初始化失败";
+                    [UIApplication sharedApplication].idleTimerDisabled = NO;
                     [self defineTapGestureRecognizerOnWindow];
                 }
             }else{
                 if (progress < 100) {
                     timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkAcInitProgress) userInfo:nil repeats:NO];
                 }else{
+                    [UIApplication sharedApplication].idleTimerDisabled = NO;
                     [timer invalidate];
                     [cancelButton removeFromSuperview];
                     HUD.customView = imageView;
@@ -256,6 +280,7 @@
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
             [HUD hide:YES];
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
             [cancelButton removeFromSuperview];
             return;
         }
@@ -268,6 +293,7 @@
                 HUD.detailsLabelText = @"空调初始化失败";
 //                [MyEUtil showMessageOn:self.navigationController.view withMessage:@"空调初始化失败"];
                 [cancelButton removeFromSuperview];
+                [UIApplication sharedApplication].idleTimerDisabled = NO;
                 [HUD hide:YES afterDelay:2];
             }
         }else{
@@ -546,6 +572,7 @@
     DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"现在开始下载所选型号控制码，如果之前已下载则会覆盖，确定开始么？" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
     [alert show];
     alert.rightBlock = ^{
+        [UIApplication sharedApplication].idleTimerDisabled = YES;
         /*---------------初始化cancelBtn---------------*/
         cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
         cancelButton.frame = CGRectMake(60, screenHigh-20-44-44, 200, 40);

@@ -54,7 +54,7 @@
             v.layer.cornerRadius = 4;
         }
     }
-    if (!IS_IOS6) {
+//    if (!IS_IOS6) {
         for (UIButton *btn in view1.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
@@ -69,14 +69,14 @@
                 btn.layer.cornerRadius = 4;
             }
         }
-    }else{
-        for (UIButton *btn in view1.subviews) {
-            if ([btn isKindOfClass:[UIButton class]] && btn.tag != 100) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-            }
-        }
-    }
+//    }else{
+//        for (UIButton *btn in view1.subviews) {
+//            if ([btn isKindOfClass:[UIButton class]] && btn.tag != 100) {
+//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//            }
+//        }
+//    }
     /*----------------------------------定义picker--------------------------------------------*/
     if (IS_IOS6) {
         pickerViewContainer = [[UIView alloc] initWithFrame:CGRectMake(0, screenHigh, screenwidth, 260)];

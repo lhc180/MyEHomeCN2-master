@@ -50,21 +50,21 @@
         }
     }
 
-    if (!IS_IOS6) {
+//    if (!IS_IOS6) {
         for (UIButton *btn in view1.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
                 [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
             }
         }
-    }else{
-        for (UIButton *btn in view1.subviews) {
-            if ([btn isKindOfClass:[UIButton class]]) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-            }
-        }
-    }
+//    }else{
+//        for (UIButton *btn in view1.subviews) {
+//            if ([btn isKindOfClass:[UIButton class]]) {
+//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//            }
+//        }
+//    }
     lowTempArray = [NSMutableArray array];
     highTempArray = [NSMutableArray array];
     for (int i=0; i<19; i++) {
@@ -173,6 +173,9 @@
         }
     }
     [self decideIfComfortChanged];
+    if (!self.device.isSystemDefined) {
+        return;
+    }
     //只有enableAcAutoRunSwitch开启的时候才能限制tabbar的点击
     if (self.enableTempMonitorSwitch.isOn && self.enableAcAutoRunSwitch.isOn) {
         UINavigationController *nav1 = [self.tabBarController childViewControllers][1];

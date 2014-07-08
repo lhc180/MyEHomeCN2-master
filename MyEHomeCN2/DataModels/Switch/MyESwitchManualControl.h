@@ -26,7 +26,7 @@
 @property(nonatomic) NSInteger remainMinute;
 @property(nonatomic, strong) NSTimer *timer;    //这里创建了一个NSTimer，用以记录当前的倒计时状态，这个要特别注意
 @property(nonatomic) NSInteger timerValue;   //这个表示的是timer的初始时间
-
+@property(nonatomic, assign) BOOL disable;
 
 -(MyESwitchChannelStatus *)initWithString:(NSString *)string;
 -(MyESwitchChannelStatus *)initWithDic:(NSDictionary *)dic;

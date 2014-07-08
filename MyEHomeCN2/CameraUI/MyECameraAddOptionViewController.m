@@ -129,6 +129,7 @@
     [HUD hide:YES];
     if (hasNew) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"局域网检测到[%i]个设备,已成功完成添加",[_wlanSearchDevices count]] delegate:self cancelButtonTitle:nil otherButtonTitles:@"知道了", nil];
+        alert.tag = 10;
         [alert show];
 //        [self presentVCToAddDeviceWithTag:1];
     }else{
@@ -204,5 +205,6 @@
 #pragma mark - UIAlertView delegate methods
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     [self.cameraList addObjectsFromArray:_wlanUsefullDevices];
+    [self.navigationController popViewControllerAnimated:YES];
 }
 @end

@@ -36,7 +36,7 @@
 
 //    self.navigationController.topViewController.title = @"自学习库";
 //    self.navigationController.navigationBar.topItem.title = @"自学习库";
-    if (!IS_IOS6) {
+//    if (!IS_IOS6) {
         for (UIButton *btn in self.view.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 if (btn.tag == 100 || btn.tag == 101) {
@@ -50,14 +50,15 @@
                 }
             }
         }
-    }else{
-        for (UIButton *btn in self.view.subviews) {
-            if (btn.tag == 100 || btn.tag == 101) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-            }
-        }
-    }
+        
+//    }else{
+//        for (UIButton *btn in self.view.subviews) {
+//            if (btn.tag == 100 || btn.tag == 101) {
+//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+//            }
+//        }
+//    }
 }
 -(void)refreshData:(BOOL)yes{
     if (yes) {
