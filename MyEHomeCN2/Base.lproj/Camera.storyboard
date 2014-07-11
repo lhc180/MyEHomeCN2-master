@@ -71,7 +71,6 @@
                                             <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
-                                        <state key="selected" image="video-control-off"/>
                                         <connections>
                                             <action selector="snapImage:" destination="we2-Pz-jeV" eventType="touchUpInside" id="B4S-TF-bDq"/>
                                         </connections>
@@ -1020,7 +1019,6 @@
         <image name="DMVideoFullScreen" width="24" height="19"/>
         <image name="back" width="48" height="30"/>
         <image name="lock" width="20" height="20"/>
-        <image name="video-control-off" width="75" height="45"/>
     </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>

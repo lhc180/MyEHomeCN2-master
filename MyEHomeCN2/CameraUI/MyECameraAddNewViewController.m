@@ -26,7 +26,7 @@
     self.txtName.text = _camera.name;
     self.txtUsername.text = _camera.username;
     self.txtUID.text = self.camera.UID;
-  
+    
     if (self.jumpFromWhere == 1) {
         self.lblTitle.text = @"检测到当前WIFI环境下存在以下设备";
     }else if (self.jumpFromWhere == 2){
@@ -34,7 +34,7 @@
     }else{
         self.lblTitle.text = @"请手动输入以下信息";
     }
-  
+    
     for (UIButton *btn in self.view.subviews) {
         if ([btn isKindOfClass:[UIButton class]]) {
             if (btn.tag == 101) {
@@ -50,7 +50,7 @@
             }
         }
     }
-
+    
 }
 
 - (void)didReceiveMemoryWarning
@@ -108,6 +108,15 @@
         [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"添加失败" andTag:NO];
     }
 }
+-(void)addCameraToList{
+    [HUD hide:YES];
+    if (_canAddNew) {
+        [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"添加成功" andTag:YES];
+        [self.cameraList addObject:self.camera];
+        [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+    }else
+        [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"添加失败" andTag:NO];
+}
 #pragma mark - IBAction methods
 - (IBAction)dissmissVC:(UIButton *)sender {
     self.cancelBtnClicked = YES;
@@ -119,15 +128,26 @@
     self.camera.name = self.txtName.text;
     self.camera.UID = self.txtUID.text;
     NSLog(@"%@",self.camera);
-    if (HUD == nil) {
-        HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+    BOOL isNew = YES;
+    for (MyECamera *c in self.cameraList) {
+        if ([c.UID isEqualToString:self.camera.UID]) {
+            isNew = NO;
+            break;
+        }
     }
-    [HUD show:YES];
-    HUD.labelText = @"正在验证...";
-    _timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(handelTimer) userInfo:nil repeats:NO];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self ConnectCam];
-    });
+    if (isNew) {
+        if (HUD == nil) {
+            HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+        }
+        [HUD show:YES];
+        HUD.labelText = @"正在验证...";
+        _timer = [NSTimer scheduledTimerWithTimeInterval:6 target:self selector:@selector(addCameraToList) userInfo:nil repeats:NO];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self ConnectCam];
+        });
+    }else
+        [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"设备已存在" andTag:NO];
+    
 }
 #pragma mark - PPPPStatusDelegate methods
 - (void) PPPPStatus: (NSString*) strDID statusType:(NSInteger) statusType status:(NSInteger) status{

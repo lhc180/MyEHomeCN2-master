@@ -98,14 +98,14 @@
 - (void)handleTimer:(NSTimer *)timer{
     [self stopSearch];
     NSLog(@"%@",_wlanSearchDevices);
-    _wlanUsefullDevices = _wlanSearchDevices;
+    _wlanUsefullDevices = [_wlanSearchDevices mutableCopy];
     BOOL hasNew = NO;
     if ([_wlanSearchDevices count]) {
         if ([self.cameraList count]) {
             BOOL hasOne = NO;
-            for (MyECamera *c in _wlanSearchDevices) {
-                for (MyECamera *c1 in self.cameraList) {
-                    if ([c.UID isEqualToString:c1.UID]) {
+            for (NSString *UID in _wlanSearchDevices) {
+                for (MyECamera *c in self.cameraList) {
+                    if ([UID isEqualToString:c.UID]) {
                         hasOne = YES;
                     }
 //                    if (![c.UID isEqualToString:c1.UID]) {  //只有所有都不一样的时候才能够新增设备
@@ -115,7 +115,7 @@
 //                    }
                 }
                 if (hasOne) {
-                    [_wlanUsefullDevices removeObject:c];
+                    [_wlanUsefullDevices removeObject:UID];
                 }
             }
             if ([_wlanUsefullDevices count]) {
@@ -128,10 +128,11 @@
     }
     [HUD hide:YES];
     if (hasNew) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"局域网检测到[%i]个设备,已成功完成添加",[_wlanSearchDevices count]] delegate:self cancelButtonTitle:nil otherButtonTitles:@"知道了", nil];
-        alert.tag = 10;
-        [alert show];
-//        [self presentVCToAddDeviceWithTag:1];
+        _camera.UID = _wlanUsefullDevices[0];
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"局域网检测到[%i]个设备,已成功完成添加",[_wlanSearchDevices count]] delegate:self cancelButtonTitle:nil otherButtonTitles:@"知道了", nil];
+//        alert.tag = 10;
+//        [alert show];
+        [self presentVCToAddDeviceWithTag:1];
     }else{
         [MyEUtil showThingsSuccessOn:self.view WithMessage:@"未找到新设备" andTag:NO];
     }
@@ -182,17 +183,31 @@
 #pragma mark SearchCameraResultProtocol
 
 - (void) SearchCameraResult:(NSString *)mac Name:(NSString *)name Addr:(NSString *)addr Port:(NSString *)port DID:(NSString*)did{
-    NSLog(@"name is %@ UID is %@ MAC is %@ add is %@",name, did,mac,addr);
-    MyECamera *camera = [[MyECamera alloc] init];
-    camera.name = name;
-    camera.UID = did;
+//    NSLog(@"name is %@ UID is %@ MAC is %@ add is %@",name, did,mac,addr);
+//    MyECamera *camera = [[MyECamera alloc] init];
+//    camera.name = name;
+//    camera.UID = did;
+//    if (![_wlanSearchDevices count]) {
+//        [_wlanSearchDevices addObject:camera];
+//    }else{
+//        for (MyECamera *c in _wlanSearchDevices) {
+//            if (![camera.UID isEqualToString:c.UID]) {
+//                [_wlanSearchDevices addObject:camera];
+//            }
+//        }
+//    }
     if (![_wlanSearchDevices count]) {
-        [_wlanSearchDevices addObject:camera];
+        [_wlanSearchDevices addObject:did];
     }else{
-        for (MyECamera *c in _wlanSearchDevices) {
-            if (![camera.UID isEqualToString:c.UID]) {
-                [_wlanSearchDevices addObject:camera];
+        BOOL isNew = YES;
+        for (NSString *c in _wlanSearchDevices) {
+            if ([c isEqualToString:did]) {
+                isNew = NO;
+                break;
             }
+        }
+        if (isNew) {
+            [_wlanSearchDevices addObject:did];
         }
     }
 }
