@@ -21,8 +21,15 @@
         self.roomId = [dic[@"roomId"] intValue];
         self.powerType = [dic[@"powerType"] intValue];
         self.reportTime = [dic[@"reporteTime"] intValue];
+        self.type = [dic[@"loadType"] intValue];
         return self;
     }
     return nil;
+}
+-(NSArray *)typeArray{
+    return @[@"日光灯/节能灯",@"白炽灯"];
+}
+-(NSString *)changeTypeToString{
+    return [self typeArray][self.type];
 }
 @end

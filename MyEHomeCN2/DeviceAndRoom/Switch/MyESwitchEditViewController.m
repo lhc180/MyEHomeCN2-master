@@ -7,6 +7,7 @@
 //
 
 #import "MyESwitchEditViewController.h"
+#import "MyESettingsViewController.h"
 
 @interface MyESwitchEditViewController ()
 
@@ -14,14 +15,6 @@
 
 @implementation MyESwitchEditViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
@@ -41,7 +34,6 @@
             self.navigationItem.rightBarButtonItem.enabled = NO;
     }];
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
@@ -114,7 +106,7 @@
     [self.nameTextField endEditing:YES];
 }
 -(void)checkIfChange{
-    NSArray *array = @[self.nameTextField.text,self.roomLabel.text,@(_reportTime),@(_selectedIndex)];
+    NSArray *array = @[self.nameTextField.text,self.roomLabel.text,@(_type),@(_value),@(_reportTime),@(_selectedIndex)];
     if (![array isEqualToArray:_initArray]) {
         self.navigationItem.rightBarButtonItem.enabled = YES;
     } else {
@@ -133,8 +125,11 @@
             [self setPowerStatus];
             _reportTime = self.switchInfo.reportTime;
             self.tableLabel.text = [NSString stringWithFormat:@"定时上报(%li分钟)",(long)_reportTime==0?10:(long)_reportTime];
-            
-            _initArray = @[self.nameTextField.text,self.roomLabel.text,@(_reportTime),@(_selectedIndex)];  //这里使用的新的语法书写这个数组，值得注意
+            _type = self.switchInfo.type;
+            self.typeLbl.text = [self.switchInfo changeTypeToString];
+            _value = self.switchInfo.value;
+            self.valueLbl.text = [NSString stringWithFormat:@"%i",_value];
+            _initArray = @[self.nameTextField.text,self.roomLabel.text,@(_type),@(_value),@(_reportTime),@(_selectedIndex)];  //这里使用的新的语法书写这个数组，值得注意
             
             [self.tableView reloadData];  //这里一定要记得更新表格
         }
@@ -150,6 +145,9 @@
         if ([MyEUtil getResultFromAjaxString:string] == 1) {
             self.device.name = self.nameTextField.text;
             self.device.roomId = _room.roomId;
+            UINavigationController *nav = self.navigationController.tabBarController.childViewControllers[4];
+            MyESettingsViewController *vc = nav.childViewControllers[0];
+            vc.isFresh = YES;
             [self.navigationController popViewControllerAnimated:YES];
         }
         if ([MyEUtil getResultFromAjaxString:string] == -3) {

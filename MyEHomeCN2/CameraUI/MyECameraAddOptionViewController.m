@@ -64,7 +64,7 @@
     formSheet.shadowOpacity = 0.3;
     formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsMoveToTop;
     formSheet.shouldDismissOnBackgroundViewTap = NO;
-    formSheet.preferredContentSize = CGSizeMake(280, 300);
+//    formSheet.preferredContentSize = CGSizeMake(280, 300);
     
     formSheet.willPresentCompletionHandler = ^(UIViewController *presentedFSViewController) {
         // Passing data
@@ -128,11 +128,21 @@
     }
     [HUD hide:YES];
     if (hasNew) {
-        _camera.UID = _wlanUsefullDevices[0];
-//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil message:[NSString stringWithFormat:@"局域网检测到[%i]个设备,已成功完成添加",[_wlanSearchDevices count]] delegate:self cancelButtonTitle:nil otherButtonTitles:@"知道了", nil];
-//        alert.tag = 10;
-//        [alert show];
-        [self presentVCToAddDeviceWithTag:1];
+        if (_wlanUsefullDevices.count == 1) {
+            self.camera.UID = _wlanUsefullDevices[0];
+            [self presentVCToAddDeviceWithTag:1];
+        }else{
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New Camera" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:
+                                  _wlanUsefullDevices[0],
+                                  _wlanUsefullDevices.count>1?_wlanUsefullDevices[1]:nil,
+                                  _wlanUsefullDevices.count>2?_wlanUsefullDevices[2]:nil,
+                                  _wlanUsefullDevices.count>3?_wlanUsefullDevices[3]:nil,
+                                  _wlanUsefullDevices.count>4?_wlanUsefullDevices[4]:nil,
+                                  _wlanUsefullDevices.count>5?_wlanUsefullDevices[5]:nil,
+                                  _wlanUsefullDevices.count>6?_wlanUsefullDevices[6]:nil,nil];
+            alert.tag = 100;
+            [alert show];
+        }
     }else{
         [MyEUtil showThingsSuccessOn:self.view WithMessage:@"未找到新设备" andTag:NO];
     }
@@ -219,7 +229,9 @@
 
 #pragma mark - UIAlertView delegate methods
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    [self.cameraList addObjectsFromArray:_wlanUsefullDevices];
-    [self.navigationController popViewControllerAnimated:YES];
+    if (alertView.tag == 100 && buttonIndex > 0) {
+        self.camera.UID = _wlanUsefullDevices[buttonIndex -1];
+        [self presentVCToAddDeviceWithTag:1];
+    }
 }
 @end

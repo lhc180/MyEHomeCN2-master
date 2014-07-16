@@ -600,7 +600,7 @@
         return;
     }
     if(![device isConnected]){
-        [MyEUtil showMessageOn:self.view withMessage:@"智控星没有信号, 无法进行控制"];
+        [MyEUtil showMessageOn:self.view withMessage:@"设备没有信号, 无法进行控制"];
         return;
     }
     

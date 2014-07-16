@@ -298,7 +298,7 @@
     if ([vc isKindOfClass:[MyETerminalSettingViewController class]]) {
         [vc setValue:self.accountData forKey:@"accountData"];
     }
-    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+//    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 @end

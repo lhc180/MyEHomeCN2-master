@@ -425,7 +425,7 @@
 #pragma mark - Wifi Param Protocol
 - (void) WifiParams: (NSString*)strDID enable:(NSInteger)enable ssid:(NSString*)strSSID channel:(NSInteger)channel mode:(NSInteger)mode authtype:(NSInteger)authtype encryp:(NSInteger)encryp keyformat:(NSInteger)keyformat defkey:(NSInteger)defkey strKey1:(NSString*)strKey1 strKey2:(NSString*)strKey2 strKey3:(NSString*)strKey3 strKey4:(NSString*)strKey4 key1_bits:(NSInteger)key1_bits key2_bits:(NSInteger)key2_bits key3_bits:(NSInteger)key3_bits key4_bits:(NSInteger)key4_bits wpa_psk:(NSString*)wpa_psk{
 //    NSLog(@"Camera WifiParams.....strDID: %@, enable:%d, ssid:%@, channel:%d, mode:%d, authtype:%d, encryp:%d, keyformat:%d, defkey:%d, strKey1:%@, strKey2:%@, strKey3:%@, strKey4:%@, key1_bits:%d, key2_bits:%d, key3_bits:%d, key4_bits:%d, wap_psk:%@", strDID, enable, strSSID, channel, mode, authtype, encryp, keyformat, defkey, strKey1, strKey2, strKey3, strKey4, key1_bits, key2_bits, key3_bits, key4_bits, wpa_psk);
-    [self performSelectorOnMainThread:@selector(refreshUIWithArray:) withObject:@[@4,strSSID] waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(refreshUIWithArray:) withObject:@[@4,[strSSID isEqualToString:@"ChinaNet"]?@"网线连接":strSSID] waitUntilDone:YES];
 }
 #pragma mark - ParamNotifyProtocol
 - (void) ParamNotify: (int) paramType params:(void*) params{

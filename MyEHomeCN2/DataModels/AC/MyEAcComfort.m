@@ -15,8 +15,8 @@
 - (MyEAcComfort *)initWithDictionary:(NSDictionary *)dictionary {
     if (self = [super init]) {
         self.comfortFlag = [[dictionary objectForKey:@"comfortFlag"] intValue] == 1;
-        self.comfortRiseTime = [dictionary objectForKey:@"comfortRiseTime"];
-        self.comfortSleepTime = [dictionary objectForKey:@"comfortSleepTime"];
+        self.comfortRiseTime = [dictionary objectForKey:@"comfortRiseTime"]==nil?@"8:00":[dictionary objectForKey:@"comfortRiseTime"];
+        self.comfortSleepTime = [dictionary objectForKey:@"comfortSleepTime"]== nil?@"22:00":[dictionary objectForKey:@"comfortSleepTime"];
         self.provinceId = dictionary[@"ProvinceCode"];
         self.cityId = dictionary[@"code"];
         return self;

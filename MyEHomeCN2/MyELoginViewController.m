@@ -375,6 +375,19 @@
         [array writeToFile:[self dataFilePath] atomically:YES];
     }
 }
+-(void)deletePrefsInPlist{
+    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
+    NSMutableArray *users = [self getUsersFromPlist];
+    NSMutableArray *usersCache = users;
+    for (NSDictionary *d in users) {
+        if ([d[@"username"] isEqualToString:[prefs objectForKey:@"username"]]) {
+            [usersCache removeObject:d];
+        }
+    }
+    [prefs removeObjectForKey:@"username"];
+    [prefs removeObjectForKey:@"password"];
+    [usersCache writeToFile:[self dataFilePath] atomically:YES];
+}
 -(void)saveSettings{
     NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
     UIButton *btn = (UIButton *)[self.view viewWithTag:100];
@@ -385,6 +398,7 @@
         [self writeUserInfoInPlist];
     }else {
         [prefs setObject:[NSNumber numberWithBool:NO] forKey:@"rememberme"];
+        [self deletePrefsInPlist];
     }
     [prefs synchronize];
 }

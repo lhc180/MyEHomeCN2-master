@@ -115,11 +115,12 @@
     UIButton *timeBtn = (UIButton *)[cell viewWithTag:102];
     UILabel *delayTimeLabel = (UILabel *)[cell viewWithTag:103];
     UILabel *remainTimeLabel = (UILabel *)[cell viewWithTag:104];
-    if (status.disable) {
+    if (!status.disable) {
+        switchBtn.enabled = YES;
+        timeBtn.enabled = YES;
+    }else
         titleLabel.textColor = [UIColor lightGrayColor];
-        switchBtn.enabled = NO;
-        timeBtn.enabled = NO;
-    }
+
 //    [_UIArray addObject:@[switchBtn,remainTimeLabel]];
     titleLabel.text = [NSString stringWithFormat:@"通道%li",(long)indexPath.row+1];
     if (status.switchStatus == 1) {

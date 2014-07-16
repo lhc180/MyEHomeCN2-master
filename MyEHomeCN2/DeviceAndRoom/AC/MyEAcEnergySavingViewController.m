@@ -291,7 +291,7 @@
 //    [UIView commitAnimations];
     [self ViewAnimation:pickerViewContainer willHidden:NO];
     buttonTag = 0;
-    [self.picker selectRow:[_timeArray indexOfObject:sender.currentTitle] inComponent:0 animated:YES];
+    [self.picker selectRow:[_timeArray containsObject:sender.currentTitle]?[_timeArray indexOfObject:sender.currentTitle]:0 inComponent:0 animated:YES];
 }
 - (IBAction)sleepTimeAction:(UIButton *)sender {
 //    // Show UIPickerView
@@ -306,7 +306,7 @@
 //    [UIView commitAnimations];
     [self ViewAnimation:pickerViewContainer willHidden:NO];
     buttonTag = 1;
-    [self.picker selectRow:[_timeArray indexOfObject:sender.currentTitle] inComponent:0 animated:YES];
+    [self.picker selectRow:[_timeArray containsObject:sender.currentTitle]?[_timeArray indexOfObject:sender.currentTitle]:0 inComponent:0 animated:YES];
 }
 
 - (IBAction)saveComfortAction:(UIBarButtonItem *)sender {

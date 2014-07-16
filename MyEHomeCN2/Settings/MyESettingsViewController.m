@@ -8,7 +8,7 @@
 
 #import "MyESettingsViewController.h"
 #import "MyEMainTabBarController.h"
-
+#import "MyESubSwitchListViewController.h"
 @interface MyESettingsViewController ()
 
 @end
@@ -55,9 +55,25 @@
         [self downloadSettingsDataFromServer];
     }
     if (self.isFresh) {
+        self.isFresh = NO;
         [self downloadSettingsDataFromServer];
     }
     [self.tableView reloadData];
+}
+
+#pragma mark - UITableView delegate methods
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (section == 0) {
+        return 2;
+    }else if (section == 3){
+        if ([self.settings.subSwitchList count]) {
+            return 3;
+        }else
+            return 2;
+    }else if (section == 4){
+        return 2;
+    }else
+        return 1;
 }
 #pragma mark
 #pragma mark - provite methods
@@ -145,10 +161,14 @@
                 MyESettingsTerminalsViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"terminal"];
                 [vc setValue:self.accountData forKey:@"accountData"];
                 [self.navigationController pushViewController:vc animated:YES];
-            }else{
+            }else if(indexPath.row == 1){
                 MyEsettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"mediator"];
                 vc.accountData = self.accountData;
                 vc.jumpFromSettings = YES;
+                [self.navigationController pushViewController:vc animated:YES];
+            }else{
+                MyESubSwitchListViewController *vc = [[UIStoryboard storyboardWithName:@"settings" bundle:nil] instantiateViewControllerWithIdentifier:@"subSwitch"];
+                vc.settings = self.settings;
                 [self.navigationController pushViewController:vc animated:YES];
             }
             break;
@@ -286,7 +306,7 @@
         [notification setOn:settings.enableNotification == 0?NO:YES animated:YES];
         [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
         terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[accountData.terminals count]];
-        
+        self.subSwitchCount.text = [NSString stringWithFormat:@"%i",self.settings.subSwitchList.count];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:settings.provinceId forKey:@"provinceId"];
         [prefs setObject:settings.cityId forKey:@"cityId"];

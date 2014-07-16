@@ -7,7 +7,7 @@
 //
 
 #import "MyESocketSettingsViewController.h"
-
+#import "MyEDevicesViewController.h"
 @interface MyESocketSettingsViewController ()
 
 @end
@@ -125,6 +125,21 @@
         [_saveBtn setTitle:@"更改名称" forState:UIControlStateNormal];
         nameTextField.userInteractionEnabled = NO;
         terminal.name = nameTextField.text;
+        //当名称修改成功后要及时修改本地数据，达到数据一致性要求
+        UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
+        MyEDevicesViewController *vc = [nav childViewControllers][0];
+        for (MyETerminal *t in vc.accountData.terminals) {
+            if ([t isKindOfClass:[MyETerminal class]]) {
+                if ([t.tId isEqualToString:self.terminal.tId]) {
+                    t.name = self.nameTextField.text;
+                }
+            }
+        }
+        for (MyEDevice *device in vc.accountData.devices) {
+            if ([device.tId isEqualToString:self.terminal.tId]) {
+                device.name = self.nameTextField.text;
+            }
+        }
         [MyEUtil showMessageOn:self.navigationController.view withMessage:@"终端名称更改成功"];
     }
 }

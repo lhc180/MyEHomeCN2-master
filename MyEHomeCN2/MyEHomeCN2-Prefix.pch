@@ -203,3 +203,7 @@
 #define URL_FOR_SWITCH_SCHEDULE_SAVE   @"http://www.myenergydomain.com.cn/phone/switch_schedule_save.jhtml"
 #define URL_FOR_SWITCH_SCHEDULE_ENABLE  @"http://www.myenergydomain.com.cn/phone/switch_auto_control_enable_save.jhtml"
 #define URL_FOR_SWITCH_ELECT_STATUS   @"http://www.myenergydomain.com.cn/phone/switch_elec_stat.jhtml"
+//subSwitch
+#define URL_FOR_SUBSWITCH_INFO @"http://www.myenergydomain.com.cn/phone/system_sub_switch_by_tid.jhtml"
+#define URL_FOR_SUBSWITCH_BIND @"http://www.myenergydomain.com.cn/phone/ system_save_main_sub_relation.jhtml"
+#define URL_FOR_SUBSWITCH_DELETE @"http://www.myenergydomain.com.cn/phone/system_remove _sub_switch.jhtml"

@@ -14,7 +14,11 @@
 @property(nonatomic) NSInteger roomId;
 @property(nonatomic) NSInteger powerType;
 @property(nonatomic) NSInteger reportTime;
+@property(nonatomic, assign) NSInteger type;
+@property(nonatomic, assign) NSInteger value;
 
 -(MyESwitchInfo *)initWithString:(NSString *)string;
 -(MyESwitchInfo *)initWithDic:(NSDictionary *)dic;
+-(NSArray *)typeArray;
+-(NSString *)changeTypeToString;
 @end

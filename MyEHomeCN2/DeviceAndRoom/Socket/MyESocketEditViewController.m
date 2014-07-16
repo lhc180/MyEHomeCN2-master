@@ -8,7 +8,7 @@
 
 #import "MyESocketEditViewController.h"
 
-#import "MyEDevicesViewController.h"
+#import "MyESettingsViewController.h"
 
 #define SOCKET_EDIT_UPLOADER_NMAE @"DeviceAddEditUploader"
 
@@ -200,10 +200,11 @@
         if ([MyEUtil getResultFromAjaxString:string] != 1) {
             [MyEUtil showErrorOn:self.navigationController.view withMessage:@"修改插座失败，请修改名称后重试！"];
         } else{
-            MyEDevicesViewController *dvc = [[self.navigationController childViewControllers] objectAtIndex:0];
             [MyEUtil showSuccessOn:self.navigationController.view withMessage:@"修改插座成功！"];
-            [dvc.tableView reloadData];
-            [self.navigationController popToViewController:dvc animated:YES];
+            UINavigationController *nav = self.navigationController.tabBarController.childViewControllers[4];
+            MyESettingsViewController *vc = nav.childViewControllers[0];
+            vc.isFresh = YES;
+            [self.navigationController popViewControllerAnimated:YES];
             self.device = nil;
         }
     }

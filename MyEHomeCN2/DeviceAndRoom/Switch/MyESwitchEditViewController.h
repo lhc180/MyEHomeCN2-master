@@ -12,7 +12,7 @@
     MBProgressHUD *HUD;
     MyERoom *_room;
     NSInteger _selectedIndex;
-    NSInteger _reportTime;
+    NSInteger _reportTime,_type,_value;
     NSArray *_initArray;  //这里采用数组来记录初始值，以前都是使用的字典
 }
 
@@ -26,5 +26,6 @@
 @property (weak, nonatomic) IBOutlet UITableViewCell *table0;
 @property (weak, nonatomic) IBOutlet UITableViewCell *table1;
 @property (weak, nonatomic) IBOutlet UILabel *tableLabel;
-
+@property (weak, nonatomic) IBOutlet UILabel *typeLbl;
+@property (weak, nonatomic) IBOutlet UILabel *valueLbl;
 @end

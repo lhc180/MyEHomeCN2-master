@@ -52,7 +52,7 @@
     [_keyMap addObject:dict];
     dict = [NSDictionary dictionaryWithObjectsAndKeys:
             [NSNumber numberWithInt:204], @"type",
-            @"频道向前", @"name",
+            @"频道减", @"name",
             self.btnPrevChanel, @"button",
             nil];
     [_keyMap addObject:dict];
@@ -76,7 +76,7 @@
     [_keyMap addObject:dict];
     dict = [NSDictionary dictionaryWithObjectsAndKeys:
             [NSNumber numberWithInt:208], @"type",
-            @"频道向后", @"name",
+            @"频道加", @"name",
             self.btnNextChanel, @"button",
             nil];
     [_keyMap addObject:dict];

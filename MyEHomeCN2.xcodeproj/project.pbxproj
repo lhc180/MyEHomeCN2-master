@@ -165,6 +165,8 @@
 		8CEC605A1828C91200DED60B /* MyEIrStudyEditKeyModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CEC60511828C91200DED60B /* MyEIrStudyEditKeyModalViewController.m */; };
 		8CEC605B1828C91200DED60B /* MyETvDefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CEC60541828C91200DED60B /* MyETvDefaultViewController.m */; };
 		8CEC64C91921ACFF005953FB /* MyESocketElecViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CEC64C81921ACFF005953FB /* MyESocketElecViewController.m */; };
+		8CED813B1973B42800B54A2F /* MyESubSwitchListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CED813A1973B42800B54A2F /* MyESubSwitchListViewController.m */; };
+		8CED813E1973B43E00B54A2F /* MyESubSwitchEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CED813D1973B43E00B54A2F /* MyESubSwitchEditViewController.m */; };
 		8CF1EAB219108C5E00A326DC /* MyECameraAddNewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF1EAB119108C5E00A326DC /* MyECameraAddNewViewController.m */; };
 		8CF1EAB91910C4ED00A326DC /* IpCameraClient.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8CF1EAB81910C4ED00A326DC /* IpCameraClient.strings */; };
 		8CF76C3818C8450D004BA3C7 /* MyESwitchAutoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CF76C3718C8450D004BA3C7 /* MyESwitchAutoViewController.m */; };
@@ -665,6 +667,10 @@
 		8CEC60541828C91200DED60B /* MyETvDefaultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyETvDefaultViewController.m; sourceTree = "<group>"; };
 		8CEC64C71921ACFF005953FB /* MyESocketElecViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESocketElecViewController.h; sourceTree = "<group>"; };
 		8CEC64C81921ACFF005953FB /* MyESocketElecViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESocketElecViewController.m; sourceTree = "<group>"; };
+		8CED81391973B42800B54A2F /* MyESubSwitchListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESubSwitchListViewController.h; sourceTree = "<group>"; };
+		8CED813A1973B42800B54A2F /* MyESubSwitchListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESubSwitchListViewController.m; sourceTree = "<group>"; };
+		8CED813C1973B43E00B54A2F /* MyESubSwitchEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESubSwitchEditViewController.h; sourceTree = "<group>"; };
+		8CED813D1973B43E00B54A2F /* MyESubSwitchEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESubSwitchEditViewController.m; sourceTree = "<group>"; };
 		8CF1EAB019108C5E00A326DC /* MyECameraAddNewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraAddNewViewController.h; sourceTree = "<group>"; };
 		8CF1EAB119108C5E00A326DC /* MyECameraAddNewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraAddNewViewController.m; sourceTree = "<group>"; };
 		8CF1EAB81910C4ED00A326DC /* IpCameraClient.strings */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; path = IpCameraClient.strings; sourceTree = "<group>"; };
@@ -1712,6 +1718,10 @@
 				8CDEF622184860AD006FBA10 /* MyEUserNameResetViewController.m */,
 				8CCB2E7E1892979000CD5C2D /* MyEAboutViewController.h */,
 				8CCB2E7F1892979000CD5C2D /* MyEAboutViewController.m */,
+				8CED81391973B42800B54A2F /* MyESubSwitchListViewController.h */,
+				8CED813A1973B42800B54A2F /* MyESubSwitchListViewController.m */,
+				8CED813C1973B43E00B54A2F /* MyESubSwitchEditViewController.h */,
+				8CED813D1973B43E00B54A2F /* MyESubSwitchEditViewController.m */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2051,6 +2061,7 @@
 				C395033A1813A2AE00950771 /* SBJsonStreamParserAccumulator.m in Sources */,
 				8C242265183D980800D685C1 /* MyEAcInstructionListViewController.m in Sources */,
 				8C41D64718DB1D0B003DFEE0 /* MyEDeviceStatus.m in Sources */,
+				8CED813E1973B43E00B54A2F /* MyESubSwitchEditViewController.m in Sources */,
 				8C384DB41827CE9D00CE8C77 /* MyEScenesDeviceEditOrAddViewController.m in Sources */,
 				8CA6C1D618C5D279004A10D8 /* EColumnChartLabel.m in Sources */,
 				8C2EBF1D18ADE988000AB585 /* MyEUniversal.m in Sources */,
@@ -2177,6 +2188,7 @@
 				8CA6C1D818C5D279004A10D8 /* EFloatBox.m in Sources */,
 				C395033F1813A2AE00950771 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				8CC6D785190FA22100532A05 /* CustomAVRecorder.mm in Sources */,
+				8CED813B1973B42800B54A2F /* MyESubSwitchListViewController.m in Sources */,
 				C3A63F7218248FF10076E7A9 /* MyESettingsTerminalsViewController.m in Sources */,
 				8C41D64A18DB1D0B003DFEE0 /* MyEIrKeySet.m in Sources */,
 				C3A0D42C1820B29E00AB12FE /* MyESceneList.m in Sources */,

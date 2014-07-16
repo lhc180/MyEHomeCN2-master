@@ -31,6 +31,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;
 @property (strong, nonatomic) IBOutlet UISwitch *notification;
 @property (strong, nonatomic) IBOutlet UILabel *terminalsCount;
+@property (weak, nonatomic) IBOutlet UILabel *subSwitchCount;
 @property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 
 @end
