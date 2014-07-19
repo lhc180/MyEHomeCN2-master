@@ -13,21 +13,15 @@
 #define AC_INSTRUCTION_SET_DOWNLOADER_NMAE @"AcUserModelInstructionDownloader"
 #define AC_TEMPERATURE_HUMIDITY_DOWNLOADER_NMAE @"AcTemperatureHumidityDownloader"
 
-@interface MyEAcManualControlViewController ()
+@interface MyEAcManualControlViewController (){
+    NSInteger _humidity,_temperature,_runmode,_switchStatus,_windLevel,_temperatureSet;
+}
 
 @end
 
 @implementation MyEAcManualControlViewController
 @synthesize accountData, device,runMode1,runMode2,runMode3,runMode4,runMode5,windLevel,windLevel0,windLevel1,windLevel2,windLevel3,runImage,runLabel,lockLabel,temperatureLabel,homeHumidityLabel,homeTemperatureLabel,tipsLabel,acControlView;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 #pragma mark - life circle methods
 -(void)viewDidDisappear:(BOOL)animated{
     [timerToRefreshTemperatureAndHumidity invalidate];
@@ -36,12 +30,22 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [btn setFrame:CGRectMake(0, 0, 50, 30)];
+    [btn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+    if (!IS_IOS6) {
+        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
+    }
+    [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
+
     isBtnLocked = NO;
     [self setRunModeImageWithRunMode:self.device.status.runMode];
     [self setWindLevelImageWithWindLevel:self.device.status.windLevel];
     temperatureLabel.text = [NSString stringWithFormat:@"%li",(long)self.device.status.setpoint];
     [homeHumidityLabel setText:[NSString stringWithFormat:@"%li%%", (long)self.device.status.humidity]];
     [homeTemperatureLabel setText:[NSString stringWithFormat:@"%li℃", (long)self.device.status.temperature]];
+    
     if (self.device.status.powerSwitch == 0) {
         [self doThisWhenPowerOff];
         powerOn = NO;
@@ -103,10 +107,13 @@
         }else{
             SBJsonParser *parser = [[SBJsonParser alloc] init];
             NSDictionary *dict = [parser objectWithString:string];
-            self.device.status.temperature = [[dict objectForKey:@"temperature"] intValue];
-            self.device.status.humidity = [[dict objectForKey:@"humidity"] intValue];
-            [homeHumidityLabel setText:[NSString stringWithFormat:@"%li%%", (long)self.device.status.humidity]];
-            [homeTemperatureLabel setText:[NSString stringWithFormat:@"%li℃",(long)self.device.status.temperature]];
+            _temperature = [[dict objectForKey:@"temperature"] intValue];
+            _humidity = [[dict objectForKey:@"humidity"] intValue];
+            _switchStatus = [dict[@"switchStatus"] intValue];
+            _runmode = [dict[@"model"] intValue];
+            _windLevel = [dict[@"winLevel"] intValue];
+            _temperatureSet = [dict[@"temperatureSet"] intValue];
+            [self refreshUI];
         }
     }
     if ([name isEqualToString:@"sendInstructionToServer"]) {
@@ -141,8 +148,8 @@
     [HUD hide:YES];
 }
 #pragma mark - IBAction methods
-- (IBAction)dismissVC:(id)sender {
-    [self dismissViewControllerAnimated:YES completion:nil];
+- (IBAction)refreshTemperatureAndHumidity:(UIBarButtonItem *)sender {
+    [self downloadTemperatureHumidityFromServer];
 }
 - (IBAction)poweOnOrOff:(UIButton *)sender {
     if (isBtnLocked) {
@@ -259,6 +266,41 @@
     [self observeBtnClickTimeInterval];
 }
 #pragma mark - private methods
+- (void)dismissVC{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+-(void)refreshUI{
+    if (self.device.status.runMode != _runmode) {
+        self.device.status.runMode = _runmode;
+        [self setRunModeImageWithRunMode:self.device.status.runMode];
+    }
+    if (self.device.status.windLevel != _windLevel) {
+        self.device.status.windLevel = _windLevel;
+        [self setWindLevelImageWithWindLevel:self.device.status.windLevel];
+    }
+    if (self.device.status.setpoint != _temperatureSet) {
+        self.device.status.setpoint = _temperatureSet;
+        temperatureLabel.text = [NSString stringWithFormat:@"%li",(long)self.device.status.setpoint];
+    }
+    if (self.device.status.humidity != _humidity) {
+        self.device.status.humidity = _humidity;
+        [homeHumidityLabel setText:[NSString stringWithFormat:@"%li%%", (long)self.device.status.humidity]];
+    }
+    if (self.device.status.temperature != _temperature) {
+        self.device.status.temperature = _temperature;
+        [homeTemperatureLabel setText:[NSString stringWithFormat:@"%li℃", (long)_temperature]];
+    }
+    if (self.device.status.powerSwitch != _switchStatus) {
+        self.device.status.powerSwitch = _switchStatus;
+        if (self.device.status.powerSwitch == 0) {
+            [self doThisWhenPowerOff];
+            powerOn = NO;
+        }else{
+            powerOn = YES;
+            [self doThisWhenPowerOn];
+        }
+    }
+}
 -(void)doThisWhenPowerOn{
     [self setRunModeImageWithRunMode:self.device.status.runMode];
     [self setWindLevelImageWithWindLevel:self.device.status.windLevel];

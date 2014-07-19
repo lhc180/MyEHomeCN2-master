@@ -11,7 +11,7 @@
 @implementation MyESwitchManualControlViewController
 
 -(void)viewDidLoad{
-//    [(UICollectionView *)self.view.subviews[0] setDelaysContentTouches:NO];
+    //    [(UICollectionView *)self.view.subviews[0] setDelaysContentTouches:NO];
     self.collectionView.delaysContentTouches = NO;
     [self downloadInfo];
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
@@ -23,7 +23,7 @@
     [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
     _timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(downloadInfo) userInfo:nil repeats:YES];
-//    _UIArray = [NSMutableArray array];
+    //    _UIArray = [NSMutableArray array];
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
@@ -55,7 +55,7 @@
     UINavigationController *nav = [self.storyboard instantiateViewControllerWithIdentifier:@"timeDelay"];
     MyEDelayTimeSetViewController *vc = nav.childViewControllers[0];
     MZFormSheetController *formsheet = [[MZFormSheetController alloc] initWithSize:CGSizeMake(260, 294) viewController:nav];
-//    vc.delegate = self;
+    //    vc.delegate = self;
     vc.index = _selectedIndex;
     vc.status = status;
     vc.control = self.control;
@@ -74,13 +74,13 @@
             UINavigationController *nav = self.tabBarController.childViewControllers[1];
             MyESwitchAutoViewController *vc = nav.childViewControllers[0];
             vc.needRefresh = YES;
-
+            
             if (status.switchStatus == 1) {
-//                status.timerValue = status.delayMinute*60+60;
-//                status.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeCount:) userInfo:_UIArray[_selectedIndex.row] repeats:YES];
+                //                status.timerValue = status.delayMinute*60+60;
+                //                status.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeCount:) userInfo:_UIArray[_selectedIndex.row] repeats:YES];
             }else
                 remainTimeLabel.text = [NSString stringWithFormat:@"剩余:0分钟"];
-//            [self.collectionView reloadData];  //这里不能够刷新数据，否则容易造成数据上的错误
+            //            [self.collectionView reloadData];  //这里不能够刷新数据，否则容易造成数据上的错误
         }
     };
     
@@ -115,41 +115,46 @@
     UIButton *timeBtn = (UIButton *)[cell viewWithTag:102];
     UILabel *delayTimeLabel = (UILabel *)[cell viewWithTag:103];
     UILabel *remainTimeLabel = (UILabel *)[cell viewWithTag:104];
-    if (!status.disable) {
+    titleLabel.text = [NSString stringWithFormat:@"通道%li",(long)indexPath.row+1];
+    NSLog(@"%@",status);
+    if (status.disable) {
+        titleLabel.textColor = [UIColor lightGrayColor];
+        switchBtn.enabled = NO;
+        timeBtn.enabled = NO;
+        delayTimeLabel.text = @"";
+        remainTimeLabel.text = @"";
+    }else{
+        titleLabel.textColor = [UIColor blackColor];
         switchBtn.enabled = YES;
         timeBtn.enabled = YES;
-    }else
-        titleLabel.textColor = [UIColor lightGrayColor];
-
-//    [_UIArray addObject:@[switchBtn,remainTimeLabel]];
-    titleLabel.text = [NSString stringWithFormat:@"通道%li",(long)indexPath.row+1];
-    if (status.switchStatus == 1) {
-        switchBtn.selected = NO;
-        if (status.delayStatus == 1) {
-            timeBtn.selected = NO;
-            delayTimeLabel.hidden = NO;
-            remainTimeLabel.hidden = NO;
-            delayTimeLabel.text = [NSString stringWithFormat:@"时长:%li分钟",(long)status.delayMinute];
-            remainTimeLabel.text = [NSString stringWithFormat:@"剩余:%li分钟",(long)status.remainMinute];
-//            status.timerValue = status.remainMinute*60;
-//            status.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeCount:) userInfo:_UIArray[indexPath.row] repeats:YES];
+        if (status.switchStatus == 1) {
+            switchBtn.selected = NO;
+            if (status.delayStatus == 1) {
+                timeBtn.selected = NO;
+                delayTimeLabel.hidden = NO;
+                remainTimeLabel.hidden = NO;
+                delayTimeLabel.text = [NSString stringWithFormat:@"时长:%li分钟",(long)status.delayMinute];
+                remainTimeLabel.text = [NSString stringWithFormat:@"剩余:%li分钟",(long)status.remainMinute];
+                //            status.timerValue = status.remainMinute*60;
+                //            status.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeCount:) userInfo:_UIArray[indexPath.row] repeats:YES];
+            }else{
+                timeBtn.selected = YES;
+                delayTimeLabel.hidden = YES;
+                remainTimeLabel.hidden = YES;
+            }
         }else{
-            timeBtn.selected = YES;
-            delayTimeLabel.hidden = YES;
-            remainTimeLabel.hidden = YES;
-        }
-    }else{
-        switchBtn.selected = YES;
-        if (status.delayStatus == 1) {
-            timeBtn.selected = NO;
-            delayTimeLabel.hidden = NO;
-            remainTimeLabel.hidden = NO;
-            delayTimeLabel.text = [NSString stringWithFormat:@"时长:%li分钟",(long)status.delayMinute];
-            remainTimeLabel.text = [NSString stringWithFormat:@"剩余:0分钟"];
-        }else{
-            timeBtn.selected = YES;
-            delayTimeLabel.hidden = YES;
-            remainTimeLabel.hidden = YES;
+            switchBtn.selected = YES;
+            if (status.delayStatus == 1) {
+                timeBtn.selected = NO;
+                delayTimeLabel.hidden = NO;
+                remainTimeLabel.hidden = NO;
+                //                delayTimeLabel.text = [NSString stringWithFormat:@"时长:%li分钟",(long)status.delayMinute];
+                //                remainTimeLabel.text = [NSString stringWithFormat:@"剩余:0分钟"];
+            }else{
+                timeBtn.selected = YES;
+                delayTimeLabel.hidden = YES;
+                remainTimeLabel.hidden = YES;
+            }
         }
     }
     return cell;
@@ -158,14 +163,14 @@
 - (IBAction)switchControl:(UIButton *)sender {
     UICollectionViewCell *cell = (UICollectionViewCell *)sender.superview.superview;
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];   //这里有两个方法来指定当前的collectionView
-//    NSIndexPath *indexPath = [(UICollectionView *)self.view.subviews[0] indexPathForCell:cell];
+    //    NSIndexPath *indexPath = [(UICollectionView *)self.view.subviews[0] indexPathForCell:cell];
     MyESwitchChannelStatus *status = self.control.SCList[indexPath.row];
     _selectedIndex = indexPath;
     [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?id=%li&switchStatus=%li&action=2",URL_FOR_SWITCH_CONTROL,(long)status.channelId,1-(long)status.switchStatus] andName:@"controlSwitch" andDictionary:@{@"button": sender,@"status":status}];
 }
 - (IBAction)timeControl:(UIButton *)sender {
     UICollectionViewCell *cell = (UICollectionViewCell *)sender.superview.superview;
-//    NSIndexPath *indexPath = [(UICollectionView *)self.view.subviews[0] indexPathForCell:cell];
+    //    NSIndexPath *indexPath = [(UICollectionView *)self.view.subviews[0] indexPathForCell:cell];
     NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
     MyESwitchChannelStatus *status = self.control.SCList[indexPath.row];
     if (!sender.selected) {
@@ -203,7 +208,7 @@
                 [array addObject:@(status.switchStatus)];
             }
             self.device.status.switchStatus = [NSMutableString stringWithString:[array componentsJoinedByString:@""]];
-            [self.collectionView reloadData];
+            [self.collectionView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
         }
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
@@ -224,17 +229,17 @@
             if (status.switchStatus == 1) {
                 if (status.delayStatus == 1) {
                     label.text = [NSString stringWithFormat:@"剩余:%i分钟",status.delayMinute];
-//                    status.timerValue = status.delayMinute*60+60;
-//                    status.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeCount:) userInfo:_UIArray[_selectedIndex.row] repeats:YES];
+                    //                    status.timerValue = status.delayMinute*60+60;
+                    //                    status.timer = [NSTimer scheduledTimerWithTimeInterval:1 target:self selector:@selector(timeCount:) userInfo:_UIArray[_selectedIndex.row] repeats:YES];
                 }
             }else{
-//                [status.timer invalidate];
+                //                [status.timer invalidate];
                 label.text = [NSString stringWithFormat:@"剩余:0分钟"];
             }
             //下面这三句代码主要是为了更改switch在device列表中的状态，这样做的好处就是不需要刷新数据，就可以实时更改开关的状态了
             NSInteger i = [self.control.SCList indexOfObject:status];
             [self.device.status.switchStatus replaceCharactersInRange:NSMakeRange(i, 1)withString:[NSString stringWithFormat:@"%i",status.switchStatus]];
-
+            
         }
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [MyEUniversal doThisWhenUserLogOutWithVC:self];

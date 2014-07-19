@@ -7,17 +7,23 @@
 //
 
 #import "MyEDevicesViewController.h"
+
+#import "MyEACManualControlNavController.h"
 #import "MyEAcManualControlViewController.h"
 #import "MyEAcEnergySavingViewController.h"
 #import "MyEAcTempMonitorViewController.h"
+
 #import "MyEDeviceAddOrEditViewController.h"
+
 #import "MyEAutoControlViewController.h"
 #import "MyEIrControlPageViewController.h"
+
 #import "MyESocketManualControlViewController.h"
 #import "MyESocketTimedControlViewController.h"
 #import "MyESocketEditViewController.h"
 #import "MyESocketElecViewController.h"
-#import "MyECameraTableViewController.h"
+#import "MyESocketAutoControlViewController.h"
+
 #import "MyESettingsViewController.h"
 
 #define DEVICE_ADD_EDIT_UPLOADER_NMAE @"DeviceAddEditUploader"
@@ -308,7 +314,8 @@
         //            tabBarController.edgesForExtendedLayout = UIRectEdgeNone;
         //        }
         
-        UINavigationController *nav0 = [tabBarController childViewControllers][0];
+//        UINavigationController *nav0 = [tabBarController childViewControllers][0];
+        MyEACManualControlNavController *nav0 = tabBarController.childViewControllers[0];
         UINavigationController *nav1 = [tabBarController childViewControllers][1];
         UINavigationController *nav2 = [tabBarController childViewControllers][2];
         UINavigationController *nav3 = [tabBarController childViewControllers][3];
@@ -324,14 +331,16 @@
         if (!device.isSystemDefined) {
             nav2.tabBarItem.enabled = NO;
         }
-        MyEAcManualControlViewController *acManualControlViewController = [[nav0 childViewControllers] objectAtIndex:0];
+//        MyEAcManualControlViewController *acManualControlViewController = [[nav0 childViewControllers] objectAtIndex:0];
         MyEAutoControlViewController *acAutoControlViewController = [[nav1 childViewControllers] objectAtIndex:0];
         MyEAcEnergySavingViewController *acComfortViewController = [[nav2 childViewControllers] objectAtIndex:0];
         MyEAcTempMonitorViewController *tempVC = [[nav3 childViewControllers] objectAtIndex:0];
         
         tabBarController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
-        acManualControlViewController.device = device;
-        acManualControlViewController.accountData = self.accountData;
+//        acManualControlViewController.device = device;
+//        acManualControlViewController.accountData = self.accountData;
+        nav0.device = device;
+        nav0.accountData = self.accountData;
         
         acAutoControlViewController.device = device;
         acAutoControlViewController.accountData = self.accountData;
@@ -377,7 +386,7 @@
         UINavigationController *nav3 = [tabBarController childViewControllers][3];
         MyESocketManualControlViewController *socketManualControlViewController = [[nav0 childViewControllers] objectAtIndex:0];
         MyESocketTimedControlViewController *socketTimedControlViewController = [[nav1 childViewControllers] objectAtIndex:0];
-        MyEAutoControlViewController *socketAutoControlViewController = [[nav2 childViewControllers] objectAtIndex:0];
+        MyESocketAutoControlViewController *socketAutoControlViewController = [[nav2 childViewControllers] objectAtIndex:0];
         MyESocketElecViewController *vc = nav3.childViewControllers[0];
         tabBarController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
         socketManualControlViewController.device = device;
@@ -388,10 +397,9 @@
         socketTimedControlViewController.accountData = self.accountData;
         
         socketAutoControlViewController.device = device;
-        socketAutoControlViewController.accountData = self.accountData;
+//        socketAutoControlViewController.accountData = self.accountData;
         
         vc.device = device;
-        
         [self presentViewController:tabBarController animated:YES completion:nil];
     }
     if (device.type == 7) {
@@ -409,7 +417,6 @@
         
         MyESwitchElecInfoViewController *vc3 = nav3.childViewControllers[0];
         vc3.device = device;
-        
         [self presentViewController:tab animated:YES completion:nil];
     }
 }

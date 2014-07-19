@@ -63,10 +63,10 @@
     if (room) {
         roomName = room.name;
     }
-    if (self.preivousPanelType == 0) {
-        self.roomBtn.enabled = YES;
-    } else
-        self.roomBtn.enabled = NO;
+//    if (self.preivousPanelType == 0) {
+//        self.roomBtn.enabled = YES;
+//    } else
+//        self.roomBtn.enabled = NO;
     
     [self.roomBtn setTitle:roomName forState:UIControlStateNormal];
     [self.maxCurrentBtn setTitle:[NSString stringWithFormat:@"%ld 安培", (long)self.device.status.maxElectricCurrent] forState:UIControlStateNormal];

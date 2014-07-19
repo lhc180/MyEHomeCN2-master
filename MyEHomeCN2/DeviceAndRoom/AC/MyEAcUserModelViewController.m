@@ -29,6 +29,15 @@
 {
     [super viewDidLoad];
 
+    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
+    [btn setFrame:CGRectMake(0, 0, 50, 30)];
+    [btn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
+    if (!IS_IOS6) {
+        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
+    }
+    [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
+
     self.tableView.tableFooterView = [[UIView alloc] init];
     self.tableView.tableFooterView.backgroundColor = [UIColor clearColor];
     [self downloadInstructionSetFromServer];
@@ -39,6 +48,13 @@
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [timerToRefreshTemperatureAndHumidity invalidate];
+}
+#pragma mark - private methods
+- (void)dismissVC{
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+- (IBAction)refreshTemperatureAndHumidity:(UIBarButtonItem *)sender {
+    [self downloadTemperatureHumidityFromServer];
 }
 #pragma mark - URL private methods
 - (void) downloadInstructionSetFromServer

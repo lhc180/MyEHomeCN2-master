@@ -15,6 +15,28 @@
     MyESwitchInfo *info = [[MyESwitchInfo alloc] initWithDic:dic];
     return info;
 }
+//-(NSString *) trimright0:(CLLocationDegrees )param
+//{
+//    NSString *str = [NSString stringWithFormat:@"%f",param];
+-(NSString *) trimright0:(NSString *)str
+{
+    int len = str.length;
+    for (int i = 0; i < len; i++)
+    {
+        if (![str  hasSuffix:@"0"])
+            break;
+        else
+            str = [str substringToIndex:[str length]-1];
+    }
+    if ([str hasSuffix:@"."])//避免像2.0000这样的被解析成2.
+    {
+        return [str substringToIndex:[str length]-1];//s.substring(0, len - i - 1);
+    }
+    else
+    {
+        return str;
+    }
+}
 -(MyESwitchInfo *)initWithDic:(NSDictionary *)dic{
     if (self = [super init]) {
         self.name = dic[@"name"];
@@ -22,6 +44,7 @@
         self.powerType = [dic[@"powerType"] intValue];
         self.reportTime = [dic[@"reporteTime"] intValue];
         self.type = [dic[@"loadType"] intValue];
+        self.powerFactor = [self trimright0:[NSString stringWithFormat:@"%f",[dic[@"powerFactor"] floatValue]]];
         return self;
     }
     return nil;

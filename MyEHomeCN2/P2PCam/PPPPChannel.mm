@@ -2123,7 +2123,6 @@ void CPPPPChannel::StopVideoPlay()
 
 void CPPPPChannel::PlayProcess()
 {
-    int runFlag = 1;
     CH264Decoder *pH264Decoder = new CH264Decoder();//创建h264的解码库
     while(m_bPlayThreadRuning)
     {
@@ -2186,38 +2185,24 @@ void CPPPPChannel::PlayProcess()
             
             [pool release];
             SAFE_DELETE(pbuf) ;
+
         }
         else /* JPEG */
         {
             NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
+//            NSData *image = [[NSData alloc] initWithBytes:pbuf length:videoLen];
+//            UIImage *img = [[UIImage alloc] initWithData:image];
+//            ImageNotify(img, untimestamp);
+//            [img release];
+//            [image release];
             NSData *image = [NSData dataWithBytesNoCopy:pbuf length:videoLen freeWhenDone:YES];
             UIImage *img = [UIImage imageWithData:image];
-            NSLog(@"创建图像 %i",[img retainCount]);
-            NSLog(@"new image %@",img);
-//            [img retain];
             ImageNotify(img, untimestamp);
-//            if (_oldImage != img) {
-//                ImageNotify(img, untimestamp);
-//            }else{
-//                [_oldImage release];
-//                _oldImage = nil;
-//            }
-            if (runFlag == 0) {
-                runFlag = 1;
-//                [_oldImage release];
-                _oldImage = nil;
-            }else
-                runFlag = 0;
-            _oldImage = img;
-            NSLog(@"传输完成");
-//            NSLog(@"end image %@",img);
-//            [img release];
-//            NSLog(@"image %@",img);
             [pool release];
         }
         
 //        SAFE_DELETE(pbuf) ;
-        usleep(300000);
+        usleep(150000);
         
     }
     

@@ -17,10 +17,12 @@
 }
 -(MyESwitchAutoControl *)initWithDic:(NSDictionary *)dic{
     if (self = [super init]) {
-        self.numChannel = [dic[@"numChannel"] intValue];
-        self.channelDisabledStatus = [NSMutableArray array];
-        for (NSNumber *i in dic[@"channelDisabledStatus"]) {
-            [self.channelDisabledStatus addObject:i];
+        if (dic[@"numChannel"]) {
+            self.numChannel = [dic[@"numChannel"] intValue];
+            self.channelDisabledStatus = [NSMutableArray array];
+            for (NSNumber *i in dic[@"channelDisabledStatus"]) {
+                [self.channelDisabledStatus addObject:i];
+            }
         }
         NSMutableArray *schedules = [NSMutableArray array];
         NSArray *array = dic[@"SSList"];
@@ -60,19 +62,21 @@
             self.scheduleId = [dic[@"scheduleId"] intValue];
             self.onTime = dic[@"onTime"];
             self.offTime = dic[@"offTime"];
-            NSMutableArray *channelArray = [NSMutableArray array];
-            
-            NSMutableArray *weekArray = [NSMutableArray array];
-            NSArray *array = dic[@"channels"];
-            for (NSNumber *i in array) {
-                [channelArray addObject:i];
+            if (dic[@"channels"]) {
+                NSMutableArray *channelArray = [NSMutableArray array];
+                NSArray *array = dic[@"channels"];
+                for (NSNumber *i in array) {
+                    [channelArray addObject:i];
+                }
+                self.channels = channelArray;
             }
-            self.channels = channelArray;
+            NSMutableArray *weekArray = [NSMutableArray array];
             NSArray *array0 = dic[@"weeks"];
             for (NSNumber *j in array0) {
                 [weekArray addObject:j];
             }
             self.weeks = weekArray;
+            
             self.runFlag = [dic[@"runFlag"] intValue];
         }
         return self;

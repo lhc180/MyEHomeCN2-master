@@ -190,106 +190,104 @@ sceneIndex,saveEditorBtn;
     NSMutableArray *dTArray = [NSMutableArray arrayWithArray:self.accountData.deviceTypes];
     
     for (int i=0; i<[self.accountData.deviceTypes count];i++) {   //终于算是找到了问题的根源了
-        NSMutableArray *dArray = [NSMutableArray array]; //里面存放的是一个设备类型的所有设备ID
-        NSMutableArray *isArray = [NSMutableArray array]; //里面存放的是一个设备ID对应的所有指令
+        NSMutableArray *deviceIdArray = [NSMutableArray array]; //里面存放的是一个设备类型的所有设备ID
+        NSMutableArray *instructionAll = [NSMutableArray array]; //里面存放的是一个设备ID对应的所有指令
         NSMutableArray *instructionArray = [NSMutableArray array]; //里面存放的是所有可用设备的指令集合
         NSMutableArray *deviceNameArray = [NSMutableArray array];
         MyEDeviceType *dt = self.accountData.deviceTypes[i];
         if ([dt.devices count] == 0) {  //如果里面没有设备，那么就移除这个type
             [dTArray removeObject:dt];
         }else{
-            dArray = [NSMutableArray arrayWithArray:dt.devices];
+            deviceIdArray = [NSMutableArray arrayWithArray:dt.devices];
             for (int j=0;j<[dt.devices count];j++) {
                 
                 NSInteger deviceId = [dt.devices[j] integerValue];
                 for (MyEDevice *d in self.accountData.devices) {
                     if (deviceId == d.deviceId) {
-                        
                         if (d.type == 1 ) { // 如果是空调
                             if ([d.brand isEqualToString:@""]) {
-                                [dArray removeObject:[NSNumber numberWithInteger:deviceId]];
-                            }
+                                [deviceIdArray removeObject:[NSNumber numberWithInteger:deviceId]];
+                            }else{
                             for (int m=0;m<[instructionRecived.allInstructions count];m++) {
                                 MyESceneDevice *sd = instructionRecived.allInstructions[m];
                                 if (deviceId == sd.deviceId) {
                                     
-                                    isArray = [NSMutableArray arrayWithArray:sd.instructions];
+                                    instructionAll = [NSMutableArray arrayWithArray:sd.instructions];
                                     for (MyESceneDeviceInstruction *sdi in sd.instructions) {
                                         if (sdi.status == 0) {
-                                            [isArray removeObject:sdi];
+                                            [instructionAll removeObject:sdi];
                                         }
                                     }
                                     break;
                                 }
                             }
-                        
+                            }
                         }
                         else if (d.type == 6 || d.type == 7){
-                            
+                            NSLog(@"开关或插座 %i",deviceId);
                         }else {
                             for (int m=0;m<[instructionRecived.allInstructions count];m++) {
                                 MyESceneDevice *sd = instructionRecived.allInstructions[m];
                                 if (deviceId == sd.deviceId) {
                                     
-                                    isArray = [NSMutableArray arrayWithArray:sd.instructions];  //这种写法相当于将这个数组初始化了一下
+                                    instructionAll = [NSMutableArray arrayWithArray:sd.instructions];  //这种写法相当于将这个数组初始化了一下
                                     for (MyESceneDeviceInstruction *sdi in sd.instructions) {
                                         if (sdi.status == 0) {
-                                            [isArray removeObject:sdi];
+                                            [instructionAll removeObject:sdi];
                                         }
                                     }
-                                    if ([isArray count] == 0) {
-                                        [dArray removeObject:[NSNumber numberWithInteger:deviceId]];
+                                    if ([instructionAll count] == 0) {
+                                        [deviceIdArray removeObject:[NSNumber numberWithInteger:deviceId]];
                                     }
                                     break;
                                 }
                             }
                         }
                         
-//                        if ([isArray count] !=0) {
-//                            [instructionArray addObject:isArray];
-//                        }
-                        if ([dArray containsObject:[NSNumber numberWithInteger:deviceId]]) {
+                        if ([deviceIdArray containsObject:[NSNumber numberWithInteger:deviceId]]) {
                             [deviceNameArray addObject:d.name];
-                            [instructionArray addObject:isArray];
+                            [instructionArray addObject:instructionAll];
                         }
                     }
                 }
             }
-            if ([dArray count] == 0) {
+            if ([deviceIdArray count] == 0) {
                 [dTArray removeObject:dt];
             }
         }
         switch (dt.dtId) {
             case 1:
-                _acArray = [NSMutableArray arrayWithObjects:dArray,deviceNameArray,instructionArray, nil];
+                _acArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
             case 2:
-                _tvArray = [NSMutableArray arrayWithObjects:dArray,deviceNameArray,instructionArray, nil];
+                _tvArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
             case 3:
-                _curturnArray = [NSMutableArray arrayWithObjects:dArray,deviceNameArray,instructionArray, nil];
+                _curturnArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
             case 4:
-                _audioArray = [NSMutableArray arrayWithObjects:dArray,deviceNameArray,instructionArray, nil];
+                _audioArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
             case 5:
-                _otherArray = [NSMutableArray arrayWithObjects:dArray,deviceNameArray,instructionArray, nil];
+                _otherArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
             case 6:
-                _socketArray = [NSMutableArray arrayWithObjects:dArray,deviceNameArray,instructionArray, nil];
+                _socketArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
+                break;
+            case 7:
+                _smartArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
             default:
-                _smartArray = [NSMutableArray arrayWithObjects:dArray,deviceNameArray,instructionArray, nil];
                 break;
         }
      }
-//    NSLog(@"%@",_acArray);
-//    NSLog(@"%@",_tvArray);
-//    NSLog(@"%@",_curturnArray);
-//    NSLog(@"%@",_audioArray);
-//    NSLog(@"%@",_otherArray);
-//    NSLog(@"%@",_socketArray);
-//    NSLog(@"%@",_smartArray);
+    NSLog(@"%@",_acArray);
+    NSLog(@"%@",_tvArray);
+    NSLog(@"%@",_curturnArray);
+    NSLog(@"%@",_audioArray);
+    NSLog(@"%@",_otherArray);
+    NSLog(@"%@",_socketArray);
+    NSLog(@"%@",_smartArray);
     NSMutableArray *nameArray = [NSMutableArray array];
     for (MyEDeviceType *t in dTArray) {
         [nameArray addObject:t.name];
@@ -584,7 +582,9 @@ sceneIndex,saveEditorBtn;
             }
         }else if (device.type == 7){
             [sceneDetailDictionary setObject:[NSNumber numberWithInteger:2] forKey:@"isAc"];
-            [controlKeyDictionary setObject:[NSString stringWithString:_device.status.switchStatus] forKey:@"channel"];
+            NSMutableString *string = [NSMutableString stringWithString:_device.status.switchStatus];
+            [string replaceOccurrencesOfString:@"2" withString:@"0" options:NSCaseInsensitiveSearch range:NSMakeRange(0, string.length)];
+            [controlKeyDictionary setObject:[NSString stringWithString:string] forKey:@"channel"];
             [controlKeyDictionary setObject:@0 forKey:@"keyId"];
         }else{//一般设备
             [controlKeyDictionary setObject:self.instructionIdArray[_selectedPowerIndex] forKey:@"keyId"];
@@ -688,8 +688,16 @@ sceneIndex,saveEditorBtn;
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];;
     UILabel *label = (UILabel *)[cell.contentView viewWithTag:100];
     UIButton *btn = (UIButton *)[cell.contentView viewWithTag:101];
+    btn.enabled = NO;
     label.text = [NSString stringWithFormat:@"通道%i",indexPath.row+1];
-    btn.selected = [[_device.status.switchStatus substringWithRange:NSMakeRange(indexPath.row, 1)] integerValue] == 1?NO:YES;
+    NSInteger i = [[_device.status.switchStatus substringWithRange:NSMakeRange(indexPath.row, 1)] integerValue];
+    NSLog(@"%i",i);
+    if (i == 2) {
+        btn.enabled = NO;
+    }else{
+        btn.enabled = YES;
+        btn.selected = i == 1?NO:YES;
+    }
     return cell;
 }
 @end

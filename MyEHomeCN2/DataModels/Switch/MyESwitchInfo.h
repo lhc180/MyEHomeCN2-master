@@ -15,7 +15,7 @@
 @property(nonatomic) NSInteger powerType;
 @property(nonatomic) NSInteger reportTime;
 @property(nonatomic, assign) NSInteger type;
-@property(nonatomic, assign) NSInteger value;
+@property(nonatomic, strong) NSString *powerFactor;
 
 -(MyESwitchInfo *)initWithString:(NSString *)string;
 -(MyESwitchInfo *)initWithDic:(NSDictionary *)dic;

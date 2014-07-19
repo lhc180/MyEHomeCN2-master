@@ -11,6 +11,4 @@
 @interface MyEAcControlViewController : UIViewController<MyEDataLoaderDelegate>
 @property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
-
-
 @end

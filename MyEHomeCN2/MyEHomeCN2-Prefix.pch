@@ -107,6 +107,8 @@
 #define IS_IOS6 (([[UIDevice currentDevice].systemVersion intValue]-6)?NO:YES)
 #define MainColor [UIColor colorWithRed:0.27 green:0.78 blue:0.86 alpha:1]
 
+//http://www.myenergydomain.com.cn
+//http://www.myenergydomain.com.cn
 
 /*-------------------------LOGIN-------------------------------*/
 #define URL_FOR_LOGIN  @"http://www.myenergydomain.com.cn/phone/user_login.jhtml"
@@ -173,7 +175,8 @@
 #define URL_FOR_UPLOAD_SOCKET_AUTO_PROCESS_SAVE  @"http://www.myenergydomain.com.cn/phone/socket_auto_control_save.jhtml"
 #define URL_FOR_ENABLE_SOCKET_AUTO_PROCESS_SAVE @"http://www.myenergydomain.com.cn/phone/socket_auto_control_enable_save.jhtml"
 #define URL_FOR_SOCKET_ELEC_INFO @"http://www.myenergydomain.com.cn/phone/socket_elec_stat.jhtml"
-
+#define URL_FOR_SOCKET_SCHEDULE_LIST @"http://www.myenergydomain.com.cn/phone/smart_socket_schedule_view.jhtml"
+#define URL_FOR_SOCKET_SCHEDULE_EDIT @"http://www.myenergydomain.com.cn/phone/socket_schedule_save.jhtml"
 /*-------------------------SCENCE-------------------------------*/
 #define URL_FOR_SCENES_VIEW  @"http://www.myenergydomain.com.cn/phone/scene_list_view.jhtml"
 #define URL_FOR_SCENES_DOWNLOAD_ALL_DEVICE_INSTRUCTION @"http://www.myenergydomain.com.cn/phone/all_device_instruction_view.jhtml"
@@ -206,4 +209,4 @@
 //subSwitch
 #define URL_FOR_SUBSWITCH_INFO @"http://www.myenergydomain.com.cn/phone/system_sub_switch_by_tid.jhtml"
 #define URL_FOR_SUBSWITCH_BIND @"http://www.myenergydomain.com.cn/phone/ system_save_main_sub_relation.jhtml"
-#define URL_FOR_SUBSWITCH_DELETE @"http://www.myenergydomain.com.cn/phone/system_remove _sub_switch.jhtml"
+#define URL_FOR_SUBSWITCH_DELETE @"http://www.myenergydomain.com.cn/phone/system_remove_sub_switch.jhtml"

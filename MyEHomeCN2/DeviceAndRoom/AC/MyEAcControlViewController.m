@@ -86,8 +86,10 @@
                 vc.humidityLabel.text = [NSString stringWithFormat:@"%li%%",(long)self.device.status.humidity];
             }else{
                 MyEAcManualControlViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"standerdControl"];
-                [vc.homeHumidityLabel setText:[NSString stringWithFormat:@"%li%%", (long)self.device.status.humidity]];
-                [vc.homeTemperatureLabel setText:[NSString stringWithFormat:@"%li℃", (long)self.device.status.temperature]];
+//                [vc.homeHumidityLabel setText:[NSString stringWithFormat:@"%li%%", (long)self.device.status.humidity]];
+//                [vc.homeTemperatureLabel setText:[NSString stringWithFormat:@"%li℃", (long)self.device.status.temperature]];
+                vc.statusDic = dict;
+                [vc refreshUI];
             }
         }
     }

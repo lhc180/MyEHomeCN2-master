@@ -6,15 +6,15 @@
 //  Copyright (c) 2014年 My Energy Domain Inc. All rights reserved.
 //
 
-#import "MyESwitchAutoViewController.h"
-
-@interface MyESwitchAutoViewController (){
+#import "MyESocketAutoControlViewController.h"
+#import "MyESocketScheduleSettingViewController.h"
+@interface MyESocketAutoControlViewController (){
     NSIndexPath *_selectIndex;
 }
 
 @end
 
-@implementation MyESwitchAutoViewController
+@implementation MyESocketAutoControlViewController
 
 #pragma mark - life circle methods
 - (void)viewDidLoad
@@ -34,14 +34,14 @@
     UIView *bgView = [[UIView alloc] init];
     bgView.backgroundColor = [UIColor clearColor];
     self.tableView.tableFooterView = bgView;
-
+    
     UIRefreshControl *rc = [[UIRefreshControl alloc] init];
     rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
     [rc addTarget:self
            action:@selector(downloadSchedulesFromServer)
  forControlEvents:UIControlEventValueChanged];
     self.refreshControl = rc;
-
+    
 }
 -(void)viewWillAppear:(BOOL)animated{
     if (self.needRefresh) {
@@ -62,7 +62,7 @@
     _selectIndex = indexPath;
     NSLog(@"index is %i",indexPath.row);
     MyESwitchSchedule *schedule = self.control.SSList[indexPath.row];
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=2",URL_FOR_SWITCH_TIME_DELAY,(long)self.device.deviceId,[schedule.channels componentsJoinedByString:@","]] andName:@"check"];
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&onTime=%@&offTime=%@&weeks=%@&runFlag=%i&action=2",URL_FOR_SOCKET_SCHEDULE_EDIT,self.device.deviceId,schedule.scheduleId,schedule.onTime,schedule.offTime,[schedule.weeks componentsJoinedByString:@","],1-schedule.runFlag] andName:@"scheduleControl"];
 }
 
 #pragma mark - private methods
@@ -70,11 +70,7 @@
     if (self.refreshControl.isRefreshing) {
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
     }
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li",URL_FOR_SWITCH_SCHEDULE_LIST,(long)self.device.deviceId] andName:@"scheduleList"];
-}
--(void)uploadInfoToServer{
-    MyESwitchSchedule *schedule = self.control.SSList[_selectIndex.row];
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&onTime=%@&offTime=%@&channels=%@&weeks=%@&runFlag=%i&action=2",URL_FOR_SWITCH_SCHEDULE_SAVE,self.device.deviceId,schedule.scheduleId,schedule.onTime,schedule.offTime,[schedule.channels componentsJoinedByString:@","],[schedule.weeks componentsJoinedByString:@","],1-schedule.runFlag] andName:@"scheduleControl"];
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li",URL_FOR_SOCKET_SCHEDULE_LIST,(long)self.device.deviceId] andName:@"scheduleList"];
 }
 -(void)dismissVC{
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -97,11 +93,9 @@
     UIView *bgView = (UIView *)[cell.contentView viewWithTag:1024];
     bgView.layer.cornerRadius = 4;
     MyESwitchSchedule *schedule = self.control.SSList[indexPath.row];
-    cell.maxChannel = self.control.numChannel;
     cell.time = [NSString stringWithFormat:@"%@-%@",schedule.onTime,schedule.offTime];
     cell.isOn = schedule.runFlag == 1?YES:NO;
     cell.weeks = schedule.weeks;
-    cell.channels = schedule.channels;
     return cell;
 }
 #pragma mark - UITableView delegate methods
@@ -110,7 +104,7 @@
     alert.rightBlock = ^{
         _selectIndex = indexPath;
         MyESwitchSchedule *schedule = self.control.SSList[indexPath.row];
-        [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&action=3",URL_FOR_SWITCH_SCHEDULE_SAVE,self.device.deviceId,schedule.scheduleId] andName:@"scheduleDelete"];
+        [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&action=3",URL_FOR_SOCKET_SCHEDULE_EDIT,self.device.deviceId,schedule.scheduleId] andName:@"scheduleDelete"];
     };
     [alert show];
 }
@@ -119,7 +113,7 @@
 }
 #pragma mark - navigation methods
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    MyESwitchScheduleSettingViewController *vc = segue.destinationViewController;
+    MyESocketScheduleSettingViewController *vc = segue.destinationViewController;
     vc.device = self.device;
     vc.control = self.control;
     if ([segue.identifier isEqualToString:@"add"]) {
@@ -130,6 +124,7 @@
         vc.schedule = self.control.SSList[[self.tableView indexPathForCell:sender].row];
     }
 }
+
 #pragma mark - url delegate methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];
@@ -140,9 +135,6 @@
     if ([name isEqualToString:@"scheduleControl"]) {
         NSLog(@"scheduleControl string is %@",string);
         if ([MyEUtil getResultFromAjaxString:string] == 1) {
-            UINavigationController *nav = self.tabBarController.childViewControllers[0];
-            MyESwitchManualControlViewController *vc = nav.childViewControllers[0];
-            vc.needRefresh = YES;
             MyESwitchSchedule *schedule = self.control.SSList[_selectIndex.row];
             schedule.runFlag = 1 - schedule.runFlag;
             [self.tableView reloadData];
@@ -174,33 +166,6 @@
         }
         if ([MyEUtil getResultFromAjaxString:string] == -1) {
             [MyEUtil showMessageOn:nil withMessage:@"下载进程数据失败"];
-        }
-    }
-    if ([name isEqualToString:@"check"]) {
-        NSLog(@"check string is %@",string);
-        if ([MyEUtil getResultFromAjaxString:string] == 2) {
-            [self uploadInfoToServer];
-        }
-        if ([MyEUtil getResultFromAjaxString:string] == 1) {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"当前开关路数已经开启了延时控制,确定保存此定时设置吗?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-            alert.rightBlock = ^{
-                //这里也要进行手动控制面板的刷新
-                UINavigationController *nav = self.tabBarController.childViewControllers[0];
-                MyESwitchManualControlViewController *vc = nav.childViewControllers[0];
-                vc.needRefresh = YES;
-                [self uploadInfoToServer];
-            };
-            alert.rightBlock = ^{
-                [self.tableView reloadData];
-            };
-            [alert show];
-        }
-        if ([MyEUtil getResultFromAjaxString:string] == -3) {
-            [MyEUniversal doThisWhenUserLogOutWithVC:self];
-        }
-        if ([MyEUtil getResultFromAjaxString:string] == -1) {
-            [self.tableView reloadData];
-            [MyEUtil showMessageOn:nil withMessage:@"获取数据失败"];
         }
     }
 }

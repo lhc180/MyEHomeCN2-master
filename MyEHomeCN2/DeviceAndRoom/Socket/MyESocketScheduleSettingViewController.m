@@ -6,43 +6,24 @@
 //  Copyright (c) 2014年 My Energy Domain Inc. All rights reserved.
 //
 
-#import "MyESwitchScheduleSettingViewController.h"
-#import "MyESwitchAutoViewController.h"
-@interface MyESwitchScheduleSettingViewController ()
+#import "MyESocketScheduleSettingViewController.h"
+#import "MyESocketAutoControlViewController.h"
+@interface MyESocketScheduleSettingViewController ()
 
 @end
 
-@implementation MyESwitchScheduleSettingViewController
+@implementation MyESocketScheduleSettingViewController
 
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    NSString *string = IS_IOS6?@"detailBtn-ios6":@"detailBtn";
     for (UIButton *btn in self.view.subviews) {
         if ([btn isKindOfClass:[UIButton class]]) {
             [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
             [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
         }
     }
-
-//    if (!IS_IOS6) {
-//        for (UIButton *btn in self.view.subviews) {
-//            if ([btn isKindOfClass:[UIButton class]]) {
-//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
-//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-//            }
-//        }
-//    }else{
-//        for (UIButton *btn in self.view.subviews) {
-//            if ([btn isKindOfClass:[UIButton class]]) {
-//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-//            }
-//        }
-//    }
-
-    self.channelSeg.mydelegate = self;
     self.weekSeg.mydelegate = self;
     NSMutableArray *array1 = [NSMutableArray array];
     NSMutableArray *array2 = [NSMutableArray array];
@@ -60,19 +41,7 @@
     }
     _headTimeArray = array1;
     _tailTimeArray = array2;
-
-    if (self.control.numChannel == 1) {
-        [self.channelSeg removeSegmentAtIndex:1 animated:YES];
-        [self.channelSeg removeSegmentAtIndex:2 animated:YES];
-    }else if(self.control.numChannel == 2){
-        [self.channelSeg removeSegmentAtIndex:2 animated:YES];
-    }
-    for (int idx = 0; idx < self.control.channelDisabledStatus.count; idx++) {
-        NSInteger i = [self.control.channelDisabledStatus[idx] intValue];
-        if (i == 1) {
-            [self.channelSeg setEnabled:NO forSegmentAtIndex:idx];
-        }
-    }
+    
     _scheduleNew = [_schedule copy];
     [self.startBtn setTitle:_schedule.onTime forState:UIControlStateNormal];
     [self.endBtn setTitle:_schedule.offTime forState:UIControlStateNormal];
@@ -95,13 +64,12 @@
 }
 -(void)uploadInfoToServer{
     // 估计这里会有问题，因为数组没有转变为字符串(特别注意这里是怎么样转化为字符串的)
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&scheduleId=%li&onTime=%@&offTime=%@&channels=%@&weeks=%@&runFlag=%i&action=%li",
-                                                           URL_FOR_SWITCH_SCHEDULE_SAVE,
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&scheduleId=%li&onTime=%@&offTime=%@&weeks=%@&runFlag=%i&action=%li",
+                                                           URL_FOR_SOCKET_SCHEDULE_EDIT,
                                                            (long)self.device.deviceId,
                                                            (long)_scheduleNew.scheduleId,
                                                            _scheduleNew.onTime,
                                                            _scheduleNew.offTime,
-                                                           [_scheduleNew.channels componentsJoinedByString:@","],
                                                            [_scheduleNew.weeks componentsJoinedByString:@","],
                                                            _scheduleNew.runFlag,
                                                            (long)self.actionType] andName:@"scheduleEdit"];
@@ -163,22 +131,17 @@
 //    }
 //}
 -(void)refreshSegment{
-    NSMutableIndexSet *channelIndex = [NSMutableIndexSet indexSet];
     NSMutableIndexSet *weekIndex = [NSMutableIndexSet indexSet];
-    for (NSNumber *i in _schedule.channels) {
-        [channelIndex addIndex:[i intValue]-1];
-    }
     for (NSNumber *i in _schedule.weeks) {
         [weekIndex addIndex:[i intValue]-1];
     }
-    [self.channelSeg setSelectedSegmentIndexes:channelIndex];
     [self.weekSeg setSelectedSegmentIndexes:weekIndex];
 }
 -(NSArray *)changeStringToInt:(NSString *)title{
     NSArray *array = [NSArray array];
     if (title.length !=5) {
-//        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"time is off" leftButtonTitle:nil rightButtonTitle:@"OK"];
-//        [alert show];
+        //        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"time is off" leftButtonTitle:nil rightButtonTitle:@"OK"];
+        //        [alert show];
         array = @[@1,@1];
     }else{
         NSInteger i = [_headTimeArray indexOfObject:[title substringToIndex:2]];
@@ -202,37 +165,24 @@
     }
     _scheduleNew.onTime = self.startBtn.currentTitle;
     _scheduleNew.offTime = self.endBtn.currentTitle;
-    _scheduleNew.channels = [self changeIndexSetToArrayWithIndexSet:self.channelSeg.selectedSegmentIndexes];
     _scheduleNew.weeks = [self changeIndexSetToArrayWithIndexSet:self.weekSeg.selectedSegmentIndexes];
-    if ([_scheduleNew.channels count] == 0) {
-        [MyEUtil showMessageOn:nil withMessage:@"没有选择开关路数"];
-        return;
-    }
     if ([_scheduleNew.weeks count] == 0) {
         [MyEUtil showMessageOn:nil withMessage:@"没有指定星期"];
         return;
     }
-    if (![self isValid]) {
-        [MyEUtil showMessageOn:nil withMessage:@"时段重叠,已存在相似时段"];
-        return;
-    }
-    if (self.actionType == 1) {
-        _scheduleNew.scheduleId = 0;
-    }
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=2",URL_FOR_SWITCH_TIME_DELAY,(long)self.device.deviceId,[_scheduleNew.channels componentsJoinedByString:@","]] andName:@"check"];
+//    if (self.actionType == 1) {
+//        _scheduleNew.scheduleId = 0;
+//    }
+    [self uploadInfoToServer];
 }
 
 #pragma mark - MultiSelectSegmentedControlDelegate methods
 -(void)multiSelect:(MultiSelectSegmentedControl*) multiSelecSegmendedControl didChangeValue:(BOOL) value atIndex: (NSUInteger) index{
-
-    NSIndexSet *anIndexSet;
-    if (multiSelecSegmendedControl == self.channelSeg) {
-        anIndexSet = self.channelSeg.selectedSegmentIndexes;
-    }else
-        anIndexSet = self.weekSeg.selectedSegmentIndexes;
+    
+    NSIndexSet *anIndexSet = self.weekSeg.selectedSegmentIndexes;
     
     if ([anIndexSet count] == 0) {
-        [MyEUtil showMessageOn:self.view withMessage:multiSelecSegmendedControl == self.channelSeg?@"必须指定开关路数":@"必须指定星期"];
+        [MyEUtil showMessageOn:self.view withMessage:@"必须指定星期"];
     }
 }
 #pragma mark - IQActionSheetPickerView delegate methods
@@ -247,29 +197,6 @@
 #pragma mark - url delegate methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];
-    if ([name isEqualToString:@"check"]) {
-        NSLog(@"check string is %@",string);
-        if ([MyEUtil getResultFromAjaxString:string] == 2) {
-            [self uploadInfoToServer];
-        }
-        if ([MyEUtil getResultFromAjaxString:string] == 1) {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"当前开关路数已经开启了延时控制,确定保存此定时设置吗?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-            alert.rightBlock = ^{
-                //这里也要进行手动控制面板的刷新
-                UINavigationController *nav = self.tabBarController.childViewControllers[0];
-                MyESwitchManualControlViewController *vc = nav.childViewControllers[0];
-                vc.needRefresh = YES;
-                [self uploadInfoToServer];
-            };
-            [alert show];
-        }
-        if ([MyEUtil getResultFromAjaxString:string] == -3) {
-            [MyEUniversal doThisWhenUserLogOutWithVC:self];
-        }
-        if ([MyEUtil getResultFromAjaxString:string] == -1) {
-            [MyEUtil showMessageOn:nil withMessage:@"获取数据失败"];
-        }
-    }
     if ([name isEqualToString:@"scheduleEdit"]) {
         NSLog(@"scheduleEdit string is %@",string);
         if ([MyEUtil getResultFromAjaxString:string] == 1) {

@@ -18,6 +18,7 @@
 }
 @property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
+@property (nonatomic, weak) NSDictionary *statusDic;
 
 @property (strong, nonatomic) IBOutlet UIImageView *runMode1;
 @property (strong, nonatomic) IBOutlet UIImageView *runMode2;
@@ -55,7 +56,7 @@
 - (IBAction)runModeChange:(UIButton *)sender;
 - (IBAction)windLevelChange:(UIButton *)sender;
 
-
+-(void)refreshUI;
 
 
 @end

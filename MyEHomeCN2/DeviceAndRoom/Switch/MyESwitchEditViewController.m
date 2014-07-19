@@ -26,13 +26,6 @@
     //下载开关信息
     [self urlLoaderWithUrlString:[NSString stringWithFormat:@"%@?deviceId=%li",URL_FOR_SWITCH_VIEW,(long)self.device.deviceId] loaderName:@"downloadSwitchInfo"];
     [self defineTapGestureRecognizer];
-    self.navigationItem.rightBarButtonItem.enabled = NO;
-    [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *noti){
-        if (![self.nameTextField.text isEqualToString:self.device.name]) {
-            self.navigationItem.rightBarButtonItem.enabled = YES;
-        }else
-            self.navigationItem.rightBarButtonItem.enabled = NO;
-    }];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -41,6 +34,7 @@
 }
 #pragma mark - IBAction methods
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 0) {
         if (indexPath.row == 0) {
             [self.nameTextField becomeFirstResponder];
@@ -54,29 +48,37 @@
         }
     }
     if (indexPath.section == 1) {
-        _selectedIndex = indexPath.row;
         if (indexPath.row == 0) {
+            [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择灯具类型" andDelegate:self andTag:2 andArray:[self.switchInfo typeArray] andSelectRow:self.switchInfo.type andViewController:self];
+        }else if(indexPath.row == 1) {
+            if (self.switchInfo.type == 1) {
+                return;
+            }
+            NSArray *array = @[@"0.5",@"0.55",@"0.6",@"0.65",@"0.7",@"0.75",@"0.8",@"0.85",@"0.9",@"0.95",@"1"];
+            NSInteger i = [array containsObject:self.switchInfo.powerFactor]?[array indexOfObject:self.switchInfo.powerFactor]:0;
+            [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择功率因数" andDelegate:self andTag:3 andArray:array andSelectRow:i andViewController:self];
+        }else if (indexPath.row == 2){
+            self.switchInfo.powerType = 0;
             self.table0.accessoryType = UITableViewCellAccessoryCheckmark;
             self.table1.accessoryType = UITableViewCellAccessoryNone;
-            [self checkIfChange];
         }else{
+            self.switchInfo.powerType = 1;
             self.table1.accessoryType = UITableViewCellAccessoryCheckmark;
             self.table0.accessoryType = UITableViewCellAccessoryNone;
             NSMutableArray *array = [NSMutableArray array];
             for (int i = 1; i < 7; i++) {
                 [array addObject:[NSString stringWithFormat:@"%i分钟",i*10]];
             }
-            [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择定时上报的时间" andDelegate:self andTag:2 andArray:array andSelectRow:_reportTime/10-1 andViewController:self];
+            [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择定时上报的时间" andDelegate:self andTag:4 andArray:array andSelectRow:_reportTime/10-1 andViewController:self];
         }
     }
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 - (IBAction)saveEdit:(UIBarButtonItem *)sender {
     if ([self.nameTextField.text length] < 1 || [self.nameTextField.text length] > 10) {
         [MyEUtil showMessageOn:nil withMessage:@"名称长度不符合要求"];
         return;
     }
-    [self urlLoaderWithUrlString:[NSString stringWithFormat:@"%@?deviceId=%li&name=%@&roomId=%li&powerType=%li&reporteTime=%li",URL_FOR_SWITCH_SAVE,(long)self.device.deviceId,self.nameTextField.text,(long)_room.roomId,(long)_selectedIndex,(long)_reportTime] loaderName:@"uploadSwitchInfo"];
+    [self urlLoaderWithUrlString:[NSString stringWithFormat:@"%@?deviceId=%li&name=%@&roomId=%li&powerType=%li&reporteTime=%li&loadType=%i&powerFactor=%@",URL_FOR_SWITCH_SAVE,(long)self.device.deviceId,self.nameTextField.text,(long)_room.roomId,(long)self.switchInfo.powerType,(long)self.switchInfo.reportTime,self.switchInfo.type,self.switchInfo.powerFactor] loaderName:@"uploadSwitchInfo"];
 }
 
 #pragma mark - private methods
@@ -90,7 +92,7 @@
     NSLog(@"%@",loader.name);
 }
 -(void)setPowerStatus{
-    if (_selectedIndex == 0) {
+    if (self.switchInfo.powerType == 0) {
         self.table0.accessoryType = UITableViewCellAccessoryCheckmark;
     }else{
         self.table1.accessoryType = UITableViewCellAccessoryCheckmark;
@@ -105,14 +107,7 @@
 -(void)hideKeyboard{
     [self.nameTextField endEditing:YES];
 }
--(void)checkIfChange{
-    NSArray *array = @[self.nameTextField.text,self.roomLabel.text,@(_type),@(_value),@(_reportTime),@(_selectedIndex)];
-    if (![array isEqualToArray:_initArray]) {
-        self.navigationItem.rightBarButtonItem.enabled = YES;
-    } else {
-        self.navigationItem.rightBarButtonItem.enabled = NO;
-    }
-}
+
 #pragma mark - url delegate methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];
@@ -121,16 +116,10 @@
         if ([MyEUtil getResultFromAjaxString:string] == 1) {
             MyESwitchInfo *info = [[MyESwitchInfo alloc] initWithString:string];
             self.switchInfo = info;
-            _selectedIndex = self.switchInfo.powerType; //这里进行赋值是为了更新UI
             [self setPowerStatus];
-            _reportTime = self.switchInfo.reportTime;
-            self.tableLabel.text = [NSString stringWithFormat:@"定时上报(%li分钟)",(long)_reportTime==0?10:(long)_reportTime];
-            _type = self.switchInfo.type;
+            self.tableLabel.text = [NSString stringWithFormat:@"定时上报(%li分钟)",(long)self.switchInfo.reportTime==0?10:(long)self.switchInfo.reportTime];
             self.typeLbl.text = [self.switchInfo changeTypeToString];
-            _value = self.switchInfo.value;
-            self.valueLbl.text = [NSString stringWithFormat:@"%i",_value];
-            _initArray = @[self.nameTextField.text,self.roomLabel.text,@(_type),@(_value),@(_reportTime),@(_selectedIndex)];  //这里使用的新的语法书写这个数组，值得注意
-            
+            self.valueLbl.text = self.switchInfo.powerFactor;
             [self.tableView reloadData];  //这里一定要记得更新表格
         }
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
@@ -166,19 +155,31 @@
                 _room = r;
             }
         }
+    }else if(pickerView.tag == 2){
+        self.typeLbl.text = titles[0];
+        if ([titles[0] isEqualToString:@"白炽灯"]) {
+            self.valueLbl.text = @"1";
+            self.switchInfo.powerFactor = @"1";
+            self.switchInfo.type = 1;
+        }else{
+            self.valueLbl.text = @"0.9";
+            self.switchInfo.powerFactor = @"0.9";
+            self.switchInfo.type = 0;
+        }
+    }else if (pickerView.tag == 3){
+        self.valueLbl.text = titles[0];
+        self.switchInfo.powerFactor = titles[0];
     }else{
         self.tableLabel.text = [NSString stringWithFormat:@"定时上报(%@)",titles[0]];
-        _reportTime = [[titles[0] substringToIndex:2] intValue];
+        self.switchInfo.reportTime = [[titles[0] substringToIndex:2] intValue];
     }
-    [self checkIfChange];
 }
 -(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didDismissWithButtonIndex:(NSInteger)index{
-    if (pickerView.tag == 2) {
-        if (_reportTime == 0) {
-            _reportTime = 10;
-            self.tableLabel.text = [NSString stringWithFormat:@"定时上报(%li分钟)",(long)_reportTime];
+    if (pickerView.tag == 4) {
+        if (self.switchInfo.reportTime == 0) {
+            self.switchInfo.reportTime = 10;
+            self.tableLabel.text = [NSString stringWithFormat:@"定时上报(%li分钟)",(long)self.switchInfo.reportTime];
         }
-        [self checkIfChange];
     }
 }
 @end

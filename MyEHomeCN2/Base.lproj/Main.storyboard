@@ -402,7 +402,7 @@
             <objects>
                 <tableViewController id="hSo-v3-xdT" customClass="MyEDevicesViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="3k7-Ze-6Dr">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -621,7 +621,7 @@
             <objects>
                 <tableViewController id="oFC-Fx-kG5" customClass="MyERoomsViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="55" sectionHeaderHeight="22" sectionFooterHeight="22" id="2Lt-zR-Fgs">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -721,7 +721,7 @@
                         <viewControllerLayoutGuide type="bottom" id="5GW-GO-DqN"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3YC-Xf-Png">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="房间名称：" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XFC-Tl-0ff">
@@ -936,7 +936,7 @@
             <objects>
                 <tableViewController storyboardIdentifier="settings" id="3SX-ta-QM3" customClass="MyESettingsViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="god-mR-kIg">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                         <view key="tableFooterView" contentMode="scaleToFill" id="hQA-7N-ap5">
@@ -1269,7 +1269,7 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="00-00-00-00-00-00-00-00" textAlignment="right" minimumFontSize="24" translatesAutoresizingMaskIntoConstraints="NO" id="Vw5-nC-qqN" customClass="WTReTextField">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="05-00-00-00-00-00-00-00" borderStyle="roundedRect" placeholder="00-00-00-00-00-00-00-00" textAlignment="right" minimumFontSize="24" translatesAutoresizingMaskIntoConstraints="NO" id="Vw5-nC-qqN" customClass="WTReTextField">
                                         <rect key="frame" x="66" y="8" width="224" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -1354,7 +1354,7 @@
             <objects>
                 <tableViewController hidesBottomBarWhenPushed="YES" id="NVh-ob-Qds" customClass="MyEDevicesViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" sectionHeaderHeight="22" sectionFooterHeight="22" id="tRB-ZM-zhC">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
@@ -1591,7 +1591,7 @@
         <scene sceneID="ui8-hf-IRM">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="y6P-5s-FOx" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="视频" image="tab-device" id="kbn-91-14B"/>
+                    <tabBarItem key="tabBarItem" title="视频" image="tab-camera" id="kbn-91-14B"/>
                     <toolbarItems/>
                     <simulatedTabBarMetrics key="simulatedBottomBarMetrics" translucent="NO"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" translucent="NO" id="WHF-r5-79l">
@@ -1612,7 +1612,7 @@
             <objects>
                 <tableViewController id="N0U-ee-D76" customClass="MyECameraTableViewController" sceneMemberID="viewController">
                     <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="fSV-uJ-EKG">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
@@ -1739,6 +1739,7 @@
         <image name="signup-scan-normal" width="229" height="36"/>
         <image name="signup-signup-highlight" width="229" height="36"/>
         <image name="signup-signup-normal" width="229" height="36"/>
+        <image name="tab-camera" width="30" height="30"/>
         <image name="tab-device" width="30" height="30"/>
         <image name="tab-room" width="30" height="30"/>
         <image name="tab-settings" width="30" height="30"/>
@@ -1750,7 +1751,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="k9u-I9-prd"/>
+        <segue reference="QeY-29-eJ9"/>
         <segue reference="TTc-VV-uG9"/>
     </inferredMetricsTieBreakers>
 </document>

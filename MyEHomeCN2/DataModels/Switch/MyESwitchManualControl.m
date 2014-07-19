@@ -52,6 +52,9 @@
     }
     return nil;
 }
+-(NSString *)description{
+    return [NSString stringWithFormat:@"disable:%@",self.disable?@"YES":@"NO"];
+}
 -(NSString *)jsonStringWithStatus:(MyESwitchChannelStatus *)status{
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
     NSString *str = [writer stringWithObject:[[MyESwitchChannelStatus alloc] getArrayWithStatus:status]];

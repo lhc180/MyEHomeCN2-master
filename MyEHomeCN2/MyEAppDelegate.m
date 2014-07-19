@@ -73,14 +73,14 @@
     //@see https://developer.apple.com/library/ios/documentation/general/Reference/InfoPlistKeyReference/Articles/AboutInformationPropertyListFiles.html
     // @see http://stackoverflow.com/questions/9530075/ios-access-app-info-plist-variables-in-code
     
-//    //以下为APNS部分
-//    // Required
-//    
-//    [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-//                                                   UIRemoteNotificationTypeSound |
-//                                                   UIRemoteNotificationTypeAlert)];
-//    // Required
-//    [APService setupWithOption:launchOptions];
+    //以下为APNS部分
+    // Required
+    
+    [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                   UIRemoteNotificationTypeSound |
+                                                   UIRemoteNotificationTypeAlert)];
+    // Required
+    [APService setupWithOption:launchOptions];
     //    UILocalNotification *localNotif =
     //    [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
     //    if (localNotif) {

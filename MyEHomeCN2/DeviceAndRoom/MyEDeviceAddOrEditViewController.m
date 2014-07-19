@@ -55,7 +55,6 @@
         self.downloadInstructionBtn.enabled = YES;
     }
     //这里是用来更新button的UI
-//    if (!IS_IOS6) {
         for (UIButton *btn in self.view.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 if (btn.tag == 103) {
@@ -70,17 +69,6 @@
                 }
             }
         }
-//    }else{
-//        for (UIButton *btn in self.view.subviews) {
-//            if ([btn isKindOfClass:[UIButton class]]) {
-//                if (btn.tag != 103 && btn.tag != 101 && btn.tag != 102) {
-//                    [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-//                    [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-//                }
-//            }
-//        }
-//    }
-    
     //以下是对所有的数组进行初始化，对数据进行支持
     
     //找出accountData里面的terminals中的智控星，也就是忽略掉插座(这里也是找到有效的红外设备)

@@ -285,7 +285,7 @@
             }else if([self.accountData.terminals count] == 0){//再检查有没有智控星
                 [mtc setTabbarButtonEnable:NO];
                 DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"温馨提示"
-                                                            contentText:@"检测到未绑定智控星,您将无法操作任何设备,请给智控星断电后重新和网关进行绑定!"
+                                                            contentText:@"检测到未绑定任何智能设备,请先绑定!"
                                                         leftButtonTitle:@"取消"
                                                        rightButtonTitle:@"刷新"];
                 [alert show];
@@ -302,7 +302,12 @@
                 [mtc setTabbarButtonEnable:YES];
             }
         }
-        statusLabel.text = accountData.mStatus ==1?@"在线":@"离线";
+        if (accountData.mStatus == 1) {
+            statusLabel.text = @"在线";
+        }else if (accountData.mStatus == 0 && [accountData.mId isEqualToString:@""]){
+            statusLabel.text = @"未注册网关";
+        }else
+            statusLabel.text = @"离线";
         [notification setOn:settings.enableNotification == 0?NO:YES animated:YES];
         [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
         terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[accountData.terminals count]];

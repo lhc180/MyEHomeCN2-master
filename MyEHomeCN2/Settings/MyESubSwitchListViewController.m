@@ -18,10 +18,14 @@
 @implementation MyESubSwitchListViewController
 
 #pragma mark - life circle methods
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    [self.tableView reloadData];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.navigationItem.title = @"开关列表";
+    self.navigationItem.title = @"从开关列表";
 }
 
 - (void)didReceiveMemoryWarning
@@ -61,7 +65,9 @@
     };
     [alert show];
 }
-
+-(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return @"删除";
+}
 #pragma mark - URL Delegate methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];

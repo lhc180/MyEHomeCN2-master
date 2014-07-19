@@ -17,9 +17,15 @@
 		8C09A61E1824CAEB00D8B55A /* MyESocketSettingsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C09A61D1824CAEB00D8B55A /* MyESocketSettingsViewController.m */; };
 		8C0BE25B182DC74000086686 /* MyEscenesAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0BE25A182DC74000086686 /* MyEscenesAddViewController.m */; };
 		8C0E11E918ACBEDB00954B7A /* SUNSlideSwitchView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0E11E818ACBEDB00954B7A /* SUNSlideSwitchView.m */; };
+		8C0EE7161977E46900EA125C /* MyESocketAutoControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0EE7151977E46900EA125C /* MyESocketAutoControlViewController.m */; };
+		8C0EE7191977E67600EA125C /* MyESocketScheduleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C0EE7181977E67600EA125C /* MyESocketScheduleSettingViewController.m */; };
 		8C13F59318D42F3800EC3D1C /* TableViewWithBlock.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C13F58E18D42F3800EC3D1C /* TableViewWithBlock.m */; };
 		8C13F59418D42F3800EC3D1C /* UITableView+DataSourceBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C13F59018D42F3800EC3D1C /* UITableView+DataSourceBlocks.m */; };
 		8C13F59518D42F3800EC3D1C /* UITableView+DelegateBlocks.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C13F59218D42F3800EC3D1C /* UITableView+DelegateBlocks.m */; };
+		8C15DBB41979FB0600BBB721 /* MyEACManualControlNavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C15DBB31979FB0600BBB721 /* MyEACManualControlNavController.m */; };
+		8C15DBBD197A466E00BBB721 /* libH264Dec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C15DBBA197A466E00BBB721 /* libH264Dec.a */; };
+		8C15DBBE197A466E00BBB721 /* Shader.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 8C15DBBB197A466E00BBB721 /* Shader.fsh */; };
+		8C15DBBF197A466E00BBB721 /* Shader.vsh in Resources */ = {isa = PBXBuildFile; fileRef = 8C15DBBC197A466E00BBB721 /* Shader.vsh */; };
 		8C17BAA5182D0700005DA1EB /* MyEIrDefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C17BAA0182D0700005DA1EB /* MyEIrDefaultViewController.m */; };
 		8C17BAA7182D0700005DA1EB /* MyEIrUserKeyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C17BAA4182D0700005DA1EB /* MyEIrUserKeyViewController.m */; };
 		8C17BAAA182D070A005DA1EB /* MyEAudioDefaultViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C17BAA9182D070A005DA1EB /* MyEAudioDefaultViewController.m */; };
@@ -118,7 +124,6 @@
 		8CC6D6D3190FA21600532A05 /* MyECameraTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D6CD190FA21600532A05 /* MyECameraTableViewController.m */; };
 		8CC6D6D4190FA21600532A05 /* MyECameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D6CF190FA21600532A05 /* MyECameraViewController.m */; };
 		8CC6D6D5190FA21600532A05 /* MyEEditCameraViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D6D1190FA21600532A05 /* MyEEditCameraViewController.m */; };
-		8CC6D77F190FA22100532A05 /* CgiPacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D6D7190FA22000532A05 /* CgiPacket.cpp */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8CC6D780190FA22100532A05 /* Adpcm.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D6DB190FA22000532A05 /* Adpcm.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8CC6D781190FA22100532A05 /* APICommon.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D6DE190FA22000532A05 /* APICommon.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8CC6D782190FA22100532A05 /* CameraDBUtils.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D6E0190FA22000532A05 /* CameraDBUtils.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -143,7 +148,6 @@
 		8CC6D795190FA22100532A05 /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC6D76E190FA22100532A05 /* libavfilter.a */; };
 		8CC6D796190FA22100532A05 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC6D76F190FA22100532A05 /* libavformat.a */; };
 		8CC6D797190FA22100532A05 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC6D770190FA22100532A05 /* libavutil.a */; };
-		8CC6D798190FA22100532A05 /* libH264Dec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC6D771190FA22100532A05 /* libH264Dec.a */; };
 		8CC6D799190FA22100532A05 /* libpostproc.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC6D772190FA22100532A05 /* libpostproc.a */; };
 		8CC6D79A190FA22100532A05 /* libPPPP_API.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC6D773190FA22100532A05 /* libPPPP_API.a */; };
 		8CC6D79B190FA22100532A05 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CC6D774190FA22100532A05 /* libswresample.a */; };
@@ -151,6 +155,7 @@
 		8CC6D79D190FA22100532A05 /* PPPPChannel.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D77B190FA22100532A05 /* PPPPChannel.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8CC6D79E190FA22100532A05 /* PPPPChannelManagement.mm in Sources */ = {isa = PBXBuildFile; fileRef = 8CC6D77D190FA22100532A05 /* PPPPChannelManagement.mm */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		8CCB2E801892979000CD5C2D /* MyEAboutViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CCB2E7F1892979000CD5C2D /* MyEAboutViewController.m */; };
+		8CD4C72F19777E1B002D699B /* CgiPacket.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 8CD4C72D19777E1B002D699B /* CgiPacket.cpp */; };
 		8CD6082418B4DDED00F93BE6 /* MyEProvinceAndCity.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CD6082318B4DDED00F93BE6 /* MyEProvinceAndCity.m */; };
 		8CD6914A1886736D00B1A931 /* libPushSDK.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CD691491886736D00B1A931 /* libPushSDK.a */; };
 		8CD6914C1886739400B1A931 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CD6914B1886739400B1A931 /* CFNetwork.framework */; };
@@ -280,12 +285,21 @@
 		8C0BE25A182DC74000086686 /* MyEscenesAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEscenesAddViewController.m; sourceTree = "<group>"; };
 		8C0E11E718ACBEDB00954B7A /* SUNSlideSwitchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SUNSlideSwitchView.h; sourceTree = "<group>"; };
 		8C0E11E818ACBEDB00954B7A /* SUNSlideSwitchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SUNSlideSwitchView.m; sourceTree = "<group>"; };
+		8C0EE7141977E46900EA125C /* MyESocketAutoControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESocketAutoControlViewController.h; sourceTree = "<group>"; };
+		8C0EE7151977E46900EA125C /* MyESocketAutoControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESocketAutoControlViewController.m; sourceTree = "<group>"; };
+		8C0EE7171977E67600EA125C /* MyESocketScheduleSettingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESocketScheduleSettingViewController.h; sourceTree = "<group>"; };
+		8C0EE7181977E67600EA125C /* MyESocketScheduleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESocketScheduleSettingViewController.m; sourceTree = "<group>"; };
 		8C13F58D18D42F3800EC3D1C /* TableViewWithBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TableViewWithBlock.h; sourceTree = "<group>"; };
 		8C13F58E18D42F3800EC3D1C /* TableViewWithBlock.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TableViewWithBlock.m; sourceTree = "<group>"; };
 		8C13F58F18D42F3800EC3D1C /* UITableView+DataSourceBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+DataSourceBlocks.h"; sourceTree = "<group>"; };
 		8C13F59018D42F3800EC3D1C /* UITableView+DataSourceBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+DataSourceBlocks.m"; sourceTree = "<group>"; };
 		8C13F59118D42F3800EC3D1C /* UITableView+DelegateBlocks.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UITableView+DelegateBlocks.h"; sourceTree = "<group>"; };
 		8C13F59218D42F3800EC3D1C /* UITableView+DelegateBlocks.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UITableView+DelegateBlocks.m"; sourceTree = "<group>"; };
+		8C15DBB21979FB0600BBB721 /* MyEACManualControlNavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEACManualControlNavController.h; sourceTree = "<group>"; };
+		8C15DBB31979FB0600BBB721 /* MyEACManualControlNavController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEACManualControlNavController.m; sourceTree = "<group>"; };
+		8C15DBBA197A466E00BBB721 /* libH264Dec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libH264Dec.a; sourceTree = "<group>"; };
+		8C15DBBB197A466E00BBB721 /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.fsh; sourceTree = "<group>"; };
+		8C15DBBC197A466E00BBB721 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = Shader.vsh; sourceTree = "<group>"; };
 		8C17BA9F182D0700005DA1EB /* MyEIrDefaultViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEIrDefaultViewController.h; sourceTree = "<group>"; };
 		8C17BAA0182D0700005DA1EB /* MyEIrDefaultViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEIrDefaultViewController.m; sourceTree = "<group>"; };
 		8C17BAA3182D0700005DA1EB /* MyEIrUserKeyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEIrUserKeyViewController.h; sourceTree = "<group>"; };
@@ -481,8 +495,6 @@
 		8CC6D6CF190FA21600532A05 /* MyECameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraViewController.m; sourceTree = "<group>"; };
 		8CC6D6D0190FA21600532A05 /* MyEEditCameraViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEEditCameraViewController.h; sourceTree = "<group>"; };
 		8CC6D6D1190FA21600532A05 /* MyEEditCameraViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEEditCameraViewController.m; sourceTree = "<group>"; };
-		8CC6D6D7190FA22000532A05 /* CgiPacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CgiPacket.cpp; sourceTree = "<group>"; };
-		8CC6D6D8190FA22000532A05 /* CgiPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CgiPacket.h; sourceTree = "<group>"; };
 		8CC6D6DA190FA22000532A05 /* Adpcm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Adpcm.h; sourceTree = "<group>"; };
 		8CC6D6DB190FA22000532A05 /* Adpcm.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Adpcm.mm; sourceTree = "<group>"; };
 		8CC6D6DC190FA22000532A05 /* AlarmProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlarmProtocol.h; sourceTree = "<group>"; };
@@ -625,7 +637,6 @@
 		8CC6D76E190FA22100532A05 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavfilter.a; sourceTree = "<group>"; };
 		8CC6D76F190FA22100532A05 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavformat.a; sourceTree = "<group>"; };
 		8CC6D770190FA22100532A05 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libavutil.a; sourceTree = "<group>"; };
-		8CC6D771190FA22100532A05 /* libH264Dec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libH264Dec.a; sourceTree = "<group>"; };
 		8CC6D772190FA22100532A05 /* libpostproc.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libpostproc.a; sourceTree = "<group>"; };
 		8CC6D773190FA22100532A05 /* libPPPP_API.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libPPPP_API.a; sourceTree = "<group>"; };
 		8CC6D774190FA22100532A05 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libswresample.a; sourceTree = "<group>"; };
@@ -641,6 +652,8 @@
 		8CC6D77E190FA22100532A05 /* PPPPDefine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PPPPDefine.h; sourceTree = "<group>"; };
 		8CCB2E7E1892979000CD5C2D /* MyEAboutViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEAboutViewController.h; sourceTree = "<group>"; };
 		8CCB2E7F1892979000CD5C2D /* MyEAboutViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEAboutViewController.m; sourceTree = "<group>"; };
+		8CD4C72D19777E1B002D699B /* CgiPacket.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CgiPacket.cpp; sourceTree = "<group>"; };
+		8CD4C72E19777E1B002D699B /* CgiPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CgiPacket.h; sourceTree = "<group>"; };
 		8CD6082218B4DDED00F93BE6 /* MyEProvinceAndCity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEProvinceAndCity.h; sourceTree = "<group>"; };
 		8CD6082318B4DDED00F93BE6 /* MyEProvinceAndCity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEProvinceAndCity.m; sourceTree = "<group>"; };
 		8CD691481886736D00B1A931 /* APService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = APService.h; sourceTree = "<group>"; };
@@ -829,11 +842,11 @@
 				8CB87D37183A36BC00565D0D /* libiconv.dylib in Frameworks */,
 				C3C805511824C1DA009F26AF /* QuartzCore.framework in Frameworks */,
 				8CC6D79C190FA22100532A05 /* libswscale.a in Frameworks */,
+				8C15DBBD197A466E00BBB721 /* libH264Dec.a in Frameworks */,
 				8CC6D79A190FA22100532A05 /* libPPPP_API.a in Frameworks */,
 				C3B735D41908A91F00851519 /* CoreAudio.framework in Frameworks */,
 				C3B735DA1908A95500851519 /* libz.dylib in Frameworks */,
 				C3CFB6BB17FA6092007B27AE /* Foundation.framework in Frameworks */,
-				8CC6D798190FA22100532A05 /* libH264Dec.a in Frameworks */,
 				C3CFB6BF17FA6092007B27AE /* UIKit.framework in Frameworks */,
 				C3CFB6BD17FA6092007B27AE /* CoreGraphics.framework in Frameworks */,
 				C3B735DC1908A95C00851519 /* libsqlite3.dylib in Frameworks */,
@@ -877,6 +890,10 @@
 				8C06264D1833A4CE00BE72B3 /* MyESocketTimedControlViewController.m */,
 				8CEC64C71921ACFF005953FB /* MyESocketElecViewController.h */,
 				8CEC64C81921ACFF005953FB /* MyESocketElecViewController.m */,
+				8C0EE7141977E46900EA125C /* MyESocketAutoControlViewController.h */,
+				8C0EE7151977E46900EA125C /* MyESocketAutoControlViewController.m */,
+				8C0EE7171977E67600EA125C /* MyESocketScheduleSettingViewController.h */,
+				8C0EE7181977E67600EA125C /* MyESocketScheduleSettingViewController.m */,
 			);
 			path = Socket;
 			sourceTree = "<group>";
@@ -1221,8 +1238,10 @@
 		8CC6D6D6190FA22000532A05 /* P2PCam */ = {
 			isa = PBXGroup;
 			children = (
-				8CC6D6D7190FA22000532A05 /* CgiPacket.cpp */,
-				8CC6D6D8190FA22000532A05 /* CgiPacket.h */,
+				8C15DBBB197A466E00BBB721 /* Shader.fsh */,
+				8C15DBBC197A466E00BBB721 /* Shader.vsh */,
+				8CD4C72D19777E1B002D699B /* CgiPacket.cpp */,
+				8CD4C72E19777E1B002D699B /* CgiPacket.h */,
 				8CC6D6D9190FA22000532A05 /* Classes */,
 				8CC6D719190FA22000532A05 /* EditCameraProtocol.h */,
 				8CC6D71A190FA22000532A05 /* include */,
@@ -1231,11 +1250,11 @@
 				8CC6D76E190FA22100532A05 /* libavfilter.a */,
 				8CC6D76F190FA22100532A05 /* libavformat.a */,
 				8CC6D770190FA22100532A05 /* libavutil.a */,
-				8CC6D771190FA22100532A05 /* libH264Dec.a */,
 				8CC6D772190FA22100532A05 /* libpostproc.a */,
 				8CC6D773190FA22100532A05 /* libPPPP_API.a */,
 				8CC6D774190FA22100532A05 /* libswresample.a */,
 				8CC6D775190FA22100532A05 /* libswscale.a */,
+				8C15DBBA197A466E00BBB721 /* libH264Dec.a */,
 				8CC6D776190FA22100532A05 /* P2P_API_Define.h */,
 				8CC6D777190FA22100532A05 /* PPPP_API.h */,
 				8CC6D778190FA22100532A05 /* PPPP_Error.h */,
@@ -1592,6 +1611,8 @@
 				C35149521810EC4500C5F422 /* MyEAcManualControlViewController.m */,
 				8CB626141861BA24004E611C /* MyEAcControlViewController.h */,
 				8CB626151861BA24004E611C /* MyEAcControlViewController.m */,
+				8C15DBB21979FB0600BBB721 /* MyEACManualControlNavController.h */,
+				8C15DBB31979FB0600BBB721 /* MyEACManualControlNavController.m */,
 			);
 			path = AC;
 			sourceTree = "<group>";
@@ -2005,11 +2026,13 @@
 				8C37A4991846FD84005F6830 /* zbar-helpicons.png in Resources */,
 				8C2972CC184DCD42005ED7E6 /* beep-beep.aiff in Resources */,
 				8C2BAE311830B51200EC2569 /* settings.storyboard in Resources */,
+				8C15DBBE197A466E00BBB721 /* Shader.fsh in Resources */,
 				8C2BAE341830B53900EC2569 /* scene.storyboard in Resources */,
 				C3CFB6C517FA6092007B27AE /* InfoPlist.strings in Resources */,
 				8C2C13CD183C800200134256 /* AcInstruction.storyboard in Resources */,
 				8C37A49A1846FD84005F6830 /* zbar-samples.png in Resources */,
 				C3CFB6CE17FA6092007B27AE /* Main.storyboard in Resources */,
+				8C15DBBF197A466E00BBB721 /* Shader.vsh in Resources */,
 				8C68F52F190F812C0012E31C /* Switch.storyboard in Resources */,
 				8C37A4981846FD84005F6830 /* zbar-help.html in Resources */,
 				8C17BAB3182D0889005DA1EB /* IrDevice.storyboard in Resources */,
@@ -2088,10 +2111,13 @@
 				8CC6D78D190FA22100532A05 /* PicPathDBUtils.mm in Sources */,
 				C3A0D42B1820B29E00AB12FE /* MyEScene.m in Sources */,
 				C39503401813A2AE00950771 /* SBJsonStreamWriterState.m in Sources */,
+				8C0EE7191977E67600EA125C /* MyESocketScheduleSettingViewController.m in Sources */,
 				8C2A535318C4878B0039AF00 /* MyESwitchAutoControl.m in Sources */,
+				8C15DBB41979FB0600BBB721 /* MyEACManualControlNavController.m in Sources */,
 				8CEC64C91921ACFF005953FB /* MyESocketElecViewController.m in Sources */,
 				8CC6D79E190FA22100532A05 /* PPPPChannelManagement.mm in Sources */,
 				8C17BAA7182D0700005DA1EB /* MyEIrUserKeyViewController.m in Sources */,
+				8CD4C72F19777E1B002D699B /* CgiPacket.cpp in Sources */,
 				C3A63F7118248FF10076E7A9 /* MyEsettingsMediatorViewController.m in Sources */,
 				C3A0D4291820B29E00AB12FE /* MyEControlKey.m in Sources */,
 				8CCB2E801892979000CD5C2D /* MyEAboutViewController.m in Sources */,
@@ -2176,7 +2202,6 @@
 				8CA6C1DC18C5D27A004A10D8 /* EPieChart.m in Sources */,
 				C395033C1813A2AE00950771 /* SBJsonStreamParserState.m in Sources */,
 				C3A63F7418248FF10076E7A9 /* MyETerminalSettingViewController.m in Sources */,
-				8CC6D77F190FA22100532A05 /* CgiPacket.cpp in Sources */,
 				8C41D64D18DB1D0B003DFEE0 /* MyESettings.m in Sources */,
 				8C1BE1981892348500439CFC /* MZFormSheetBackgroundWindowViewController.m in Sources */,
 				8C2A534418C4707D0039AF00 /* MyESwitchEditViewController.m in Sources */,
@@ -2186,6 +2211,7 @@
 				8C26E27B18C58451009759F4 /* MyESwitchElec.m in Sources */,
 				8CF76C3818C8450D004BA3C7 /* MyESwitchAutoViewController.m in Sources */,
 				8CA6C1D818C5D279004A10D8 /* EFloatBox.m in Sources */,
+				8C0EE7161977E46900EA125C /* MyESocketAutoControlViewController.m in Sources */,
 				C395033F1813A2AE00950771 /* SBJsonStreamWriterAccumulator.m in Sources */,
 				8CC6D785190FA22100532A05 /* CustomAVRecorder.mm in Sources */,
 				8CED813B1973B42800B54A2F /* MyESubSwitchListViewController.m in Sources */,
@@ -2406,6 +2432,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;
@@ -2440,6 +2467,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				GCC_INPUT_FILETYPE = sourcecode.cpp.objcpp;

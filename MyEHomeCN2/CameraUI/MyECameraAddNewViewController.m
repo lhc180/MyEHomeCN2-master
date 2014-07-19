@@ -141,7 +141,7 @@
         }
         [HUD show:YES];
         HUD.labelText = @"正在验证...";
-        _timer = [NSTimer scheduledTimerWithTimeInterval:6 target:self selector:@selector(addCameraToList) userInfo:nil repeats:NO];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(addCameraToList) userInfo:nil repeats:NO];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self ConnectCam];
         });

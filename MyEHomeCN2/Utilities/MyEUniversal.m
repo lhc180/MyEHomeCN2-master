@@ -40,7 +40,7 @@
     [picker.actionToolbar addSubview:titleLable];
     /*------------------------------------------------------*/
     if ([array count] >1) {
-        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 5, 40)];
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 8, 40)];
         label.center = CGPointMake(picker.pickerView.center.x, picker.pickerView.center.y-44);
         label.text = @":";
         label.font = [UIFont boldSystemFontOfSize:20];

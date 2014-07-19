@@ -485,7 +485,8 @@
         
         //对于多层判断结构，要尽可能将最常见的情况放在前面，这样可以提高判断的速度，优化体验
         if (self.accountData.loginSuccess == -3) {
-            [MyEUniversal doThisWhenUserLogOutWithVC:self];
+            [MyEUtil showMessageOn:self.view withMessage:@"用户已禁用!"];
+//            [MyEUniversal doThisWhenUserLogOutWithVC:self];
         }else if (self.accountData.loginSuccess == 1){
             //登录成功之后首要任务就是保存设置内容
             [self saveSettings];
@@ -500,8 +501,15 @@
             [MyEUtil showToastOn:nil withMessage:@"此M-ID对应的账户已经修改了用户名，请使用新用户名和密码登陆" backgroundColor:nil];
         }else if(self.accountData.loginSuccess == 2){
             [MyEUtil showMessageOn:self.view withMessage:@"此网关的MID已注册"];
+            //登录成功之后首要任务就是保存设置内容
+            [self saveSettings];
+            if ([self.accountData.mId length] == 0) {
+                [self performSegueWithIdentifier:@"mediator" sender:self];
+            }else{
+                [self performSegueWithIdentifier:@"ShowMainTabViewDirectly" sender:self];
+            }
         }else{
-            [MyEUtil showMessageOn:self.view withMessage:@"登录失败，用户名或密码错误"];
+            [MyEUtil showMessageOn:self.view withMessage:@"登录失败"];
         }
     }
 }

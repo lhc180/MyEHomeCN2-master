@@ -28,6 +28,7 @@
     self.lblMainTid.text = [self.subSwitch.mainTid isEqualToString:@""]?@"未绑定":self.subSwitch.mainTid;
     [self.tableView reloadData];
     self.navigationItem.title = self.subSwitch.name;
+    [self downloadInfoFromServer];
 }
 
 - (void)didReceiveMemoryWarning
@@ -49,10 +50,12 @@
 #pragma mark - UITableView delegate methods
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    if (![_mainSwitchList count]) {
-        return;
+    if (indexPath.section == 1) {
+        if (![_mainSwitchList count]) {
+            return;
+        }
+        [MyEUniversal doThisWhenNeedPickerWithTitle:@"选择主开关" andDelegate:self andTag:1 andArray:_mainSwitchList andSelectRow:[_mainSwitchList containsObject:self.lblMainTid.text]?[_mainSwitchList indexOfObject:self.lblMainTid.text]:0 andViewController:self];
     }
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"选择主开关" andDelegate:self andTag:1 andArray:_mainSwitchList andSelectRow:[_mainSwitchList containsObject:self.lblMainTid.text]?[_mainSwitchList indexOfObject:self.lblMainTid.text]:0 andViewController:self];
 }
 
 #pragma mark - private methods
@@ -75,6 +78,8 @@
             for (NSDictionary *d in dic[@"terminalSwitchList"]) {
                 [_mainSwitchList addObject:d[@"TId"]];
             }
+        }
+        if (self.subSwitch.mainTid.length > 0) {
             [_mainSwitchList addObject:@"解绑"];
         }
     }
@@ -83,6 +88,10 @@
         if (i == 1) {
             [MyEUtil showMessageOn:nil withMessage:@"关联成功"];
             self.subSwitch.mainTid = self.lblMainTid.text;
+            if ([_mainSwitchList containsObject:@"解绑"]) {
+                [_mainSwitchList removeObject:@"解绑"];
+            }else
+                [_mainSwitchList addObject:@"解绑"];
         }else if (i == 0){
             [MyEUtil showMessageOn:nil withMessage:@"传入的数据有误"];
         }else if (i == -1){
@@ -90,6 +99,10 @@
         }else if (i == 2){
             [MyEUtil showMessageOn:nil withMessage:@"解绑成功"];
             self.subSwitch.mainTid = @"";
+            if ([_mainSwitchList containsObject:@"解绑"]) {
+                [_mainSwitchList removeObject:@"解绑"];
+            }else
+                [_mainSwitchList addObject:@"解绑"];
         }else
             [MyEUtil showMessageOn:nil withMessage:@"用户已断开"];
     }

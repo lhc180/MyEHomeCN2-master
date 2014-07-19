@@ -115,10 +115,6 @@ void CPPPPChannelManagement::StopAll()
     {
         if(m_PPPPChannel[i].bValid == 1)
         {
-            if (m_PPPPChannel[i].pPPPPChannel == NULL) {
-                NSLog(@"PPPPChannel 不存在");
-                return;
-            }
             m_PPPPChannel[i].pPPPPChannel->SetStop();
         }
     }  
@@ -132,19 +128,11 @@ void CPPPPChannelManagement::StopAll()
         if(m_PPPPChannel[i].bValid == 1)
         {
             NSLog(@"StopAll  channel: %d", i);
-            if (m_PPPPChannel[i].pPPPPChannel == NULL) {
-                NSLog(@"PPPPChannel 不存在");
-                return;
-            }
             memset(m_PPPPChannel[i].szDID, 0, sizeof(m_PPPPChannel[i].szDID));
-            NSLog(@"0011");
             SAFE_DELETE(m_PPPPChannel[i].pPPPPChannel);
-            NSLog(@"0012");
             SAFE_DELETE(m_PPPPChannel[i].pVideoBuf);
-            NSLog(@"0013");
-            //SAFE_DELETE(m_PPPPChannel[i].pEglDisplay);            
+            //SAFE_DELETE(m_PPPPChannel[i].pEglDisplay);
             m_PPPPChannel[i].bValid = 0;
-            NSLog(@"0014");
         }
     }  
     

@@ -132,7 +132,7 @@
             self.camera.UID = _wlanUsefullDevices[0];
             [self presentVCToAddDeviceWithTag:1];
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New Camera" message:nil delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"检测到以下新设备" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:
                                   _wlanUsefullDevices[0],
                                   _wlanUsefullDevices.count>1?_wlanUsefullDevices[1]:nil,
                                   _wlanUsefullDevices.count>2?_wlanUsefullDevices[2]:nil,

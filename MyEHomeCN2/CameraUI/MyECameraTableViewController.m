@@ -238,7 +238,10 @@
     }
     MyECameraViewController *viewController = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"cameraInfo"];
     viewController.camera = camera;
-    [self.navigationController pushViewController:viewController animated:YES];
+    viewController.modalPresentationStyle = UIModalPresentationNone;
+    viewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:viewController animated:YES completion:nil];
+//    [self.navigationController pushViewController:viewController animated:YES];
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {

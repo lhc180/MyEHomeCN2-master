@@ -219,6 +219,7 @@
         accountData.devices = account.devices;
         accountData.terminals = account.terminals;
         accountData.rooms = account.rooms;
+        
         [self performSegueWithIdentifier:@"ShowMainTabViewDirectly" sender:self];
     }
 
