@@ -11,12 +11,12 @@
 #import "MyECamera.h"
 #import "cmdhead.h"
 #import "SdcardScheduleProtocol.h"
-#import "SnapshotProtocol.h"
 @interface MyECameraSDSetViewController : UITableViewController<SdcardScheduleProtocol,UIAlertViewDelegate>
 @property (nonatomic, weak) MyECamera *camera;
+@property (nonatomic, strong) MyECameraSDSchedule *schedule;
 @property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
 @property (weak, nonatomic) IBOutlet UILabel *totalLbl;
 @property (weak, nonatomic) IBOutlet UILabel *delayLbl;
 @property (weak, nonatomic) IBOutlet UILabel *statusLbl;
-
+@property (weak, nonatomic) IBOutlet UISwitch *recordSwitch;
 @end

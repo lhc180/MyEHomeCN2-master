@@ -12,6 +12,7 @@
 #include "APICommon.h"
 #import "PPPPDefine.h"
 #import "obj_common.h"
+#import "cmdhead.h"
 
 #import "MyECameraLandscapeViewController.h"
 
@@ -25,6 +26,7 @@
     NSTimer *_timer;
     NSTimer *_timerForSpeed,*_timerForDate;
     NSInteger _seconds,_timeZone,_speed,_secondsFromNow;
+    MyECameraLandscapeViewController *_vc;
 }
 @property (nonatomic, retain) NSCondition* m_PPPPChannelMgtCondition;
 @end
@@ -38,7 +40,12 @@
     [_timer invalidate];
     [_timerForDate invalidate];
     [_timerForSpeed invalidate];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIDeviceOrientationDidChangeNotification object:nil];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    _m_PPPPChannelMgt->SetDateTimeDelegate((char*)[_camera.UID UTF8String], nil);
+    _m_PPPPChannelMgt->SetSDcardScheduleDelegate((char*)[_camera.UID UTF8String], nil);
 }
 - (void)viewDidLoad
 {
@@ -63,21 +70,16 @@
                                                  name:UIApplicationWillEnterForegroundNotification
                                                object:nil];
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUserInterface) name:UIDeviceOrientationDidChangeNotification object:nil];
+//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(changeUserInterface) name:UIDeviceOrientationDidChangeNotification object:nil];
     
-//    for (UIButton *btn in self.actionView.subviews) {
-//        [btn setBackgroundImage:[[UIImage imageNamed:@"control-enable-normal"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateNormal];
-//        [btn setBackgroundImage:[[UIImage imageNamed:@"control-enable-highlight"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateSelected                                                                                                ];
-//        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//        [btn setTitleColor:[UIColor colorWithRed:69/255 green:220/255 blue:200/255 alpha:1] forState:UIControlStateSelected];
-//    }
     [self refreshUIWithArray:@[@0,_camera.name]];
     _timer = [NSTimer scheduledTimerWithTimeInterval:15*60 target:self selector:@selector(popUp:) userInfo:nil repeats:NO];
     
     //初始化各个方向的view
-    MyECameraLandscapeViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"landscape"];
-    //    vc.m_PPPPChannelMgt = _m_PPPPChannelMgt;
-    self.mainLandscapeView = vc.view;
+    _vc = [self.storyboard instantiateViewControllerWithIdentifier:@"landscape"];
+    _vc.m_PPPPChannelMgt = _m_PPPPChannelMgt;
+    _vc.camera = _camera;
+    self.mainLandscapeView = _vc.view;
     self.mainPortraitView = self.view;
     UIImageView *image = (UIImageView *)[self.mainLandscapeView viewWithTag:100];
     [self addGestureOnImageView:image];
@@ -142,9 +144,10 @@
                 return ;
             }
             _isLandscape = YES;
-            self.view=self.mainLandscapeView;
-            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(90));
-            self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
+//            self.view=self.mainLandscapeView;
+            [self.view addSubview:self.mainLandscapeView];
+//            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(90));
+//            self.view.bounds=CGRectMake(0.0, 0.0, screenHigh, screenwidth);
             NSLog(@"Device oriented horizontally, home button on the right");
             break;
         case UIDeviceOrientationLandscapeRight:
@@ -152,16 +155,18 @@
                 return ;
             }
             _isLandscape = YES;
-            self.view=self.mainLandscapeView;
-            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(-90));
-            self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
+//            self.view=self.mainLandscapeView;
+            [self.view addSubview:self.mainLandscapeView];
+//            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(-90));
+//            self.view.bounds=CGRectMake(0.0, 0.0, screenHigh, screenwidth);
             NSLog(@"Device oriented horizontally, home button on the left");
             break;
         case UIDeviceOrientationPortrait:
             _isLandscape = NO;
-            self.view=self.mainPortraitView;
-            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
-            self.view.bounds=CGRectMake(0.0, 0.0, 320.0, 480.0);
+//            self.view=self.mainPortraitView;
+            [self.mainLandscapeView removeFromSuperview];
+//            self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
+//            self.view.bounds=CGRectMake(0.0, 0.0, screenwidth, screenHigh);
             NSLog(@"Device oriented vertically, home button on the bottom");
             break;
         case UIDeviceOrientationPortraitUpsideDown:
@@ -278,6 +283,7 @@
     _m_PPPPChannelMgt->SetSDcardScheduleDelegate((char*)[_camera.UID UTF8String], self);
     
     //获取具体的值
+    _m_PPPPChannelMgt->GetCGI([_camera.UID UTF8String], CGI_IEGET_CAM_PARAMS);
     _m_PPPPChannelMgt->PPPPSetSystemParams((char*)[_camera.UID UTF8String], MSG_TYPE_GET_PARAMS, NULL, 0);
     _m_PPPPChannelMgt->PPPPSetSystemParams((char*)[self.camera.UID UTF8String], MSG_TYPE_GET_RECORD, NULL, 0);
     [self performSelectorOnMainThread:@selector(startTimerToGetStatus) withObject:nil waitUntilDone:YES];
@@ -398,7 +404,8 @@
 - (void) refreshImage:(UIImage*)image{
     if (image != nil) {
         dispatch_async(dispatch_get_main_queue(),^{
-            if ([self.view isEqual:self.mainLandscapeView]) {
+//            if ([self.view isEqual:self.mainLandscapeView]) {
+            if ([self.view.subviews containsObject:self.mainLandscapeView]) {
                 UIImageView *imageV = (UIImageView *)[self.mainLandscapeView viewWithTag:100];
                 imageV.image = nil;
                 imageV.image = image;
@@ -430,30 +437,40 @@
 
 #pragma mark - ParamNotifyProtocol
 - (void) ParamNotify: (int) paramType params:(void*) params{
-//    if (paramType == CGI_IEGET_CAM_PARAMS) {
-//        PSTRU_CAMERA_PARAM param = (PSTRU_CAMERA_PARAM) params;
-//        flip = param->flip;
-//    }
+    if (paramType == CGI_IEGET_CAM_PARAMS) {
+        PSTRU_CAMERA_PARAM param = (PSTRU_CAMERA_PARAM) params;
+        _cameraParam = [[MyECameraParam alloc] init];
+        _cameraParam.resolution = param->resolution;
+        _cameraParam.bright = param->bright;
+        _cameraParam.contrast = param->contrast;
+        _cameraParam.mode = param->mode;
+        _cameraParam.flip = param->flip;
+        _vc.cameraParam = _cameraParam;
+        NSLog(@"%@",_cameraParam);
+    }
 }
 #pragma mark - IBAction Methods
 -(void)endShowFullScreenView{
     if (_isLandscape) {
         _isLandscape = NO;
-        self.view=self.mainPortraitView;
-        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
-        self.view.bounds=CGRectMake(0.0, 0.0, 320.0, 480.0);
+//        self.view=self.mainPortraitView;
+        [self.mainLandscapeView removeFromSuperview];
+//        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
+//        self.view.bounds=CGRectMake(0.0, 0.0, screenwidth, screenHigh);
     }
 }
 - (IBAction)showFullScreenView:(UIButton *)sender {
     _isLandscape = !_isLandscape;
     if (_isLandscape) {
-        self.view=self.mainLandscapeView;
-        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(90));
-        self.view.bounds=CGRectMake(0.0, 0.0, 480.0, 320.0);
+//        self.view=self.mainLandscapeView;
+        [self.view addSubview:self.mainLandscapeView];
+//        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(90));
+//        self.view.bounds=CGRectMake(0.0, 0.0, screenHigh, screenwidth);
     }else{
-        self.view=self.mainPortraitView;
-        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
-        self.view.bounds=CGRectMake(0.0, 0.0, 320.0, 480.0);
+        [self.mainLandscapeView removeFromSuperview];
+//        self.view=self.mainPortraitView;
+//        self.view.transform=CGAffineTransformMakeRotation(deg2rad*(0));
+//        self.view.bounds=CGRectMake(0.0, 0.0, screenwidth, screenHigh);
     }
 }
 - (IBAction)popUp:(UIButton *)sender {

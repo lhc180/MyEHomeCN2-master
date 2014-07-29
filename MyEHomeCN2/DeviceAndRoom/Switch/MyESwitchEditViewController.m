@@ -162,8 +162,8 @@
             self.switchInfo.powerFactor = @"1";
             self.switchInfo.type = 1;
         }else{
-            self.valueLbl.text = @"0.9";
-            self.switchInfo.powerFactor = @"0.9";
+            self.valueLbl.text = @"0.65";
+            self.switchInfo.powerFactor = @"0.65";
             self.switchInfo.type = 0;
         }
     }else if (pickerView.tag == 3){

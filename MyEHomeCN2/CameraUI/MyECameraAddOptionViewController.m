@@ -21,22 +21,14 @@
 
 @implementation MyECameraAddOptionViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.camera = [[MyECamera alloc] init];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [self Initialize];
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [self Initialize];
+//    });
     for (UIButton *btn in self.view.subviews) {
         if ([btn isKindOfClass:[UIButton class]]) {
             

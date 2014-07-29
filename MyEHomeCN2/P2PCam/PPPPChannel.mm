@@ -2024,7 +2024,6 @@ void CPPPPChannel::PlaybackVideoPlayerProcess()
             [img release];
             [image release];
             [pool release];
-            
         }
         
         SAFE_DELETE(pbuf) ;         

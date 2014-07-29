@@ -12,7 +12,7 @@
 #import "PPPPDefine.h"
 #import "obj_common.h"
 #import "PPPPChannelManagement.h"
-@interface MyECameraAddNewViewController : UIViewController
+@interface MyECameraAddNewViewController : UIViewController<MyEDataLoaderDelegate>
 @property (weak, nonatomic) MyECamera *camera;
 @property (nonatomic) NSInteger jumpFromWhere;  //1.WIFI搜索，2.二维码扫描，3.手动添加
 @property (weak, nonatomic) NSMutableArray *cameraList;

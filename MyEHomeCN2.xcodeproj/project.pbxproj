@@ -33,6 +33,7 @@
 		8C17BAB3182D0889005DA1EB /* IrDevice.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C17BAAE182D0889005DA1EB /* IrDevice.storyboard */; };
 		8C17BAB4182D0889005DA1EB /* Socket.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C17BAB0182D0889005DA1EB /* Socket.storyboard */; };
 		8C1A494C1964DEF90012B566 /* MyECameraLandscapeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1A494B1964DEF90012B566 /* MyECameraLandscapeViewController.m */; };
+		8C1A71001982384F009C276E /* MyECameraSDRecordScheduleSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1A70FF1982384F009C276E /* MyECameraSDRecordScheduleSetViewController.m */; };
 		8C1BE1971892348500439CFC /* MZFormSheetBackgroundWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1BE18A1892348500439CFC /* MZFormSheetBackgroundWindow.m */; };
 		8C1BE1981892348500439CFC /* MZFormSheetBackgroundWindowViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1BE18C1892348500439CFC /* MZFormSheetBackgroundWindowViewController.m */; };
 		8C1BE1991892348500439CFC /* MZFormSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C1BE18E1892348500439CFC /* MZFormSheetController.m */; };
@@ -92,6 +93,10 @@
 		8C5344B71829CEB40051A60B /* MyESceneDeviceInstruction.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5344B61829CEB40051A60B /* MyESceneDeviceInstruction.m */; };
 		8C5344BA1829DA440051A60B /* MyESceneInstructionRecived.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5344B91829DA440051A60B /* MyESceneInstructionRecived.m */; };
 		8C5344BD1829DA7B0051A60B /* MyESceneDevice.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5344BC1829DA7B0051A60B /* MyESceneDevice.m */; };
+		8C601B44197E050700928235 /* MyECameraPTZSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C601B43197E050700928235 /* MyECameraPTZSetViewController.m */; };
+		8C601B47197E35C000928235 /* MyECameraDateSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C601B46197E35C000928235 /* MyECameraDateSetViewController.m */; };
+		8C601B4A197E6BD500928235 /* MyECameraSDRecordViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C601B49197E6BD500928235 /* MyECameraSDRecordViewController.m */; };
+		8C601B4D197E6BEF00928235 /* MyECameraSDRecordDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C601B4C197E6BEF00928235 /* MyECameraSDRecordDetailViewController.m */; };
 		8C68F52F190F812C0012E31C /* Switch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C68F52D190F812C0012E31C /* Switch.storyboard */; };
 		8C68F531190F94EA0012E31C /* MyETerminal.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C41D64118DB1D0B003DFEE0 /* MyETerminal.m */; };
 		8C69B66318473AE8003CB31D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C69B66218473AE8003CB31D /* SystemConfiguration.framework */; };
@@ -113,6 +118,8 @@
 		8CA6C1DC18C5D27A004A10D8 /* EPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA6C1CE18C5D279004A10D8 /* EPieChart.m */; };
 		8CA6C1DD18C5D27A004A10D8 /* EViewSwitcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA6C1D018C5D279004A10D8 /* EViewSwitcher.m */; };
 		8CA6C1DE18C5D27A004A10D8 /* UICountingLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA6C1D218C5D279004A10D8 /* UICountingLabel.m */; };
+		8CABBCB5197CEAE30066F235 /* MyECameraAlarmViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CABBCB4197CEAE30066F235 /* MyECameraAlarmViewController.m */; };
+		8CABBCB8197D05E50066F235 /* MyECameraUsefullTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CABBCB7197D05E50066F235 /* MyECameraUsefullTableViewController.m */; };
 		8CB070D518C72C0800DB18B6 /* MyEDelayTimeSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB070D418C72C0800DB18B6 /* MyEDelayTimeSetViewController.m */; };
 		8CB4257D185FF1E8009DA5B5 /* MyEIrControlPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB4257C185FF1E8009DA5B5 /* MyEIrControlPageViewController.m */; };
 		8CB626161861BA24004E611C /* MyEAcControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CB626151861BA24004E611C /* MyEAcControlViewController.m */; };
@@ -311,6 +318,8 @@
 		8C17BAB1182D0889005DA1EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Socket.storyboard; sourceTree = "<group>"; };
 		8C1A494A1964DEF90012B566 /* MyECameraLandscapeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraLandscapeViewController.h; sourceTree = "<group>"; };
 		8C1A494B1964DEF90012B566 /* MyECameraLandscapeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraLandscapeViewController.m; sourceTree = "<group>"; };
+		8C1A70FE1982384F009C276E /* MyECameraSDRecordScheduleSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraSDRecordScheduleSetViewController.h; sourceTree = "<group>"; };
+		8C1A70FF1982384F009C276E /* MyECameraSDRecordScheduleSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraSDRecordScheduleSetViewController.m; sourceTree = "<group>"; };
 		8C1BE1891892348500439CFC /* MZFormSheetBackgroundWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MZFormSheetBackgroundWindow.h; sourceTree = "<group>"; };
 		8C1BE18A1892348500439CFC /* MZFormSheetBackgroundWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MZFormSheetBackgroundWindow.m; sourceTree = "<group>"; };
 		8C1BE18B1892348500439CFC /* MZFormSheetBackgroundWindowViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MZFormSheetBackgroundWindowViewController.h; sourceTree = "<group>"; };
@@ -440,6 +449,14 @@
 		8C5344B91829DA440051A60B /* MyESceneInstructionRecived.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESceneInstructionRecived.m; sourceTree = "<group>"; };
 		8C5344BB1829DA7B0051A60B /* MyESceneDevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESceneDevice.h; sourceTree = "<group>"; };
 		8C5344BC1829DA7B0051A60B /* MyESceneDevice.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESceneDevice.m; sourceTree = "<group>"; };
+		8C601B42197E050700928235 /* MyECameraPTZSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraPTZSetViewController.h; sourceTree = "<group>"; };
+		8C601B43197E050700928235 /* MyECameraPTZSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraPTZSetViewController.m; sourceTree = "<group>"; };
+		8C601B45197E35C000928235 /* MyECameraDateSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraDateSetViewController.h; sourceTree = "<group>"; };
+		8C601B46197E35C000928235 /* MyECameraDateSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraDateSetViewController.m; sourceTree = "<group>"; };
+		8C601B48197E6BD500928235 /* MyECameraSDRecordViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraSDRecordViewController.h; sourceTree = "<group>"; };
+		8C601B49197E6BD500928235 /* MyECameraSDRecordViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraSDRecordViewController.m; sourceTree = "<group>"; };
+		8C601B4B197E6BEF00928235 /* MyECameraSDRecordDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraSDRecordDetailViewController.h; sourceTree = "<group>"; };
+		8C601B4C197E6BEF00928235 /* MyECameraSDRecordDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraSDRecordDetailViewController.m; sourceTree = "<group>"; };
 		8C68F52E190F812C0012E31C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Switch.storyboard; sourceTree = "<group>"; };
 		8C69B66218473AE8003CB31D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		8C81F9CC196158CB00A980D8 /* MyECameraWIFISetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraWIFISetViewController.h; sourceTree = "<group>"; };
@@ -477,6 +494,10 @@
 		8CA6C1D018C5D279004A10D8 /* EViewSwitcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = EViewSwitcher.m; sourceTree = "<group>"; };
 		8CA6C1D118C5D279004A10D8 /* UICountingLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UICountingLabel.h; sourceTree = "<group>"; };
 		8CA6C1D218C5D279004A10D8 /* UICountingLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UICountingLabel.m; sourceTree = "<group>"; };
+		8CABBCB3197CEAE30066F235 /* MyECameraAlarmViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraAlarmViewController.h; sourceTree = "<group>"; };
+		8CABBCB4197CEAE30066F235 /* MyECameraAlarmViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraAlarmViewController.m; sourceTree = "<group>"; };
+		8CABBCB6197D05E50066F235 /* MyECameraUsefullTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyECameraUsefullTableViewController.h; sourceTree = "<group>"; };
+		8CABBCB7197D05E50066F235 /* MyECameraUsefullTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyECameraUsefullTableViewController.m; sourceTree = "<group>"; };
 		8CB070D318C72C0800DB18B6 /* MyEDelayTimeSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEDelayTimeSetViewController.h; sourceTree = "<group>"; };
 		8CB070D418C72C0800DB18B6 /* MyEDelayTimeSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEDelayTimeSetViewController.m; sourceTree = "<group>"; };
 		8CB4257B185FF1E8009DA5B5 /* MyEIrControlPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEIrControlPageViewController.h; sourceTree = "<group>"; };
@@ -1231,6 +1252,20 @@
 				8C81F9D6196164A600A980D8 /* MyECameraWIFIConnectViewController.m */,
 				8C1A494A1964DEF90012B566 /* MyECameraLandscapeViewController.h */,
 				8C1A494B1964DEF90012B566 /* MyECameraLandscapeViewController.m */,
+				8CABBCB3197CEAE30066F235 /* MyECameraAlarmViewController.h */,
+				8CABBCB4197CEAE30066F235 /* MyECameraAlarmViewController.m */,
+				8CABBCB6197D05E50066F235 /* MyECameraUsefullTableViewController.h */,
+				8CABBCB7197D05E50066F235 /* MyECameraUsefullTableViewController.m */,
+				8C601B42197E050700928235 /* MyECameraPTZSetViewController.h */,
+				8C601B43197E050700928235 /* MyECameraPTZSetViewController.m */,
+				8C601B45197E35C000928235 /* MyECameraDateSetViewController.h */,
+				8C601B46197E35C000928235 /* MyECameraDateSetViewController.m */,
+				8C601B48197E6BD500928235 /* MyECameraSDRecordViewController.h */,
+				8C601B49197E6BD500928235 /* MyECameraSDRecordViewController.m */,
+				8C601B4B197E6BEF00928235 /* MyECameraSDRecordDetailViewController.h */,
+				8C601B4C197E6BEF00928235 /* MyECameraSDRecordDetailViewController.m */,
+				8C1A70FE1982384F009C276E /* MyECameraSDRecordScheduleSetViewController.h */,
+				8C1A70FF1982384F009C276E /* MyECameraSDRecordScheduleSetViewController.m */,
 			);
 			path = CameraUI;
 			sourceTree = "<group>";
@@ -2095,10 +2130,12 @@
 				C32CF2BE183B39570054DB15 /* MyEAutoProcessViewController.m in Sources */,
 				C3CFB6FC17FA77D2007B27AE /* MyELoginViewController.m in Sources */,
 				8C2B8FAE18B2116900F2D404 /* KAProgressLabel.m in Sources */,
+				8CABBCB5197CEAE30066F235 /* MyECameraAlarmViewController.m in Sources */,
 				C3A51AE218066444007145FE /* MyEAcInstructionSet.m in Sources */,
 				8C2C13D6183CAB2600134256 /* MyEAcBrandsAndModels.m in Sources */,
 				8C5344BD1829DA7B0051A60B /* MyESceneDevice.m in Sources */,
 				C3A632B7190D9632003289D2 /* NSObject+SBJson.m in Sources */,
+				8C601B4D197E6BEF00928235 /* MyECameraSDRecordDetailViewController.m in Sources */,
 				C3CFB6CB17FA6092007B27AE /* MyEAppDelegate.m in Sources */,
 				8C06264E1833A4CE00BE72B3 /* MyESocketManualControlViewController.m in Sources */,
 				8C41D64518DB1D0B003DFEE0 /* MyEAccountData.m in Sources */,
@@ -2112,6 +2149,7 @@
 				C3A0D42B1820B29E00AB12FE /* MyEScene.m in Sources */,
 				C39503401813A2AE00950771 /* SBJsonStreamWriterState.m in Sources */,
 				8C0EE7191977E67600EA125C /* MyESocketScheduleSettingViewController.m in Sources */,
+				8C601B47197E35C000928235 /* MyECameraDateSetViewController.m in Sources */,
 				8C2A535318C4878B0039AF00 /* MyESwitchAutoControl.m in Sources */,
 				8C15DBB41979FB0600BBB721 /* MyEACManualControlNavController.m in Sources */,
 				8CEC64C91921ACFF005953FB /* MyESocketElecViewController.m in Sources */,
@@ -2136,6 +2174,7 @@
 				8CA6C1D418C5D279004A10D8 /* EColumn.m in Sources */,
 				C3A0D42A1820B29E00AB12FE /* MyEDeviceControl.m in Sources */,
 				8C2C13D3183CA04500134256 /* MyEAcModel.m in Sources */,
+				8C601B44197E050700928235 /* MyECameraPTZSetViewController.m in Sources */,
 				8C03BF7818434F6B00B749D2 /* MyEAcComfort.m in Sources */,
 				8CC6D6D4190FA21600532A05 /* MyECameraViewController.m in Sources */,
 				8CC6D78F190FA22100532A05 /* RecPathDBUtils.mm in Sources */,
@@ -2144,6 +2183,7 @@
 				8C81F9D11961593D00A980D8 /* MyECameraPasswordSetTableViewController.m in Sources */,
 				8C03BF7C18436DC900B749D2 /* MyEAcInstructionAutoCheckViewController.m in Sources */,
 				8C24226B183DAE3400D685C1 /* MyEAcAddNewBrandAndModuleViewController.m in Sources */,
+				8CABBCB8197D05E50066F235 /* MyECameraUsefullTableViewController.m in Sources */,
 				8C2C13D0183CA02A00134256 /* MyEAcBrand.m in Sources */,
 				C395033E1813A2AE00950771 /* SBJsonStreamWriter.m in Sources */,
 				8CC6D792190FA22100532A05 /* SearchListMgt.mm in Sources */,
@@ -2205,6 +2245,7 @@
 				8C41D64D18DB1D0B003DFEE0 /* MyESettings.m in Sources */,
 				8C1BE1981892348500439CFC /* MZFormSheetBackgroundWindowViewController.m in Sources */,
 				8C2A534418C4707D0039AF00 /* MyESwitchEditViewController.m in Sources */,
+				8C601B4A197E6BD500928235 /* MyECameraSDRecordViewController.m in Sources */,
 				8CC6D6D3190FA21600532A05 /* MyECameraTableViewController.m in Sources */,
 				8C1BE19C1892348500439CFC /* UIImage+Additional.m in Sources */,
 				8CC6D78C190FA22100532A05 /* PCMRecorder.mm in Sources */,
@@ -2237,6 +2278,7 @@
 				8C8B4CCF18C6C316000B1A50 /* MZTimerLabel.m in Sources */,
 				C3A63F5B18248FE20076E7A9 /* WTReParser.m in Sources */,
 				C39503391813A2AE00950771 /* SBJsonStreamParser.m in Sources */,
+				8C1A71001982384F009C276E /* MyECameraSDRecordScheduleSetViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

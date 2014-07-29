@@ -25,7 +25,7 @@
 + (BOOL) isConnectedToInternet;
 
 - (id)initLoadingWithURLString:(NSString *)urlString postData:(NSString *)postString delegate:(id <MyEDataLoaderDelegate>)delegate loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict;
-
++ (void)startLoadingWithURLString:(NSString *)urlString postData:(NSString *)postString delegate:(id <MyEDataLoaderDelegate>)delegate loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict;
 @end
 
 @protocol MyEDataLoaderDelegate <NSObject>

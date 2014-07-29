@@ -22,6 +22,7 @@
 }
 @property CPPPPChannelManagement* m_PPPPChannelMgt;
 @property (nonatomic, weak) MyECamera *camera;
+@property (nonatomic, strong) MyECameraParam *cameraParam;
 
 @property (nonatomic, strong) UIView *mainPortraitView;
 @property (nonatomic, strong) UIView *mainLandscapeView;

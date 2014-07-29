@@ -7,6 +7,7 @@
 //
 
 #import "MyECameraAddNewViewController.h"
+#import "MyECameraTableViewController.h"
 @interface MyECameraAddNewViewController (){
     NSCondition* _m_PPPPChannelMgtCondition;
     CPPPPChannelManagement* _m_PPPPChannelMgt;
@@ -86,25 +87,28 @@
 }
 -(void)handelTimer{
     [_timer invalidate];
-    [HUD hide:YES];
     if (_canAddNew) {
-        BOOL isNew = NO;
-        if ([self.cameraList count]) {
-            for (MyECamera *c in self.cameraList) {
-                if (![_camera.UID isEqualToString:c.UID]) {
-                    isNew = YES;
-                }
-            }
-        }else
-            isNew = YES;
-        if (isNew) {
-            [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"添加成功" andTag:YES];
-            NSLog(@"%@",self.camera);
-            [self.cameraList addObject:self.camera];
-            [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
-        }else
-            [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"设备已存在" andTag:NO];
+        HUD.labelText = @"正在添加...";
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&did=%@&user=%@&pwd=%@&name=%@&action=1",URL_FOR_CAMERA_EDIT,_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"add" userDataDictionary:nil];
+
+//        BOOL isNew = NO;
+//        if ([self.cameraList count]) {
+//            for (MyECamera *c in self.cameraList) {
+//                if (![_camera.UID isEqualToString:c.UID]) {
+//                    isNew = YES;
+//                }
+//            }
+//        }else
+//            isNew = YES;
+//        if (isNew) {
+//            [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"添加成功" andTag:YES];
+//            NSLog(@"%@",self.camera);
+//            [self.cameraList addObject:self.camera];
+//            [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+//        }else
+//            [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"设备已存在" andTag:NO];
     }else{
+        [HUD hide:YES];
         [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"添加失败" andTag:NO];
     }
 }
@@ -128,6 +132,27 @@
     self.camera.name = self.txtName.text;
     self.camera.UID = self.txtUID.text;
     NSLog(@"%@",self.camera);
+    if ([_camera.username length] == 0)
+    {
+        [MyEUtil showErrorOn:self.navigationController.view withMessage:@"请输入用户名"];
+        return;
+    }
+    if ([_camera.password length] == 0)
+    {
+        [MyEUtil showErrorOn:self.navigationController.view withMessage:@"请输入密码"];
+        return;
+    }
+    if ([_camera.name length] == 0)
+    {
+        [MyEUtil showErrorOn:self.navigationController.view withMessage:@"请输入摄像头的名称"];
+        return;
+    }
+    if ([_camera.UID length] == 0)
+    {
+        [MyEUtil showErrorOn:self.navigationController.view withMessage:@"请输入UID"];
+        return;
+    }
+
     BOOL isNew = YES;
     for (MyECamera *c in self.cameraList) {
         if ([c.UID isEqualToString:self.camera.UID]) {
@@ -198,4 +223,32 @@
     HUD.labelText = strPPPPStatus;
 }
 
+#pragma mark - URL Delegate methods
+-(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
+    [HUD hide:YES];
+    NSLog(@"receive string is %@",string);
+    if ([name isEqualToString:@"add"]) {
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        if (i == 1) {
+            NSDictionary *dic = [string JSONValue];
+            if (dic) {
+                NSInteger deviceId = [dic[@"id"] intValue];
+                _camera.deviceId = deviceId;
+                [self.cameraList addObject:self.camera];
+                MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
+                vc.needRefresh = YES;
+                [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+            }
+        }else if (i == 0){
+            [MyEUtil showMessageOn:nil withMessage:@"传入数据有误"];
+        }else if (i == -3){
+            [MyEUniversal doThisWhenUserLogOutWithVC:self];
+        }else
+            [MyEUtil showMessageOn:nil withMessage:@"添加失败"];
+    }
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
+    [HUD hide:YES];
+    [MyEUtil showMessageOn:nil withMessage:@"与服务器连接失败"];
+}
 @end

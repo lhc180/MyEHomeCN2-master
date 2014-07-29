@@ -210,3 +210,8 @@
 #define URL_FOR_SUBSWITCH_INFO @"http://www.myenergydomain.com.cn/phone/system_sub_switch_by_tid.jhtml"
 #define URL_FOR_SUBSWITCH_BIND @"http://www.myenergydomain.com.cn/phone/ system_save_main_sub_relation.jhtml"
 #define URL_FOR_SUBSWITCH_DELETE @"http://www.myenergydomain.com.cn/phone/system_remove_sub_switch.jhtml"
+
+/*--------------------------Camera-----------------------------------*/
+
+#define URL_FOR_CAMERA_LIST @"http://www.myenergydomain.com.cn/phone/ipcamera_view.jhtml"
+#define URL_FOR_CAMERA_EDIT @"http://www.myenergydomain.com.cn/phone/ipcamera_save.jhtml"

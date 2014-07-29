@@ -95,7 +95,10 @@
     }
     return  nil;
 }
-
++ (void)startLoadingWithURLString:(NSString *)urlString postData:(NSString *)postString delegate:(id <MyEDataLoaderDelegate>)delegate loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
+    MyEDataLoader *loader= [[MyEDataLoader alloc] initLoadingWithURLString:urlString postData:postString delegate:delegate loaderName:name userDataDictionary:dict];
+    NSLog(@"Loader name is %@", loader.name);
+}
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse
                                                                      *)response

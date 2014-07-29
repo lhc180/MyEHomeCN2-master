@@ -11,7 +11,7 @@
 #import "MyECameraWIFISetViewController.h"
 #import "MyECameraPasswordSetTableViewController.h"
 #import "MyECameraSDSetViewController.h"
-@interface MyEEditCameraViewController : UITableViewController<UITextFieldDelegate,UIAlertViewDelegate>
+@interface MyEEditCameraViewController : UITableViewController<UITextFieldDelegate,UIAlertViewDelegate,MyEDataLoaderDelegate>
 @property (nonatomic, retain) MyECamera *camera;
 @property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
 @property (weak, nonatomic) IBOutlet UILabel *UIDlbl;

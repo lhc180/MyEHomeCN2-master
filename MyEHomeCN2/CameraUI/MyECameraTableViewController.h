@@ -8,17 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "MyEEditCameraViewController.h"
-#import "SearchCameraResultProtocol.h"
-#import "SearchDVS.h"
 #import "defineutility.h"
 #import "PPPPChannelManagement.h"
 
-@interface MyECameraTableViewController : UITableViewController <SnapshotProtocol>{
-    CSearchDVS* dvs;
-}
+@interface MyECameraTableViewController : UITableViewController <SnapshotProtocol,MyEDataLoaderDelegate>
 
 @property (nonatomic, retain) NSMutableArray *cameraList;
-@property (nonatomic, retain) NSTimer* searchTimer;
 @property (nonatomic) BOOL needRefresh;
 
 @end

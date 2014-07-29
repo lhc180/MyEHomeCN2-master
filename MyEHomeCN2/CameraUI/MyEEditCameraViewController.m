@@ -8,19 +8,16 @@
 
 #import "MyEEditCameraViewController.h"
 #import "MyECameraTableViewController.h"
-@interface MyEEditCameraViewController ()
+#import "MyECameraAlarmViewController.h"
+#import "MyECameraDateSetViewController.h"
+#import "MyECameraSDRecordViewController.h"
+@interface MyEEditCameraViewController (){
+    MBProgressHUD *HUD;
+}
 @end
 
 @implementation MyEEditCameraViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 #pragma life circle methods
 - (void)viewDidLoad
 {
@@ -72,13 +69,23 @@
     }
     self.camera.name = self.nameTxt.text;
     self.camera.password = self.passwordTxt.text;
-    MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
-    vc.needRefresh = YES;
+    if (HUD == nil) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }else
+        [HUD show:YES];
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&did=%@&user=%@&pwd=%@&name=%@&action=2",URL_FOR_CAMERA_EDIT,_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
+
 }
 //-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
 //    [self.view endEditing:YES];
 //}
 #pragma mark - UITableView dataSource methods
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    if (_camera.isOnline) {
+        return 3;
+    }else
+        return 1;
+}
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     if (section == 0) {
         if (_camera.isOnline) {
@@ -86,7 +93,7 @@
         }else
             return 3;
     }else if (section == 1){
-        return 3;
+        return 6;
     }else
         return 2;
 }
@@ -130,6 +137,18 @@
         MyECameraSDSetViewController *sd = (MyECameraSDSetViewController *)vc;
         sd.m_PPPPChannelMgt = _m_PPPPChannelMgt;
     }
+    if ([segue.identifier isEqualToString:@"alarm"]) {
+        MyECameraAlarmViewController *alarm = (MyECameraAlarmViewController *)vc;
+        alarm.m_PPPPChannelMgt = _m_PPPPChannelMgt;
+    }
+    if ([segue.identifier isEqualToString:@"date"]) {
+        MyECameraDateSetViewController *date = (MyECameraDateSetViewController *)vc;
+        date.m_PPPPChannelMgt = _m_PPPPChannelMgt;
+    }
+    if ([segue.identifier isEqualToString:@"record"]) {
+        MyECameraSDRecordViewController *record = (MyECameraSDRecordViewController *)vc;
+        record.m_PPPPChannelMgt = _m_PPPPChannelMgt;
+    }
 }
 #pragma mark - UIAlertView delegate methods
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
@@ -147,5 +166,27 @@
         }else
             [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
     }
+}
+
+#pragma mark - URL Delegate methods
+-(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
+    NSLog(@"receive string is %@",string);
+    [HUD hide:YES];
+    if ([name isEqualToString:@"edit"]) {
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        if (i == 1) {
+            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
+            vc.needRefresh = YES;
+        }else if (i == 0){
+            [MyEUtil showMessageOn:nil withMessage:@"传入数据有误"];
+        }else if (i == -3){
+            [MyEUniversal doThisWhenUserLogOutWithVC:self];
+        }else
+            [MyEUtil showMessageOn:nil withMessage:@"设置失败"];
+    }
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
+    [HUD hide:YES];
+    [MyEUtil showMessageOn:nil withMessage:@"与服务器连接失败"];
 }
 @end

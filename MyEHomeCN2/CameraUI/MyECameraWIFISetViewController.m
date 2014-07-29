@@ -17,20 +17,17 @@
 
 @implementation MyECameraWIFISetViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+#pragma mark - life circle methods
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     if (self.needRefresh) {
         self.needRefresh = NO;
         [self refreshData];
     }
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    _m_PPPPChannelMgt->SetWifiParamDelegate((char*)[_camera.UID UTF8String], nil);
 }
 - (void)viewDidLoad
 {

@@ -73,7 +73,7 @@
                                     <action selector="runModeChange:" destination="4is-d4-vRs" eventType="touchUpInside" id="Mpu-kc-tTv"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6Jn-vN-PBi">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6Jn-vN-PBi">
                                 <rect key="frame" x="29" y="20" width="262" height="150"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <subviews>
@@ -203,9 +203,17 @@
                                     </label>
                                 </subviews>
                                 <color key="backgroundColor" red="0.63921568627450975" green="0.88627450980392153" blue="0.77254901960784317" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="150" id="3Xx-oa-yqm"/>
+                                </constraints>
                             </view>
                         </subviews>
                         <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Jn-vN-PBi" firstAttribute="leading" secondItem="OIJ-gh-49y" secondAttribute="leading" constant="29" id="Biq-cb-hQd"/>
+                            <constraint firstAttribute="trailing" secondItem="6Jn-vN-PBi" secondAttribute="trailing" constant="29" id="guz-J3-yg3"/>
+                            <constraint firstItem="6Jn-vN-PBi" firstAttribute="top" secondItem="5gx-1y-FFw" secondAttribute="bottom" constant="20" id="h8k-Bd-nPX"/>
+                        </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <navigationItem key="navigationItem" title="手动控制" id="Fn5-6J-sab">
@@ -246,7 +254,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dAp-ZK-kX3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1941" y="-8498"/>
+            <point key="canvasLocation" x="-4694" y="-10266"/>
         </scene>
         <!--Tab Bar Controller-->
         <scene sceneID="FPC-Ez-zko">
@@ -267,7 +275,7 @@
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qh4-cj-ul4" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3437" y="-6814"/>
+            <point key="canvasLocation" x="-6190" y="-8582"/>
         </scene>
         <!--MyE Auto Control View Controller - 定时控制-->
         <scene sceneID="fUd-1h-jTB">
@@ -328,7 +336,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oim-sf-PY6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2314" y="-7225"/>
+            <point key="canvasLocation" x="-5067" y="-8993"/>
         </scene>
         <!--MyE Auto Process List View Controller-->
         <scene sceneID="hkY-80-gOX">
@@ -377,7 +385,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Cja-yJ-gz0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1605" y="-6941"/>
+            <point key="canvasLocation" x="-4358" y="-8709"/>
         </scene>
         <!--MyE Auto Process View Controller - 自动进程-->
         <scene sceneID="1MI-5W-H7n">
@@ -388,7 +396,7 @@
                         <viewControllerLayoutGuide type="bottom" id="Zbg-bv-k3c"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="piF-C4-Xdj">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="278"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" translatesAutoresizingMaskIntoConstraints="NO" id="zZm-sy-tkb" customClass="MultiSelectSegmentedControl">
@@ -467,7 +475,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="OUx-wm-Wmg" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-979" y="-7239"/>
+            <point key="canvasLocation" x="-3732" y="-9007"/>
         </scene>
         <!--MyE Auto Period View Controller - 时段详情-->
         <scene sceneID="icy-9g-1Uc">
@@ -478,7 +486,7 @@
                         <viewControllerLayoutGuide type="bottom" id="LtE-Bc-XqJ"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="3XE-OY-jhr">
-                        <rect key="frame" x="0.0" y="64" width="320" height="367"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="354"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="开始时刻" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="l6n-Pk-Um3">
@@ -602,7 +610,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k9I-7B-MHy" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="187" y="-7212"/>
+            <point key="canvasLocation" x="-2566" y="-8980"/>
         </scene>
         <!--MyE Auto Period List View Controller-->
         <scene sceneID="HnI-an-0gc">
@@ -651,7 +659,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="gyU-vR-0Ff" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-274" y="-6982"/>
+            <point key="canvasLocation" x="-3027" y="-8750"/>
         </scene>
         <!--MyE Ac User Model View Controller - 手动控制-->
         <scene sceneID="zsF-Vn-uoB">
@@ -787,7 +795,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MOq-R0-HYM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1941" y="-7952"/>
+            <point key="canvasLocation" x="-4694" y="-9720"/>
         </scene>
         <!--MyE Ac Energy Saving View Controller - 节能控制-->
         <scene sceneID="H4A-aM-0VM">
@@ -934,7 +942,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="PWM-XH-hGR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2337" y="-6539"/>
+            <point key="canvasLocation" x="-5090" y="-8307"/>
         </scene>
         <!--MyE Ac Temp Monitor View Controller - 温度监控-->
         <scene sceneID="xPf-FJ-sf8">
@@ -1079,7 +1087,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MEy-75-k8A" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2351" y="-5651"/>
+            <point key="canvasLocation" x="-5104" y="-7419"/>
         </scene>
         <!--MyEAC Manual Control Nav Controller - 手动控制-->
         <scene sceneID="d9j-1i-HYC">
@@ -1095,33 +1103,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Aas-fo-aWn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2815" y="-8268"/>
-        </scene>
-        <!--MyE Ac Control View Controller - 手动控制-->
-        <scene sceneID="S83-sn-4D0">
-            <objects>
-                <viewController id="PT8-Al-Qbz" customClass="MyEAcControlViewController" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="tID-mk-L9u"/>
-                        <viewControllerLayoutGuide type="bottom" id="K6e-1b-kFx"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="eeQ-Bg-ruq">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="480"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                    </view>
-                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <navigationItem key="navigationItem" title="手动控制" id="qb7-O2-BSR">
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="5wQ-tV-gVc">
-                            <connections>
-                                <action selector="refreshTemperatureAndHumidity:" destination="PT8-Al-Qbz" id="uhY-2g-U2Q"/>
-                            </connections>
-                        </barButtonItem>
-                    </navigationItem>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="2Ct-Sf-Ugm" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="-2786" y="-8920"/>
+            <point key="canvasLocation" x="-5568" y="-10036"/>
         </scene>
         <!--Navigation Controller - 定时控制-->
         <scene sceneID="dso-oJ-3Kd">
@@ -1140,7 +1122,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ndA-aE-O1d" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2840" y="-7225"/>
+            <point key="canvasLocation" x="-5593" y="-8993"/>
         </scene>
         <!--Navigation Controller - 节能控制-->
         <scene sceneID="sRV-7Z-dog">
@@ -1159,7 +1141,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uyL-lm-Kdr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2863" y="-6539"/>
+            <point key="canvasLocation" x="-5616" y="-8307"/>
         </scene>
         <!--Navigation Controller - 温度监控-->
         <scene sceneID="Abx-Vw-ll7">
@@ -1178,7 +1160,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cd0-r3-a5b" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2877" y="-5651"/>
+            <point key="canvasLocation" x="-5630" y="-7419"/>
         </scene>
     </scenes>
     <resources>
@@ -1202,7 +1184,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="l4e-se-Mtf"/>
-        <segue reference="qvD-Md-gt0"/>
+        <segue reference="N2P-vQ-xic"/>
+        <segue reference="SI1-sd-8kp"/>
     </inferredMetricsTieBreakers>
 </document>

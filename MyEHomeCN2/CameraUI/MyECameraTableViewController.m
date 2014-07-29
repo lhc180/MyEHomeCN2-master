@@ -22,6 +22,8 @@
     NSCondition* _m_PPPPChannelMgtCondition;
     CPPPPChannelManagement* _m_PPPPChannelMgt;
     BOOL _isDetailView; //用于指定大view视图
+    MBProgressHUD *HUD;
+    NSIndexPath *_selectedIndex;
 }
 @end
 
@@ -31,7 +33,6 @@
 -(void)viewWillAppear:(BOOL)animated{
     if (self.needRefresh) {
         self.needRefresh = NO;
-        [self _saveData];
         [self getCameraStatus];
     }
     [self.tableView reloadData];
@@ -54,7 +55,6 @@
 //    camera1.username = @"admin";
 //    camera1.password = @"888888";
 //    [self.cameraList addObject:camera1];
-    [self _loadData];
     
     UIRefreshControl *rc = [[UIRefreshControl alloc] init];
     rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
@@ -62,12 +62,19 @@
     self.refreshControl = rc;
     
     _m_PPPPChannelMgtCondition = [[NSCondition alloc] init];
+    _m_PPPPChannelMgt = new CPPPPChannelManagement();
+    _m_PPPPChannelMgt->pCameraViewController = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self initialize];
+        InitAudioSession();
     });
-    if ([self.cameraList count]) {
-        [self getCameraStatusForTheFirstTime];
-    }
+    
+    [self downloadCameraListFromServer];
+
+    UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(downloadCameraListFromServer)];
+    UIBarButtonItem *add = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addCamera:)];
+    self.navigationItem.rightBarButtonItems = @[add,refresh];
+
 //    [[NSNotificationCenter defaultCenter] addObserver:self
 //                                             selector:@selector(didEnterBackground)
 //                                                 name:UIApplicationDidEnterBackgroundNotification
@@ -76,7 +83,6 @@
 //                                             selector:@selector(willEnterForeground)
 //                                                 name:UIApplicationWillEnterForegroundNotification
 //                                               object:nil];
-    InitAudioSession();
 }
 
 - (void)didReceiveMemoryWarning
@@ -111,28 +117,23 @@
     return [documentsDirectory stringByAppendingPathComponent:@"cameras.plist"];
 }
 #pragma mark - private methods
--(void)getCameraStatusForTheFirstTime{
-    dispatch_async(dispatch_get_main_queue(), ^{
-        for (int i = 0; i < [self.cameraList count]; i++) {
-            MyECamera *c = self.cameraList[i];
-            [self ConnectCamWithCamera:c];  //这里不需要截图，只需要获取状态就可以了
-        }
-    });
+-(void)endGetCameraStatus{
+    [self.refreshControl endRefreshing];
+    self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
 }
 -(void)getCameraStatus{
-    if (![self.cameraList count]) {
-        [self.refreshControl endRefreshing];
-        return;
-    }
     if (self.refreshControl.isRefreshing) {
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
     }
+    if (![self.cameraList count]) {
+        [self performSelector:@selector(endGetCameraStatus) withObject:nil afterDelay:0.3];
+        return;
+    }
     dispatch_async(dispatch_get_main_queue(), ^{
-        for (int i = 0; i < [self.cameraList count]; i++) {
-            MyECamera *c = self.cameraList[i];
+        for (MyECamera *c in _cameraList) {
             [self ConnectCamWithCamera:c];
-            c.m_PPPPChannelMgt->SetSnapshotDelegate((char*)[c.UID UTF8String], self);
-            c.m_PPPPChannelMgt->Snapshot([c.UID UTF8String]);
+            _m_PPPPChannelMgt->SetSnapshotDelegate((char*)[c.UID UTF8String], self);
+            _m_PPPPChannelMgt->Snapshot([c.UID UTF8String]);
         }
     });
 }
@@ -146,16 +147,23 @@
 //        [self initialize];
 //    });
     [_m_PPPPChannelMgtCondition lock];
-    camera.m_PPPPChannelMgt = new CPPPPChannelManagement();
-    camera.m_PPPPChannelMgt->pCameraViewController = self;
-    
-    if (camera.m_PPPPChannelMgt == NULL) {
+    if (_m_PPPPChannelMgt == NULL) {
         [_m_PPPPChannelMgtCondition unlock];
         return;
     }
-    camera.m_PPPPChannelMgt->Start([camera.UID UTF8String], [camera.username UTF8String], [camera.password UTF8String]);
+    _m_PPPPChannelMgt->Start([camera.UID UTF8String], [camera.username UTF8String], [camera.password UTF8String]);
     [_m_PPPPChannelMgtCondition unlock];
 }
+
+#pragma mark - URL method
+-(void)downloadCameraListFromServer{
+    if (HUD == nil) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }else
+        [HUD show:YES];
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@",URL_FOR_CAMERA_LIST] postData:nil delegate:self loaderName:@"download" userDataDictionary:nil];
+}
+
 #pragma mark - IBAction methods
 - (IBAction)addCamera:(UIBarButtonItem *)sender {
     MyECameraAddOptionViewController *vc = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"cameraAdd"];
@@ -173,7 +181,7 @@
     NSLog(@"%i",indexPath.row);
     MyEEditCameraViewController *viewController = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"edit"];
     viewController.camera = c;
-    viewController.m_PPPPChannelMgt = c.m_PPPPChannelMgt;
+    viewController.m_PPPPChannelMgt = _m_PPPPChannelMgt;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -192,7 +200,7 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [self initialize];
     });
-    [self getCameraStatusForTheFirstTime];
+    [self getCameraStatus];
 }
 #pragma mark - Table view data source
 
@@ -248,10 +256,14 @@
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"确定删除该摄像机么?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
         alert.rightBlock = ^{
-            [self.cameraList removeObjectAtIndex:indexPath.row];
-            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            NSLog(@"%@",self.cameraList);
-            [self _saveData];
+            _selectedIndex = indexPath;
+            MyECamera *_camera = _cameraList[indexPath.row];
+            [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&did=%@&user=%@&pwd=%@&name=%@&action=3",URL_FOR_CAMERA_EDIT,_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
+
+//            [self.cameraList removeObjectAtIndex:indexPath.row];
+//            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+//            NSLog(@"%@",self.cameraList);
+//            [self _saveData];
         };
         [alert show];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
@@ -274,8 +286,6 @@
     switch (status) {
         case PPPP_STATUS_UNKNOWN:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusUnknown", @STR_LOCALIZED_FILE_NAME, nil);
-            [self.refreshControl endRefreshing];
-            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
             break;
         case PPPP_STATUS_CONNECTING:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusConnecting", @STR_LOCALIZED_FILE_NAME, nil);
@@ -285,18 +295,12 @@
             break;
         case PPPP_STATUS_CONNECT_FAILED:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusConnectFailed", @STR_LOCALIZED_FILE_NAME, nil);
-            [self.refreshControl endRefreshing];
-            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
             break;
         case PPPP_STATUS_DISCONNECT:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusDisconnected", @STR_LOCALIZED_FILE_NAME, nil);
-            [self.refreshControl endRefreshing];
-            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
             break;
         case PPPP_STATUS_INVALID_ID:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusInvalidID", @STR_LOCALIZED_FILE_NAME, nil);
-            [self.refreshControl endRefreshing];
-            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
             break;
         case PPPP_STATUS_ON_LINE:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusOnline", @STR_LOCALIZED_FILE_NAME, nil);
@@ -304,23 +308,15 @@
             break;
         case PPPP_STATUS_DEVICE_NOT_ON_LINE:
             strPPPPStatus = NSLocalizedStringFromTable(@"CameraIsNotOnline", @STR_LOCALIZED_FILE_NAME, nil);
-            [self.refreshControl endRefreshing];
-            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
             break;
         case PPPP_STATUS_CONNECT_TIMEOUT:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusConnectTimeout", @STR_LOCALIZED_FILE_NAME, nil);
-            [self.refreshControl endRefreshing];
-            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
             break;
         case PPPP_STATUS_INVALID_USER_PWD:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusInvaliduserpwd", @STR_LOCALIZED_FILE_NAME, nil);
-            [self.refreshControl endRefreshing];
-            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
             break;
         default:
             strPPPPStatus = NSLocalizedStringFromTable(@"PPPPStatusUnknown", @STR_LOCALIZED_FILE_NAME, nil);
-            [self.refreshControl endRefreshing];
-            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
             break;
     }
     NSLog(@"PPPPStatus  %@",strPPPPStatus);
@@ -330,11 +326,13 @@
             c.isOnline = isOnline;
         }
     }
+    if (self.refreshControl.isRefreshing) {
+        [self performSelectorOnMainThread:@selector(endGetCameraStatus) withObject:nil waitUntilDone:YES];
+    }
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
 }
 -(void)SnapshotNotify:(NSString *)strDID data:(char *)data length:(int)length{
     NSLog(@"receive image");
-    [self.refreshControl endRefreshing];
     NSArray *paths=NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,NSUserDomainMask,YES);
     NSString *documentsDirectory=[paths objectAtIndex:0];
     for (MyECamera *c in self.cameraList) {
@@ -342,9 +340,56 @@
 			NSString *savedImagePath=[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpg",c.UID]];
 			[[NSData dataWithBytes:data length:length] writeToFile:savedImagePath atomically:YES];
             c.imagePath = savedImagePath;
+            c.status = @"设备在线";
+            c.isOnline = YES;
+        }else{
+            c.status = @"设备不在线";
+            c.isOnline = NO;
         }
     }
-    [self _saveData];
+    if (self.refreshControl.isRefreshing) {
+        [self performSelectorOnMainThread:@selector(endGetCameraStatus) withObject:nil waitUntilDone:YES];
+    }
     [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+}
+
+#pragma mark - URL Delegate methods
+-(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
+    [HUD hide:YES];
+    NSLog(@"reveive string is %@",string);
+    if ([name isEqualToString:@"download"]) {
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        if (i==1) {
+            NSDictionary *dic = [string JSONValue];
+            _cameraList = [NSMutableArray array];
+            for (NSDictionary *d in dic[@"cameraList"]) {
+                [_cameraList addObject:[[MyECamera alloc] initWithDictionary:d]];
+            }
+            if (_cameraList.count) {
+                [self getCameraStatus];
+            }
+        }else if (i == -3){
+            [MyEUniversal doThisWhenUserLogOutWithVC:self];
+        }else if (i == 0){
+            [MyEUtil showMessageOn:nil withMessage:@"传入数据有问题"];
+        }else
+            [MyEUtil showMessageOn:nil withMessage:@"接收数据失败"];
+    }
+    if ([name isEqualToString:@"edit"]) {
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        if (i==1) {
+            [_cameraList removeObjectAtIndex:_selectedIndex.row];
+            [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+        }else if (i == -3){
+            [MyEUniversal doThisWhenUserLogOutWithVC:self];
+        }else if (i == 0){
+            [MyEUtil showMessageOn:nil withMessage:@"传入数据有问题"];
+        }else
+            [MyEUtil showMessageOn:nil withMessage:@"接收数据失败"];
+    }
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
+    [HUD hide:YES];
+    [MyEUtil showErrorOn:nil withMessage:@"与服务器连接超时"];
 }
 @end

@@ -76,11 +76,11 @@
     //以下为APNS部分
     // Required
     
-    [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                   UIRemoteNotificationTypeSound |
-                                                   UIRemoteNotificationTypeAlert)];
-    // Required
-    [APService setupWithOption:launchOptions];
+//    [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+//                                                   UIRemoteNotificationTypeSound |
+//                                                   UIRemoteNotificationTypeAlert)];
+//    // Required
+//    [APService setupWithOption:launchOptions];
     //    UILocalNotification *localNotif =
     //    [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
     //    if (localNotif) {
