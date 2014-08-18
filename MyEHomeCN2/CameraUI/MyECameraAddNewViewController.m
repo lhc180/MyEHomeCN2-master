@@ -236,7 +236,8 @@
     NSLog(@"PPPPStatus  %@",strPPPPStatus);
     HUD.labelText = strPPPPStatus;
 }
-
+-(void)SnapshotNotify:(NSString *)strDID data:(char *)data length:(int)length{
+}
 #pragma mark - URL Delegate methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];

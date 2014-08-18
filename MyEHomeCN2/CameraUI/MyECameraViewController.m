@@ -355,12 +355,12 @@
 }
 - (void) YUVNotify: (Byte*) yuv length:(int)length width: (int) width height:(int)height timestamp:(unsigned int)timestamp DID:(NSString *)did{
     UIImage* image = [APICommon YUV420ToImage:yuv width:width height:height];
-    MainDelegate.dataLength += length;
+    MainDelegate.dataLength += length/10;
     [self performSelector:@selector(refreshImage:) withObject:image];
 }
 - (void) H264Data: (Byte*) h264Frame length: (int) length type: (int) type timestamp: (NSInteger) timestamp{
     UIImage* image = [UIImage imageWithData:[[NSData alloc] initWithBytes:h264Frame length:length]];
-    MainDelegate.dataLength += length;
+    MainDelegate.dataLength += length/10;
     [self performSelector:@selector(refreshImage:) withObject:image];
 }
 #pragma mark - PPPPStatusDelegate methods
