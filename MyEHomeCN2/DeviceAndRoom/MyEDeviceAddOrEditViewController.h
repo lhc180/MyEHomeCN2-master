@@ -9,8 +9,8 @@
 #import <UIKit/UIKit.h>
 #import "MyEInstructionManageViewController.h"
 #import "MyEDevicesViewController.h"
-
-@interface MyEDeviceAddOrEditViewController : UIViewController<UITextFieldDelegate,MyEDataLoaderDelegate,MBProgressHUDDelegate,IQActionSheetPickerView>{
+#import "MyEQRScanViewController.h"
+@interface MyEDeviceAddOrEditViewController : UIViewController<UITextFieldDelegate,MyEDataLoaderDelegate,MBProgressHUDDelegate,IQActionSheetPickerView,MyEQRScanViewControllerDelegate>{
     MBProgressHUD *HUD;
     NSMutableArray *_terminalArray;// 所有的智控星的列表
     NSMutableArray *_validTypeArray;// 插座/开关这两个类型是不能在App添加的, 今后有可能又更多类型不能在App添加.
@@ -32,11 +32,15 @@
 @property (strong, nonatomic) IBOutlet UIButton *deleteBtn;
 @property (weak, nonatomic) IBOutlet UIButton *sureBtn;
 
+//关键参数
 @property (nonatomic) NSInteger preivousPanelType;// 0表示登录后直接到设备面板在到此面板， 1表示从Rooms面板转移到设备再到此面板
 @property (nonatomic) NSInteger actionType; // 0表示添加，1表示编辑
 
+//空调相关
 @property (weak, nonatomic) IBOutlet UIButton *downloadInstructionBtn;
 
-- (IBAction)confirmAction:(id)sender;
+//安防相关
+@property (weak, nonatomic) IBOutlet UIView *safeMainView;
+@property (weak, nonatomic) IBOutlet WTReTextField *safeIdTxt;
 
 @end

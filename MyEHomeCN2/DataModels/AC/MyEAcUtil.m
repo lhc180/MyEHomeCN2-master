@@ -92,27 +92,36 @@
 {
     switch (deviceType) {
         case DT_AC:
-            return [UIImage imageNamed:@"ac-on"];
+            return [UIImage imageNamed:@"ac-off"];
             break;
         case DT_TV:
-            return [UIImage imageNamed:@"tv-on"];
+            return [UIImage imageNamed:@"tv-off"];
             break;
         case DT_CURTAIN:
-            return [UIImage imageNamed:@"curtain-on"];
+            return [UIImage imageNamed:@"curtain-off"];
             break;
         case DT_AUDIO:
-            return [UIImage imageNamed:@"audio-on"];
+            return [UIImage imageNamed:@"audio-off"];
             break;
         case DT_SOCKET:
-            return [UIImage imageNamed:@"socket-on"];
+            return [UIImage imageNamed:@"socket-off"];
             break;
         case DT_OTHER:
-            return [UIImage imageNamed:@"other-on"];
+            return [UIImage imageNamed:@"other-off"];
+            break;
+        case 7:
+            return [UIImage imageNamed:@"switch-off"];
+            break;
+        case 8:
+            return [UIImage imageNamed:@"ir-off"];
+            break;
+        case 9:
+            return [UIImage imageNamed:@"smoke-off"];
             break;
         default:
-            return [UIImage imageNamed:@"switch-on"];
+            return [UIImage imageNamed:@"door-off"];
             break;
     }
-    return [UIImage imageNamed:@"other-on"];
+    return [UIImage imageNamed:@"other-off"];
 }
 @end

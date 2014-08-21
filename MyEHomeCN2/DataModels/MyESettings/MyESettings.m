@@ -98,6 +98,9 @@
 }
 -(UIImage *)getImage{
     NSArray *array = @[@"signal0",@"signal1",@"signal2",@"signal3",@"signal4"];
+    if (self.signal == -1) {
+        return [UIImage imageNamed:@"noconnection"];
+    }
     return [UIImage imageNamed:array[self.signal]];
 }
 @end

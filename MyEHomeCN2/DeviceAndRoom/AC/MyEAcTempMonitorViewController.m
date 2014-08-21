@@ -206,8 +206,17 @@
 #pragma mark - privates method
 -(void)_refreshUI
 {
-    [self.enableTempMonitorSwitch setOn:self.acTempMonitor.monitorFlag animated:YES ];
-    [self.enableAcAutoRunSwitch setOn:self.acTempMonitor.autoRunFlag animated:YES ];
+    [self.enableTempMonitorSwitch setOn:self.acTempMonitor.monitorFlag animated:YES];
+    if (!self.device.isSystemDefined) {
+        [self.enableAcAutoRunSwitch setOn:NO];
+        self.enableAcAutoRunSwitch.enabled = NO;
+    }else{
+        if (self.enableTempMonitorSwitch.isOn) {
+            [self.enableAcAutoRunSwitch setOn:self.acTempMonitor.autoRunFlag animated:YES];
+        }else
+            [self.enableAcAutoRunSwitch setOn:NO];
+    }
+//    [self.enableAcAutoRunSwitch setOn:self.acTempMonitor.autoRunFlag animated:YES ];
     //这里增加了限制条件，因为有时候数据的显示超出了设定范围
     if (self.acTempMonitor.minTemp > 18) {
         [self.lowTemBtn setTitle:[NSString stringWithFormat:@"18℃"] forState:UIControlStateNormal];

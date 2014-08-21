@@ -103,37 +103,36 @@
     }else{
         MyETerminal *terminal = [self.accountData.terminals objectAtIndex:indexPath.row];
         NSString *identifier = nil;
-        switch (terminal.irType) {
-            case 1:
-                identifier = @"zhikongxing";
-                break;
-            case 2:
-                identifier = @"zhinengchazuo";
-                break;
-            default:
-                identifier = @"zhinengchazuo";
-                break;
-        }
+        if (terminal.irType == 1) {
+            identifier = @"zhikongxing";
+        }else
+            identifier = @"zhinengchazuo";
+
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
         
         cell.textLabel.text = terminal.name;
         
-        switch (terminal.conSignal) {
-            case 1:
-                cell.imageView.image = [UIImage imageNamed:@"signal1"];
-                break;
-            case 2:
-                cell.imageView.image = [UIImage imageNamed:@"signal2"];
-                break;
-            case 3:
-                cell.imageView.image = [UIImage imageNamed:@"signal3"];
-                break;
-            case 4:
-                cell.imageView.image = [UIImage imageNamed:@"signal4"];
-                break;
-            default:
-                cell.imageView.image = [UIImage imageNamed:@"signal0"]; //这个是不在线的图标
-                break;
+        if (terminal.irType < 4) {
+            switch (terminal.conSignal) {
+                case 1:
+                    cell.imageView.image = [UIImage imageNamed:@"signal1"];
+                    break;
+                case 2:
+                    cell.imageView.image = [UIImage imageNamed:@"signal2"];
+                    break;
+                case 3:
+                    cell.imageView.image = [UIImage imageNamed:@"signal3"];
+                    break;
+                case 4:
+                    cell.imageView.image = [UIImage imageNamed:@"signal4"];
+                    break;
+                default:
+                    cell.imageView.image = [UIImage imageNamed:@"signal0"]; //这个是不在线的图标
+                    break;
+            }
+        }else{
+            NSArray *array = @[@"ir",@"smoke",@"door"];
+            cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-off",array[terminal.irType - 4]]];
         }
         return cell;
     }

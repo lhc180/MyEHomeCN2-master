@@ -21,6 +21,7 @@
         _isOnline = NO;
         _status = @"未知";
         _deviceId = 0;
+        _statusValue = 0;
         return self;
     }
     return nil;
@@ -37,6 +38,7 @@
         self.imagePath = @"";
         self.isOnline = NO;
         self.status = @"未知";
+        self.statusValue = 0;
         return self;
     }
     return nil;
@@ -64,7 +66,7 @@
 }
 #pragma mark - NSLog methods
 -(NSString *)description{
-    return [NSString stringWithFormat:@"name:%@  UID:%@  userName:%@  password:%@",self.name,self.UID,self.username,self.password];
+    return [NSString stringWithFormat:@"name:%@  UID:%@  userName:%@  password:%@ status:%@",self.name,self.UID,self.username,self.password,self.status];
 }
 @end
 

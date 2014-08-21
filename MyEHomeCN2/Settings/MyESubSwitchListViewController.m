@@ -46,7 +46,7 @@
     MyESettingSubSwitch *subSwitch = self.settings.subSwitchList[indexPath.row];
     cell.textLabel.text = subSwitch.name;
     cell.imageView.image = [subSwitch getImage];
-    cell.detailTextLabel.text = subSwitch.mainTid.length>0?@"已关联":@"未关联";
+    cell.detailTextLabel.text = subSwitch.mainTid.length>0?@"已绑定":@"未绑定";
     return cell;
 }
 

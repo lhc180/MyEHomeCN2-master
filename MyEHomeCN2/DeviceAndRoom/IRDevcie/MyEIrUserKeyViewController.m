@@ -300,11 +300,13 @@
             [MyEUtil showErrorOn:self.navigationController.view withMessage:@"发送按键控制时发生错误！"];
         } else if ([MyEUtil getResultFromAjaxString:string] == 1){
             if([MyEUtil getResultFromAjaxString:string] == 1){
-                [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令发送成功"];
+//                [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令发送成功"];
             } else if([MyEUtil getResultFromAjaxString:string] == -1){
-                [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令发送失败"];
+                [MyEUtil showMessageOn:nil withMessage:@"指令发送失败"];
+//                [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令发送失败"];
             } else
-                [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令发送产生错误"];
+                [MyEUtil showMessageOn:nil withMessage:@"指令发送失败"];
+//                [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令发送产生错误"];
         }
     }
 

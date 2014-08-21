@@ -13,13 +13,14 @@
 @property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
 @property (nonatomic, assign) NSInteger deviceId;
 @property (nonatomic, assign) NSInteger userId;
-@property (nonatomic, copy) NSString *name;
-@property (nonatomic, copy) NSString *UID;
-@property (nonatomic, copy) NSString *username;
-@property (nonatomic, copy) NSString *password;
-@property (nonatomic, copy) NSString *status;
-@property (nonatomic, copy) NSString *imagePath;  //本地存储图片
-@property (nonatomic) BOOL isOnline;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, strong) NSString *UID;
+@property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *password;
+@property (nonatomic, strong) NSString *status;
+@property (nonatomic, strong) NSString *imagePath;  //本地存储图片
+@property (nonatomic, assign) NSInteger statusValue;
+@property (nonatomic, assign) BOOL isOnline;
 
 - (MyECamera *)initWithDictionary:(NSDictionary *)dictionary;
 - (MyECamera *)initWithJSONString:(NSString *)jsonString;

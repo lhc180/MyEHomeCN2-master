@@ -306,7 +306,7 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
 }
 + (void)showToastOn:(UIView *)view withMessage:(NSString *)message backgroundColor:(UIColor *)bgColor
 {
-    MyEAppDelegate *app = (MyEAppDelegate *)[UIApplication sharedApplication].delegate;
+    MYEAppDelegate *app = (MYEAppDelegate *)[UIApplication sharedApplication].delegate;
     MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:app.window animated:YES];
     
 //    // Configure for text only and offset down
@@ -353,7 +353,7 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
     //如果要做的更好些的话，这里应该加入一个定时器，当用户一直点击btn时，HUD会一直显示，当用户不再点击时，HUD在2s之后消失
     //我真是太聪明了，这里对于HUD进行了重复性判断，如果此时已经有了HUD，那么就不再创建HUD。这里也算是解决了很久以来的一个心愿
 //    BOOL hasHUD = NO;
-    MyEAppDelegate *app = (MyEAppDelegate *)[UIApplication sharedApplication].delegate;
+    MYEAppDelegate *app = (MYEAppDelegate *)[UIApplication sharedApplication].delegate;
 //    for (UIView *v in app.window.subviews) {
 //        if ([v isKindOfClass:[MBProgressHUD class]]) {
 //            hasHUD = YES;
@@ -389,7 +389,7 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
     HUD.mode = MBProgressHUDModeText;
     HUD.labelText = message;
 	HUD.margin = 10.f;
-//	HUD.yOffset = 150.f;
+	HUD.yOffset = 40.f;
     if (yes) {
         HUD.color = [UIColor greenColor];
     }else{

@@ -89,7 +89,9 @@ instructionMode, acInstructionSet, irKeySet;
 
 #pragma mark 属性方法
 - (BOOL)isInitialized{
-    return self.modelId > 0;
+    NSLog(@"%@   %@",self.brand,self.model);
+    return ![self.brand isEqualToString:@""] && ![self.model isEqualToString:@""];
+//    return self.modelId > 0;
 }
 - (BOOL)isOrphan{
     return [self.tId length] == 0;

@@ -15,15 +15,6 @@
 @implementation MyEAcStandardInstructionViewController
 @synthesize brandIdArray,brandNameArray,modelIdArray,modelNameArray,brandBtn,modelBtn;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 #pragma mark - life circle methods
 
 //以下的这行代码是导致tabbar上残留文字的罪魁祸首，这个以后要多加注意
@@ -31,6 +22,10 @@
 //    [super viewWillAppear:YES];
 //    self.navigationController.topViewController.title = @"标准库";
 //}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -72,10 +67,12 @@
                     [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
                     [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
                 }else{
-                btn.layer.masksToBounds = YES;
-                btn.layer.cornerRadius = 4;
-                btn.layer.borderColor = btn.tintColor.CGColor;
-                btn.layer.borderWidth = 1;
+                    if (!IS_IOS6) {
+                        btn.layer.masksToBounds = YES;
+                        btn.layer.cornerRadius = 4;
+                        btn.layer.borderColor = btn.tintColor.CGColor;
+                        btn.layer.borderWidth = 1;
+                    }
                 }
             }
         }
@@ -211,12 +208,14 @@
         NSLog(@"%@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [HUD hide:YES];
+            [timer invalidate];
             [UIApplication sharedApplication].idleTimerDisabled = NO;
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
             return;
         }
         if ([MyEUtil getResultFromAjaxString:string] != 1) {
             [HUD hide:YES];
+            [timer invalidate];
             [UIApplication sharedApplication].idleTimerDisabled = NO;
             HUD.detailsLabelText = @"进度查询失败!";
 //            [MyEUtil showMessageOn:self.navigationController.view withMessage:@"初始化进度查询失败"];
@@ -305,6 +304,7 @@
     }
     if ([name isEqualToString:@"cancelAcInit"]) {
         NSLog(@"%@",string);
+        [timer invalidate];
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [HUD hide:YES];
             [MyEUniversal doThisWhenUserLogOutWithVC:self];

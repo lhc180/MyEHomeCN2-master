@@ -24,6 +24,13 @@
             [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
         }
     }
+    if (IS_IOS6) {
+        self.weekSeg.layer.borderColor = MainColor.CGColor;
+        self.weekSeg.layer.borderWidth = 1.0f;
+        self.weekSeg.layer.cornerRadius = 4.0f;
+        self.weekSeg.layer.masksToBounds = YES;
+    }
+
     self.weekSeg.mydelegate = self;
     NSMutableArray *array1 = [NSMutableArray array];
     NSMutableArray *array2 = [NSMutableArray array];

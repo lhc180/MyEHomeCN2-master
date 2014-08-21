@@ -32,6 +32,12 @@
     }
     [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
+    if (IS_IOS6) {
+        self.dateSegment.layer.borderColor = MainColor.CGColor;
+        self.dateSegment.layer.borderWidth = 1.0f;
+        self.dateSegment.layer.cornerRadius = 4.0f;
+        self.dateSegment.layer.masksToBounds = YES;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -75,11 +81,11 @@
     [_eColumnChart removeFromSuperview];
     _eColumnChart = nil;
     _eColumnChart = [[EColumnChart alloc] initWithFrame:CGRectMake(40, 120, 270, 200)];
-    [self defineGestureWith:_eColumnChart];
     [_eColumnChart setColumnsIndexStartFromLeft:YES];
     [_eColumnChart setDataSource:self];
     [_eColumnChart setShowHighAndLowColumnWithColor:YES];
     [self.view addSubview:_eColumnChart];
+    [self defineGestureWith:_eColumnChart];
 }
 -(void)downloadElecInfoFromServer{
     if (HUD == nil) {

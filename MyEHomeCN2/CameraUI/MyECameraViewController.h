@@ -17,7 +17,7 @@
 #import "MyECamera.h"
 
 @interface MyECameraViewController : UIViewController
-<ImageNotifyProtocol,ParamNotifyProtocol,DateTimeProtocol,SdcardScheduleProtocol> {
+<ImageNotifyProtocol,ParamNotifyProtocol,DateTimeProtocol,SdcardScheduleProtocol,SnapshotProtocol> {
 
 }
 @property CPPPPChannelManagement* m_PPPPChannelMgt;
@@ -36,6 +36,7 @@
 
 @property (weak, nonatomic) IBOutlet UIButton *talkBtn;
 @property (weak, nonatomic) IBOutlet UIButton *listenBtn;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *actionSeg;
 
 @property (strong, nonatomic) IBOutletCollection(UILabel) NSArray *infoLabels;
 

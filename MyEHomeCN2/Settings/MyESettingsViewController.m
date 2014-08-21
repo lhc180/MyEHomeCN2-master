@@ -153,8 +153,8 @@
             [self.navigationController pushViewController:vc animated:YES];
             break;}
         case 2:
-            [notification setOn:notification.isOn?NO:YES animated:YES];
-            [self valueChange:notification];
+//            [notification setOn:notification.isOn?NO:YES animated:YES];
+//            [self valueChange:notification];
             break;
         case 3:
             if (indexPath.row == 0) {
@@ -162,7 +162,7 @@
                 [vc setValue:self.accountData forKey:@"accountData"];
                 [self.navigationController pushViewController:vc animated:YES];
             }else if(indexPath.row == 1){
-                MyEsettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"mediator"];
+                MYESettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"gateway"];
                 vc.accountData = self.accountData;
                 vc.jumpFromSettings = YES;
                 [self.navigationController pushViewController:vc animated:YES];
@@ -261,8 +261,9 @@
                     vc0.needRefresh = YES;
 
                     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"settings" bundle:nil];
-                    MyEsettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"mediator"];
+                    MYESettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"gateway"];
                     vc.accountData = self.accountData;
+                    vc.jumpFromSettings = YES;
                     [self.navigationController pushViewController:vc animated:YES];
                 };
             }else if (self.accountData.mStatus == 0 ) { //再看网关在不在线
@@ -369,7 +370,7 @@
 }
 - (IBAction)deleteUserInfo:(UIButton *)sender {
     DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"温馨提示"
-                                                contentText:@"此操作将使您与服务器断开连接，您确定么？"
+                                                contentText:@"此操作将使您与服务器断开连接，您确定退出登录吗？"
                                             leftButtonTitle:@"取消"
                                            rightButtonTitle:@"确定"];
     [alert show];
@@ -378,16 +379,10 @@
         [defs removeObjectForKey:@"mId"];
         [defs removeObjectForKey:@"provinceId"];
         [defs removeObjectForKey:@"cityId"];
-        
-        self.accountData.devices = nil;
-        self.accountData.terminals = nil;
-        self.accountData.rooms = nil;
-        self.accountData.deviceTypes = nil;
-        self.accountData.userId = nil;
-        self.accountData.userName = nil;
-        self.accountData.mId = nil;
-        
-        [self performSegueWithIdentifier:@"showLoginVC" sender:self];
+        self.accountData = nil;
+        [MainDelegate.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
+        MyELoginViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        MainDelegate.window.rootViewController = vc;
         [self uploadModelToServerToDeleteUserInfo];
     };
 }

@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C3CFB6B617FA6092007B27AE"
+               BlueprintIdentifier = "8CBC7D52199DE51E0067D79F"
                BuildableName = "MyEHomeCN2.app"
                BlueprintName = "MyEHomeCN2"
                ReferencedContainer = "container:MyEHomeCN2.xcodeproj">
@@ -32,7 +32,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "C3CFB6DA17FA6092007B27AE"
+               BlueprintIdentifier = "8CBC7D73199DE51F0067D79F"
                BuildableName = "MyEHomeCN2Tests.xctest"
                BlueprintName = "MyEHomeCN2Tests"
                ReferencedContainer = "container:MyEHomeCN2.xcodeproj">
@@ -42,7 +42,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C3CFB6B617FA6092007B27AE"
+            BlueprintIdentifier = "8CBC7D52199DE51E0067D79F"
             BuildableName = "MyEHomeCN2.app"
             BlueprintName = "MyEHomeCN2"
             ReferencedContainer = "container:MyEHomeCN2.xcodeproj">
@@ -54,25 +54,20 @@
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       allowLocationSimulation = "YES">
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C3CFB6B617FA6092007B27AE"
+            BlueprintIdentifier = "8CBC7D52199DE51E0067D79F"
             BuildableName = "MyEHomeCN2.app"
             BlueprintName = "MyEHomeCN2"
             ReferencedContainer = "container:MyEHomeCN2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
-         <AdditionalOption
-            key = "NSZombieEnabled"
-            value = "YES"
-            isEnabled = "YES">
-         </AdditionalOption>
       </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
@@ -84,7 +79,7 @@
       <BuildableProductRunnable>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "C3CFB6B617FA6092007B27AE"
+            BlueprintIdentifier = "8CBC7D52199DE51E0067D79F"
             BuildableName = "MyEHomeCN2.app"
             BlueprintName = "MyEHomeCN2"
             ReferencedContainer = "container:MyEHomeCN2.xcodeproj">
@@ -96,7 +91,6 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
-      customArchiveName = "MyEHome"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

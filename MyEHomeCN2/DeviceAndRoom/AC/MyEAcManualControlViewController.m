@@ -70,7 +70,7 @@
         }
     }
     timerToRefreshTemperatureAndHumidity = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(downloadTemperatureHumidityFromServer) userInfo:nil repeats:YES];
-
+    [self downloadTemperatureHumidityFromServer];
 }
 
 #pragma mark -

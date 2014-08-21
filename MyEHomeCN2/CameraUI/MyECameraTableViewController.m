@@ -24,6 +24,7 @@
     BOOL _isDetailView; //用于指定大view视图
     MBProgressHUD *HUD;
     NSIndexPath *_selectedIndex;
+    BOOL _jumpToSubControllers;
 }
 @end
 
@@ -31,11 +32,29 @@
 
 #pragma mark - life circle methods
 -(void)viewWillAppear:(BOOL)animated{
-    if (self.needRefresh) {
-        self.needRefresh = NO;
-        [self getCameraStatus];
+    [super viewWillAppear:YES];
+    [self getCameraStatus];
+    if (IS_IOS6) {
+        [[UIApplication sharedApplication] setStatusBarHidden:YES];
+        [[UIApplication sharedApplication] setStatusBarHidden:NO];
     }
-    [self.tableView reloadData];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didEnterBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(willEnterForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    if (!_jumpToSubControllers) {  //如果是跳转到子控制器，则只是
+        _jumpToSubControllers = NO;
+        [self didEnterBackground];
+    }
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
 }
 - (void)viewDidLoad
 {
@@ -63,26 +82,16 @@
     
     _m_PPPPChannelMgtCondition = [[NSCondition alloc] init];
     _m_PPPPChannelMgt = new CPPPPChannelManagement();
-    _m_PPPPChannelMgt->pCameraViewController = self;
+
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self initialize];
         InitAudioSession();
+        [self initialize];
     });
-    
     [self downloadCameraListFromServer];
 
     UIBarButtonItem *refresh = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemRefresh target:self action:@selector(downloadCameraListFromServer)];
     UIBarButtonItem *add = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addCamera:)];
     self.navigationItem.rightBarButtonItems = @[add,refresh];
-
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(didEnterBackground)
-//                                                 name:UIApplicationDidEnterBackgroundNotification
-//                                               object:nil];
-//    [[NSNotificationCenter defaultCenter] addObserver:self
-//                                             selector:@selector(willEnterForeground)
-//                                                 name:UIApplicationWillEnterForegroundNotification
-//                                               object:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -91,7 +100,7 @@
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - data methods
+#pragma mark - data save methods
 -(void)_loadData{
     NSMutableArray *array = nil;
     NSString *filePath = [self dataFilePath];
@@ -129,10 +138,13 @@
         [self performSelector:@selector(endGetCameraStatus) withObject:nil afterDelay:0.3];
         return;
     }
+    _jumpToSubControllers = NO;
+    _m_PPPPChannelMgt->pCameraViewController = self;
+    [self didEnterBackground];  //这里要将所有的都断开，然后再进行连接
+   
     dispatch_async(dispatch_get_main_queue(), ^{
         for (MyECamera *c in _cameraList) {
             [self ConnectCamWithCamera:c];
-            _m_PPPPChannelMgt->SetSnapshotDelegate((char*)[c.UID UTF8String], self);
             _m_PPPPChannelMgt->Snapshot([c.UID UTF8String]);
         }
     });
@@ -143,15 +155,12 @@
     PPPP_NetworkDetect(&NetInfo, 0);
 }
 - (void)ConnectCamWithCamera:(MyECamera *)camera{
-//    dispatch_async(dispatch_get_main_queue(), ^{
-//        [self initialize];
-//    });
     [_m_PPPPChannelMgtCondition lock];
     if (_m_PPPPChannelMgt == NULL) {
         [_m_PPPPChannelMgtCondition unlock];
         return;
     }
-    _m_PPPPChannelMgt->Start([camera.UID UTF8String], [camera.username UTF8String], [camera.password UTF8String]);
+    _m_PPPPChannelMgt->Start([camera.UID UTF8String],[camera.username UTF8String],[camera.password UTF8String]);
     [_m_PPPPChannelMgtCondition unlock];
 }
 
@@ -177,8 +186,9 @@
 - (IBAction)editCamera:(UIButton *)sender {
     CGPoint hit = [sender convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:hit];
+    _jumpToSubControllers = YES;
     MyECamera *c = self.cameraList[indexPath.row];
-    NSLog(@"%i",indexPath.row);
+    NSLog(@"%li",(long)indexPath.row);
     MyEEditCameraViewController *viewController = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"edit"];
     viewController.camera = c;
     viewController.m_PPPPChannelMgt = _m_PPPPChannelMgt;
@@ -199,8 +209,11 @@
 - (void) willEnterForeground{
     dispatch_async(dispatch_get_main_queue(), ^{
         [self initialize];
+        InitAudioSession();
     });
-    [self getCameraStatus];
+    if (self.cameraList.count) {
+        [self getCameraStatus];
+    }
 }
 #pragma mark - Table view data source
 
@@ -229,10 +242,14 @@
         UILabel *lblStatus = (UILabel *)[cell.contentView viewWithTag:3];
         lblStatus.text = camera.status;
         UIImageView *imageView = (UIImageView *)[cell.contentView viewWithTag:11];
+        UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:100];
+        [act startAnimating];
+        act.hidden = ![camera.imagePath isEqualToString:@""];
         if (camera.isOnline) {
             imageView.image = [UIImage imageNamed:@"signal4"];
-        }else
+        }else{
             imageView.image = [UIImage imageNamed:@"signal0"];
+        }
     }
     return cell;
 }
@@ -244,8 +261,10 @@
         [MyEUtil showMessageOn:nil withMessage:@"摄像头不在线"];
         return;
     }
+    _jumpToSubControllers = YES;
     MyECameraViewController *viewController = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"cameraInfo"];
     viewController.camera = camera;
+    viewController.m_PPPPChannelMgt = _m_PPPPChannelMgt;
     viewController.modalPresentationStyle = UIModalPresentationNone;
     viewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     [self presentViewController:viewController animated:YES completion:nil];
@@ -258,7 +277,7 @@
         alert.rightBlock = ^{
             _selectedIndex = indexPath;
             MyECamera *_camera = _cameraList[indexPath.row];
-            [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&did=%@&user=%@&pwd=%@&name=%@&action=3",URL_FOR_CAMERA_EDIT,_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
+            [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&did=%@&user=%@&pwd=%@&name=%@&action=3",URL_FOR_CAMERA_EDIT,(long)_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
 
 //            [self.cameraList removeObjectAtIndex:indexPath.row];
 //            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
@@ -324,12 +343,15 @@
         if ([c.UID isEqualToString:strDID]) {
             c.status = strPPPPStatus;
             c.isOnline = isOnline;
+            if (status > 2) {
+                c.imagePath = @"noImage";
+            }
         }
     }
     if (self.refreshControl.isRefreshing) {
-        [self performSelectorOnMainThread:@selector(endGetCameraStatus) withObject:nil waitUntilDone:YES];
+        [self performSelectorOnMainThread:@selector(endGetCameraStatus) withObject:nil waitUntilDone:NO];
     }
-    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 }
 -(void)SnapshotNotify:(NSString *)strDID data:(char *)data length:(int)length{
     NSLog(@"receive image");
@@ -340,17 +362,12 @@
 			NSString *savedImagePath=[documentsDirectory stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.jpg",c.UID]];
 			[[NSData dataWithBytes:data length:length] writeToFile:savedImagePath atomically:YES];
             c.imagePath = savedImagePath;
-            c.status = @"设备在线";
-            c.isOnline = YES;
-        }else{
-            c.status = @"设备不在线";
-            c.isOnline = NO;
         }
     }
     if (self.refreshControl.isRefreshing) {
-        [self performSelectorOnMainThread:@selector(endGetCameraStatus) withObject:nil waitUntilDone:YES];
+        [self performSelectorOnMainThread:@selector(endGetCameraStatus) withObject:nil waitUntilDone:NO];
     }
-    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+    [self.tableView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
 }
 
 #pragma mark - URL Delegate methods
@@ -361,7 +378,7 @@
         NSInteger i = [MyEUtil getResultFromAjaxString:string];
         if (i==1) {
             NSDictionary *dic = [string JSONValue];
-            _cameraList = [NSMutableArray array];
+            [_cameraList removeAllObjects];
             for (NSDictionary *d in dic[@"cameraList"]) {
                 [_cameraList addObject:[[MyECamera alloc] initWithDictionary:d]];
             }

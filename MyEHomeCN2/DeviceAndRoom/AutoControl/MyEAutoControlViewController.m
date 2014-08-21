@@ -56,6 +56,12 @@
     }
     [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
+    if (IS_IOS6) {
+        self.enableProcessSegmentedControl.layer.borderColor = MainColor.CGColor;
+        self.enableProcessSegmentedControl.layer.borderWidth = 1.0f;
+        self.enableProcessSegmentedControl.layer.cornerRadius = 4.0f;
+        self.enableProcessSegmentedControl.layer.masksToBounds = YES;
+    }
 
     [self downloadProcessListFromServer];
 //    [self.parentViewController setTitle:[NSString stringWithFormat:@"%@-自动控制", self.device.name]];

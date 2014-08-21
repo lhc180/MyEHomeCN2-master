@@ -14,14 +14,6 @@
 
 @implementation MyECameraWIFIConnectViewController
 
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -46,7 +38,7 @@
         vc.needRefresh = YES;
         [self.navigationController popViewControllerAnimated:YES];
     }else
-        [MyEUtil showMessageOn:nil withMessage:@"操作失败,请检测密码是否有误!"];
+        [MyEUtil showMessageOn:nil withMessage:@"操作失败,请确认密码正确且摄像机在线"];
 }
 
 @end

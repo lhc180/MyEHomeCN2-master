@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @interface MyEDeviceStatus : NSObject  <NSCopying> 
-@property (nonatomic) NSInteger connection;//0表示断开，1~4表示四格信号
+@property (nonatomic) NSInteger connection;//0表示断开，1~4表示四格信号,-2表示安防设备
 
 @property (nonatomic) NSInteger powerSwitch;//0表示关，1开
 
@@ -23,6 +23,11 @@
 @property (nonatomic) NSInteger tempMornitorEnabled;
 @property (nonatomic) NSInteger acTmax;
 @property (nonatomic) NSInteger acTmin;
+
+//安防设备
+@property (nonatomic, assign) NSInteger protectionStatus; //安防设备的布防状态：1-布防 0-撤防
+@property (nonatomic, assign) NSInteger alertStatus; //安防设备的报警状态：1-报警 0-未报警
+//for switch
 @property (nonatomic,strong) NSMutableString *switchStatus;
 
 // for Smart Socket

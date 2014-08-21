@@ -53,12 +53,12 @@
     UILabel *deviceNameLabel,*roomLabel,*controlKey,*controlKeyDetail;
     if (IS_IOS6) {
         deviceNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(62, 7, 103, 21)];
-        roomLabel = [[UILabel alloc] initWithFrame:CGRectMake(213, 10, 48, 15)];
+        roomLabel = [[UILabel alloc] initWithFrame:CGRectMake(201, 10, 60, 15)];
         controlKey = [[UILabel alloc] initWithFrame:CGRectMake(62, 31, 53, 15)];
         controlKeyDetail = [[UILabel alloc] initWithFrame:CGRectMake(125, 31, 159, 15)];
     }else{
         deviceNameLabel = [[UILabel alloc] initWithFrame:CGRectMake(72, 7, 103, 21)];
-        roomLabel = [[UILabel alloc] initWithFrame:CGRectMake(213, 10, 48, 15)];
+        roomLabel = [[UILabel alloc] initWithFrame:CGRectMake(201, 10, 60, 15)];
         controlKey = [[UILabel alloc] initWithFrame:CGRectMake(72, 31, 53, 15)];
         controlKeyDetail = [[UILabel alloc] initWithFrame:CGRectMake(135, 31, 159, 15)];
     }
@@ -148,6 +148,9 @@
             //            controlKeyName = [controlKeyName stringByAppendingString:[channel characterAtIndex:i] ==0?@"关":@"开"];
         }
         controlKeyName = [array componentsJoinedByString:@","];
+    }else if ([dic[@"isAc"] intValue] == 3 || [dic[@"isAc"] intValue] == 4 || [dic[@"isAc"] intValue] == 5){  //安防设备
+        NSInteger i = [dic[@"controlKey"][@"powerSwitch"] intValue];
+        controlKeyName = i == 1?@"布防":@"撤防";
     }else{
         // 可能这里容易出问题
         //前两个判断表示设备是插座

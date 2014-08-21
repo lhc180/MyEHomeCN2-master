@@ -7,11 +7,12 @@
 //
 
 #import "MyECameraLandscapeViewController.h"
-
+#import "MBProgressHUD.h"
 @interface MyECameraLandscapeViewController (){
     UIImageView *_playImage;
     NSInteger _dataLength;
     BOOL _isShowing;
+    MBProgressHUD *HUD;
 }
 
 @end
@@ -35,29 +36,47 @@
         [self setPlaybackViewHide:NO];
         [self performSelector:@selector(changeView) withObject:nil afterDelay:0.1];
         [self startRecordFromBegin:YES];
+    }else{
+        [self setVideoControlViewHide:NO];
+        [self addGestureOnControlView];
     }
     [self performSelector:@selector(changeView) withObject:nil afterDelay:0.1];
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideOrShowView)];
     _isShowing = YES;
-    [_playImage addGestureRecognizer:tap];
+    [self.view addGestureRecognizer:tap];
+    UITapGestureRecognizer *tap2 = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(backToSuperView:)];
+    tap2.numberOfTapsRequired = 2;
+    [self.view addGestureRecognizer:tap2];
+    if (IS_IOS6) {
+        self.videoControlSeg.layer.borderColor = MainColor.CGColor;
+        self.videoControlSeg.layer.borderWidth = 1.0f;
+        self.videoControlSeg.layer.cornerRadius = 4.0f;
+        self.videoControlSeg.layer.masksToBounds = YES;
+    }
+//    [_resetBtn setBackgroundImage:[[UIImage imageNamed:@"control-enable-normal"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateNormal];
+//    [_resetBtn setBackgroundImage:[[UIImage imageNamed:@"control-enable-highlight"] stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateHighlighted];
+//    [_resetBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    [_resetBtn setTitleColor:[UIColor colorWithRed:69/255 green:220/255 blue:200/255 alpha:1] forState:UIControlStateHighlighted];
+
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
-    //resolution: 0  bright: 12  contrast: 100  mode: 1 flip: 0
-    NSLog(@"%@",_cameraParam);
-    if (self.actionType != 2) {
-        UILabel *contrastLbl = (UILabel *)[_ContrastSetView viewWithTag:100];
-        UILabel *brightnessLbl = (UILabel *)[_brightnessSetView viewWithTag:100];
-        UISlider *contrastSlider = (UISlider *)[_ContrastSetView viewWithTag:101];
-        UISlider *brightnessSlider = (UISlider *)[_brightnessSetView viewWithTag:101];
-        contrastLbl.text = [NSString stringWithFormat:@"%i",_cameraParam.contrast];
-        brightnessLbl.text = [NSString stringWithFormat:@"%i",_cameraParam.bright];
-        contrastSlider.value = _cameraParam.contrast;
-        brightnessSlider.value = _cameraParam.bright;
-        contrastSlider.transform=CGAffineTransformMakeRotation(deg2rad*(90));
-        brightnessSlider.transform=CGAffineTransformMakeRotation(deg2rad*(90));
-        self.videoBtn.selected = _cameraParam.saturation==0?YES:NO;
-    }
+//    NSLog(@"%@",_playImage.gestureRecognizers);
+//    //resolution: 0  bright: 12  contrast: 100  mode: 1 flip: 0
+//    NSLog(@"%@",_cameraParam);
+//    if (self.actionType != 2) {
+//        UILabel *contrastLbl = (UILabel *)[_ContrastSetView viewWithTag:100];
+//        UILabel *brightnessLbl = (UILabel *)[_brightnessSetView viewWithTag:100];
+//        UISlider *contrastSlider = (UISlider *)[_ContrastSetView viewWithTag:101];
+//        UISlider *brightnessSlider = (UISlider *)[_brightnessSetView viewWithTag:101];
+//        contrastLbl.text = [NSString stringWithFormat:@"%i",_cameraParam.contrast];
+//        brightnessLbl.text = [NSString stringWithFormat:@"%i",_cameraParam.bright];
+//        contrastSlider.value = _cameraParam.contrast;
+//        brightnessSlider.value = _cameraParam.bright;
+//        contrastSlider.transform=CGAffineTransformMakeRotation(deg2rad*(90));
+//        brightnessSlider.transform=CGAffineTransformMakeRotation(deg2rad*(90));
+//        self.videoBtn.selected = _cameraParam.saturation==0?YES:NO;
+//    }
 }
 -(BOOL)prefersStatusBarHidden{
     return YES;
@@ -101,7 +120,73 @@
     }
     NSData *data = UIImageJPEGRepresentation(image, 1);
     _dataLength += data.length;
-    [self performSelectorOnMainThread:@selector(updateSliderValue) withObject:nil waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(updateSliderValue) withObject:nil waitUntilDone:NO];
+}
+-(void)addGestureOnControlView{
+    UISwipeGestureRecognizer *recognizer;
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeOnBrightViewFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionUp)];
+    [_brightnessSetView addGestureRecognizer:recognizer];
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeOnBrightViewFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionDown)];
+    [_brightnessSetView addGestureRecognizer:recognizer];
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeOnContrastViewFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionUp)];
+    [_ContrastSetView addGestureRecognizer:recognizer];
+    recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeOnContrastViewFrom:)];
+    [recognizer setDirection:(UISwipeGestureRecognizerDirectionDown)];
+    [_ContrastSetView addGestureRecognizer:recognizer];
+}
+-(void)handleSwipeOnBrightViewFrom:(UISwipeGestureRecognizer *)recognizer{
+    if (recognizer.direction == UISwipeGestureRecognizerDirectionUp) {
+        _cameraParam.bright += 5;
+        if (_cameraParam.bright > 255) {
+            _cameraParam.bright = 255;
+        }
+    }else if(recognizer.direction == UISwipeGestureRecognizerDirectionDown){
+        _cameraParam.bright -= 5;
+        if (_cameraParam.bright < 1) {
+            _cameraParam.bright = 1;
+        }
+    }
+    [self cameraControlWithParam:1 andValue:_cameraParam.bright];
+    [self showHUDWithString:[NSString stringWithFormat:@"亮度: %i",_cameraParam.bright]];
+}
+-(void)handleSwipeOnContrastViewFrom:(UISwipeGestureRecognizer *)recognizer{
+    
+    if (recognizer.direction == UISwipeGestureRecognizerDirectionUp) {
+        _cameraParam.contrast += 5;
+        if (_cameraParam.contrast > 255) {
+            _cameraParam.contrast = 255;
+        }
+    }else if(recognizer.direction == UISwipeGestureRecognizerDirectionDown){
+        _cameraParam.contrast -= 5;
+        if (_cameraParam.contrast < 1) {
+            _cameraParam.contrast = 1;
+        }
+    }
+    [self cameraControlWithParam:2 andValue:_cameraParam.contrast];
+    [self showHUDWithString:[NSString stringWithFormat:@"对比度: %i",_cameraParam.contrast]];
+}
+-(void)showHUD{
+    if (HUD == nil) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.mode = MBProgressHUDModeText;
+        HUD.opacity = 0.5;
+        HUD.userInteractionEnabled = YES;
+    }else
+        [HUD show:YES];
+}
+-(void)showHUDWithString:(NSString *)string{
+    if (HUD == nil) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.mode = MBProgressHUDModeText;
+        HUD.opacity = 0.5;
+        HUD.userInteractionEnabled = YES;
+    }else
+        [HUD show:YES];
+    HUD.labelText = string;
+    [HUD hide:YES afterDelay:1];
 }
 #pragma mark - Camera methods
 -(void)startRecordFromBegin:(BOOL)flag{
@@ -123,33 +208,17 @@
 }
 #pragma mark - IBAction methods
 //camera control
-- (IBAction)changeVideoQulity:(UIButton *)sender {
-    sender.selected = !sender.selected;
-    if ([sender.currentTitle isEqualToString:@"标清"]) {
-        _cameraParam.saturation = 0;
-        [self cameraControlWithParam:0 andValue:0];  //转成高清
-    }else
+- (IBAction)videoQulityChange:(UISegmentedControl *)sender {
+    NSInteger i = sender.selectedSegmentIndex;
+    if (i == 0) {
         _cameraParam.saturation = 1;
         [self cameraControlWithParam:0 andValue:1];
-}
-- (IBAction)contrastSet:(UISlider *)sender {
-    UILabel *label = (UILabel *)[_ContrastSetView viewWithTag:100];
-    label.text = [NSString stringWithFormat:@"%i",(int)sender.value];
-    [self cameraControlWithParam:2 andValue:(int)sender.value];
-    _ContrastSetView.hidden = YES;
-}
-- (IBAction)brightnessSet:(UISlider *)sender {
-    UILabel *label = (UILabel *)[_brightnessSetView viewWithTag:100];
-    label.text = [NSString stringWithFormat:@"%i",(int)sender.value];
-    [self cameraControlWithParam:1 andValue:(int)sender.value];
-    _brightnessSetView.hidden = YES;
-}
-
-- (IBAction)changeContrast:(UIButton *)sender {
-    _ContrastSetView.hidden = !_ContrastSetView.hidden;
-}
-- (IBAction)changeBrightness:(UIButton *)sender {
-    _brightnessSetView.hidden = !_brightnessSetView.hidden;
+        [sender setSelectedSegmentIndex:0];
+    }else{
+        _cameraParam.saturation = 0;
+        [self cameraControlWithParam:0 andValue:0];  //转成高清
+        [sender setSelectedSegmentIndex:1];
+    }
 }
 - (IBAction)snapshot:(UIButton *)sender {
     UIGraphicsBeginImageContext(_playImage.bounds.size);
@@ -157,7 +226,16 @@
     UIImage *temp = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
     UIImageWriteToSavedPhotosAlbum(temp, nil, nil, nil);
-    [MyEUtil showMessageOn:nil withMessage:@"截图已保存到照片库"];
+//    [MyEUtil showMessageOn:nil withMessage:@"截图已保存到照片库"];
+}
+- (IBAction)resetToTheDefault:(UIButton *)sender {
+    [self cameraControlWithParam:1 andValue:62];
+    [self cameraControlWithParam:2 andValue:123];
+}
+- (IBAction)backToSuperView:(UIButton *)sender {
+    if (self.view.superview) {
+        [self.view removeFromSuperview];
+    }
 }
 
 - (IBAction)changeProgress:(UISlider *)sender {
@@ -205,7 +283,6 @@
 - (void) ImageNotify: (UIImage *)image timestamp: (NSInteger)timestamp DID:(NSString *)did{
     [self performSelector:@selector(refreshImage:) withObject:image];
 }
-
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];

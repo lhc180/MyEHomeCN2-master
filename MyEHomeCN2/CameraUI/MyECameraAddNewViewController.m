@@ -21,6 +21,10 @@
 @implementation MyECameraAddNewViewController
 
 #pragma mark - life circle methods
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [self didEnterBackground];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -51,7 +55,6 @@
             }
         }
     }
-    
 }
 
 - (void)didReceiveMemoryWarning
@@ -60,6 +63,16 @@
     // Dispose of any resources that can be recreated.
 }
 #pragma mark - private methods
+- (void) didEnterBackground{
+    [_m_PPPPChannelMgtCondition lock];
+    if (_m_PPPPChannelMgt == NULL) {
+        [_m_PPPPChannelMgtCondition unlock];
+        return;
+    }
+    _m_PPPPChannelMgt->StopAll();
+    [_m_PPPPChannelMgtCondition unlock];
+}
+
 -(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{
     [self.view endEditing:YES];
 }
@@ -113,13 +126,14 @@
     }
 }
 -(void)addCameraToList{
-    [HUD hide:YES];
     if (_canAddNew) {
         [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"添加成功" andTag:YES];
         [self.cameraList addObject:self.camera];
         [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
-    }else
+    }else{
+        [HUD hide:YES];
         [MyEUtil showThingsSuccessOn:self.navigationController.view WithMessage:@"添加失败" andTag:NO];
+    }
 }
 #pragma mark - IBAction methods
 - (IBAction)dissmissVC:(UIButton *)sender {
@@ -166,7 +180,7 @@
         }
         [HUD show:YES];
         HUD.labelText = @"正在验证...";
-        _timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(addCameraToList) userInfo:nil repeats:NO];
+        _timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(handelTimer) userInfo:nil repeats:NO];
         dispatch_async(dispatch_get_main_queue(), ^{
             [self ConnectCam];
         });
@@ -222,7 +236,8 @@
     NSLog(@"PPPPStatus  %@",strPPPPStatus);
     HUD.labelText = strPPPPStatus;
 }
-
+-(void)SnapshotNotify:(NSString *)strDID data:(char *)data length:(int)length{
+}
 #pragma mark - URL Delegate methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];
@@ -235,8 +250,6 @@
                 NSInteger deviceId = [dic[@"id"] intValue];
                 _camera.deviceId = deviceId;
                 [self.cameraList addObject:self.camera];
-                MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
-                vc.needRefresh = YES;
                 [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
             }
         }else if (i == 0){

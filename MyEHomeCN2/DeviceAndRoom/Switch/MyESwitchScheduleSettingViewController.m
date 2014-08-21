@@ -41,6 +41,18 @@
 //            }
 //        }
 //    }
+    if (IS_IOS6) {
+        self.channelSeg.layer.borderColor = MainColor.CGColor;
+        self.channelSeg.layer.borderWidth = 1.0f;
+        self.channelSeg.layer.cornerRadius = 4.0f;
+        self.channelSeg.layer.masksToBounds = YES;
+    }
+    if (IS_IOS6) {
+        self.weekSeg.layer.borderColor = MainColor.CGColor;
+        self.weekSeg.layer.borderWidth = 1.0f;
+        self.weekSeg.layer.cornerRadius = 4.0f;
+        self.weekSeg.layer.masksToBounds = YES;
+    }
 
     self.channelSeg.mydelegate = self;
     self.weekSeg.mydelegate = self;

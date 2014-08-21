@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyERoomsViewController : UITableViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate>{
+@interface MyERoomsViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
 }
 @property (nonatomic, weak) MyEAccountData *accountData;

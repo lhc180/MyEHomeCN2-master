@@ -104,6 +104,6 @@
     _alarm.mail = mail;
     _alarm.snapshot = snapshot;
     _alarm.upload_interval = upload_interval;
-    [self performSelectorOnMainThread:@selector(refreshUI) withObject:nil waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(refreshUI) withObject:nil waitUntilDone:NO];
 }
 @end

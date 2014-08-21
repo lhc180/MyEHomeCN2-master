@@ -75,8 +75,8 @@
         UINavigationController *nav = (UINavigationController *)presentedFSViewController;
         MyECameraAddNewViewController *vc = nav.childViewControllers[0];
         if (!vc.cancelBtnClicked) {
-            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
-            vc.needRefresh = YES;
+//            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
+//            vc.needRefresh = YES;
             [self.navigationController popViewControllerAnimated:YES];
         }
     };
@@ -215,7 +215,9 @@
 }
 #pragma mark - QRScan delegate methods
 -(void)passCameraUID:(NSString *)UID{
-    self.camera.UID = UID;
+    NSMutableString *str = [UID mutableCopy];
+    [str replaceOccurrencesOfString:@"-" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, UID.length)];
+    self.camera.UID = str;
     [self presentVCToAddDeviceWithTag:2];
 }
 

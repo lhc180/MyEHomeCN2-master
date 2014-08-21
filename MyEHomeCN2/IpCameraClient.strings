@@ -1,11 +1,10 @@
 /* 
-  IpCameraClient.strings
-  MyEHomeCN2
+   IpCameraClient.strings
+   IpCameraClient
 
-  Created by 翟强 on 14-4-30.
-  Copyright (c) 2014年 My Energy Domain Inc. All rights reserved.
-*/
-
+   Created by jiyonglong on 12-5-2.
+   Copyright 2012 __MyCompanyName__. All rights reserved.
+ */
 
 IPCamera = "摄像机";
 AddCamera = "添加摄像机";
@@ -39,17 +38,17 @@ Done =  "完成";
 PPPPModeP2P = "p2p连接";
 PPPPModeRelay = "p2p转发";
 PPPPModeUnknown = "未知";
-PPPPStatusUnknown = "设备状态未知";
+PPPPStatusUnknown = "未知";
 PPPPStatusConnecting = "正在连接";
 PPPPStatusInitialing = "正在初始化";
-PPPPStatusOnline = "设备在线";
+PPPPStatusOnline = "在线";
 PPPPStatusConnectFailed = "连接失败";
 PPPPStatusDisconnected = "连接断开";
 PPPPStatusInvalidID = "无效ID";
 PleaseInputCamreraName = "请输入摄像机名称";
 PleaseInputCameraID = "请输入摄像机ID";
 PleaseInputUserName = "请输入用户名";
-CameraIsNotOnline = "设备不在线";
+CameraIsNotOnline = "摄像机不在线";
 Version = "版本信息";
 DefaultVideoParams = "视频参数恢复默认";
 UnknownResolution = "未知分辨率";
@@ -202,7 +201,6 @@ record_filename="文件名字: ";
 record_filetime="录像时间: ";
 
 PPPPStatusInvalidUserPwd="用户名或者密码错误";
-PPPPStatusInvaliduserpwd="用户名或密码错误";
 filesize="文件大小: ";
 
 
@@ -220,3 +218,5 @@ preset_set="设置";
 preset="預置位";
 
 setuser_nomatch="用户名或秘密只能是数字或字母";
+
+

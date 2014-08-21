@@ -81,7 +81,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="gDy-U7-A0g"/>
-                                    <barButtonItem enabled="NO" title=" 保存修改 " id="ETu-Br-8Vr">
+                                    <barButtonItem title=" 保存修改 " id="ETu-Br-8Vr">
                                         <connections>
                                             <action selector="saveEditor:" destination="ctO-1g-bWv" id="3u5-oc-HHy"/>
                                         </connections>
@@ -176,10 +176,10 @@
                                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                     </view>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zdN-TO-lEX">
-                                        <rect key="frame" x="142" y="7" width="148" height="30"/>
+                                        <rect key="frame" x="125" y="7" width="165" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -210,7 +210,7 @@
                                         </connections>
                                     </barButtonItem>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="BvE-xg-NKx"/>
-                                    <barButtonItem enabled="NO" title=" 保存修改 " id="aeO-iE-5kB">
+                                    <barButtonItem title=" 保存修改 " id="aeO-iE-5kB">
                                         <connections>
                                             <action selector="saveEditor:" destination="QcN-yu-5kA" id="G4j-DV-vYK"/>
                                         </connections>

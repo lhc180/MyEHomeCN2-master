@@ -174,7 +174,7 @@
     }
     switch (longPress.state) {
         case UIGestureRecognizerStateBegan:{
-            MyEAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+            MYEAppDelegate *delegate = [UIApplication sharedApplication].delegate;
             progressHUD = [MBProgressHUD showHUDAddedTo:delegate.window animated:YES];
             UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
             image.image = [UIImage imageNamed:@"Volume"];
@@ -265,14 +265,15 @@
     }
     if([name isEqualToString:IR_DEVICE_SEND_CONTROL_KEY_UPLOADER_NMAE]) {
         if ([MyEUtil getResultFromAjaxString:string] == -1) {
-            [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"发送按键控制时发生错误！"];
+            [MyEUtil showMessageOn:nil withMessage:@"发送按键控制时发生错误!"];
         } else if ([MyEUtil getResultFromAjaxString:string] == 1){
             if([MyEUtil getResultFromAjaxString:string] == 1){
-                [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令发送成功"];
+//                [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令发送成功"];
             } else if([MyEUtil getResultFromAjaxString:string] == -1){
-                [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"指令发送失败"];
+                [MyEUtil showMessageOn:nil withMessage:@"指令发送失败"];
             } else
-                [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"指令发送产生错误"];
+                [MyEUtil showMessageOn:nil withMessage:@"指令发送失败"];
+//                [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"指令发送产生错误"];
         }
     }
 }

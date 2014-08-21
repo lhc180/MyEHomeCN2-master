@@ -108,7 +108,8 @@
     return [self.control.SCList count];  //这里就是按照有多少通道就新建多少item，没有将数据写死，有助于以后的修改
 }
 -(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    UICollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+    UICollectionViewCell *cell = nil;
+    cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
     MyESwitchChannelStatus *status = self.control.SCList[indexPath.row];
     UILabel *titleLabel = (UILabel *)[cell viewWithTag:100];
     UIButton *switchBtn = (UIButton *)[cell viewWithTag:101];
@@ -208,7 +209,7 @@
                 [array addObject:@(status.switchStatus)];
             }
             self.device.status.switchStatus = [NSMutableString stringWithString:[array componentsJoinedByString:@""]];
-            [self.collectionView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:YES];
+            [self.collectionView performSelectorOnMainThread:@selector(reloadData) withObject:nil waitUntilDone:NO];
         }
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [MyEUniversal doThisWhenUserLogOutWithVC:self];

@@ -12,5 +12,7 @@
 
 @property(nonatomic, strong) NSString *cityId;
 @property(nonatomic, strong) NSString *cityName;
+
 - (MyECity *)initWithDictionary:(NSDictionary *)dictionary;
+
 @end

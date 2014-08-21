@@ -48,7 +48,7 @@
 #pragma mark - IBAction method
 -(IBAction)save:(UIBarButtonItem *)sender{
     NSInteger i = _m_PPPPChannelMgt->SetSDcardScheduleParams((char *)[_camera.UID UTF8String], _schedule.cover, _schedule.timeLength, _schedule.fixedTimeRecord, _schedule.sun_0, _schedule.sun_1, _schedule.sun_2,_schedule.mon_0, _schedule.mon_1, _schedule.mon_2, _schedule.tue_0, _schedule.tue_1, _schedule.tue_2, _schedule.wed_0, _schedule.wed_1, _schedule.wed_2, _schedule.thu_0, _schedule.thu_1, _schedule.thu_2, _schedule.fri_0, _schedule.fri_1, _schedule.fri_2, _schedule.sat_0, _schedule.sat_1, _schedule.sat_2);
-    [MyEUtil showMessageOn:nil withMessage:i==1?@"设置成功":@"设置失败"];
+    [MyEUtil showMessageOn:nil withMessage:i==1?@"设置成功":@"设置失败,请确认摄像机在线"];
 }
 -(IBAction)setRecordMode:(UISwitch *)sender{
     _schedule.fixedTimeRecord = sender.isOn;
@@ -109,7 +109,7 @@
     _schedule.sat_0 = record_schedule_sat_0;
     _schedule.sat_1 = record_schedule_sat_1;
     _schedule.sat_2 = record_schedule_sat_2;
-    [self performSelectorOnMainThread:@selector(refreshUI) withObject:nil waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(refreshUI) withObject:nil waitUntilDone:NO];
 }
 #pragma mark - Navigation method
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{

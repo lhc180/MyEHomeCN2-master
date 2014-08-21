@@ -10,7 +10,7 @@
 #import "UserPwdProtocol.h"
 #import "MyECamera.h"
 #import "PPPPChannelManagement.h"
-@interface MyECameraPasswordSetTableViewController : UITableViewController<UserPwdProtocol>
+@interface MyECameraPasswordSetTableViewController : UITableViewController<UserPwdProtocol,UIAlertViewDelegate>
 @property (nonatomic, weak) MyECamera *camera;
 @property (nonatomic) CPPPPChannelManagement *m_PPPPChannelMgt;
 @property (weak, nonatomic) IBOutlet UITextField *Pwdold;

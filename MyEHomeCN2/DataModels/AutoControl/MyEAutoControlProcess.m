@@ -18,8 +18,8 @@
         _pId = 0;
         _name = @"";
         _periods = [[NSMutableArray alloc] init];
-        MyEAutoControlPeriod * period = [[MyEAutoControlPeriod alloc] init];
-        [_periods addObject:period];
+//        MyEAutoControlPeriod * period = [[MyEAutoControlPeriod alloc] init];
+//        [_periods addObject:period];
         _days = [[NSMutableArray alloc] init];
         return self;
     }

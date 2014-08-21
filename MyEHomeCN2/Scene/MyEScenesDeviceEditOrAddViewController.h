@@ -31,7 +31,7 @@
     NSMutableArray *_otherArray;
     NSMutableArray *_curturnArray;
     NSMutableArray *_socketArray;
-    NSMutableArray *_smartArray;
+    NSMutableArray *_smartArray,*_irArray,*_smokeArray,*_doorArray;
     
     NSInteger _deviceTypeIndex;
     MyEDevice *_device;

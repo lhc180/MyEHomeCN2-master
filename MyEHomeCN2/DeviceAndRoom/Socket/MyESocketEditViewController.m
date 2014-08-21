@@ -27,6 +27,10 @@
     return self;
 }
 #pragma mark - life circle methods
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];

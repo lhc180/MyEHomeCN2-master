@@ -91,6 +91,6 @@
     }
     _cameraDate.timeServerIndex = [[_cameraDate timeServerArray] indexOfObject:_cameraDate.ntp_svr];
 
-    [self performSelectorOnMainThread:@selector(refreshUI) withObject:nil waitUntilDone:YES];
+    [self performSelectorOnMainThread:@selector(refreshUI) withObject:nil waitUntilDone:NO];
 }
 @end

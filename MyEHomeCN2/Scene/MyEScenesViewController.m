@@ -12,25 +12,21 @@
 #define SCENES_DOWNLOADER_NMAE_ALL_INSTRUCTIONS     @"ScenesDownloader_All_Instruction"
 #define SCENES_UPLOADER_NMAE @"ScenesUploader"
 
-@interface MyEScenesViewController ()
+@interface MyEScenesViewController (){
+    NSInteger _countOfFinishedDownloads;
+}
 
 @end
 
 @implementation MyEScenesViewController
 @synthesize accountData = _accountData, sceneList = _sceneList,instructionRecived,scenesArray;
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+
 #pragma mark - life circle methods
 -(void)doThisWhenNeedRefreshData{
     if (self.refreshControl.isRefreshing) {
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
     }
+    _countOfFinishedDownloads = 0;
     [self downloadSceneDataFromServer];
     [self downloadInstructionFromServer];
 }
@@ -53,14 +49,31 @@
     //从这里可以看出，其实所使用的原理都是相同的，但采用的方法却不相同
     //这里默认只刷新一次 // by YY
     if (self.accountData.needDownloadInstructionsForScene) {
+        if(HUD == nil) {
+            HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+            HUD.delegate = self;
+        } else
+            [HUD show:YES];
+
         [self downloadInstructionFromServer];
         [self downloadSceneDataFromServer];
+        _countOfFinishedDownloads = 0;
         self.accountData.needDownloadInstructionsForScene = NO;
     }
 }
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
+}
+#pragma mark - private methods
+-(void)checkIfHasScenes{
+    if ([scenesArray count] == 0) {
+        [MyEUniversal dothisWhenTableViewIsEmptyWithMessage:@"当前没有有效场景，请点击右上角“+”进行添加" andFrame:CGRectMake(20,40,280,80) andVC:self];
+    }else{
+        if ([self.view.subviews containsObject:[self.view viewWithTag:999]]) {
+            [[self.view viewWithTag:999] removeFromSuperview];
+        }
+    }
 }
 -(BOOL)checkIfCanAddScene{
     //读的是写好的值，修改的是新建的值
@@ -97,7 +110,7 @@
                                 }
                             }
                         }
-                        else if (d.type == 6 || d.type == 7){
+                        else if (d.type > 5){
                             
                         }else {
                             for (int m=0;m<[instructionRecived.allInstructions count];m++) {
@@ -139,13 +152,6 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    if ([scenesArray count] == 0) {
-        [MyEUniversal dothisWhenTableViewIsEmptyWithMessage:@"当前没有有效场景，请点击右上角“+”进行添加" andFrame:CGRectMake(20,40,280,80) andVC:self];
-    }else{
-        if ([self.view.subviews containsObject:[self.view viewWithTag:999]]) {
-            [[self.view viewWithTag:999] removeFromSuperview];
-        }
-    }
     return [scenesArray count];
 }
 
@@ -216,12 +222,6 @@
 }
 - (void) downloadSceneDataFromServer
 {
-    if(HUD == nil) {
-        HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        HUD.delegate = self;
-    } else
-        [HUD show:YES];
-    
     NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",URL_FOR_SCENES_VIEW, self.accountData.userId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:SCENES_DOWNLOADER_NMAE_SCENES  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
@@ -231,6 +231,7 @@
 // 响应下载上传
 - (void) didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     if([name isEqualToString:SCENES_DOWNLOADER_NMAE_SCENES]) {
+        _countOfFinishedDownloads += 1;
         NSLog(@"Vacations JSON String from server is \n%@",string);
         if ([MyEUtil getResultFromAjaxString:string] != 1) {
             [MyEUtil showErrorOn:self.navigationController.view withMessage:@"下载场景数据发生错误。"];
@@ -248,8 +249,7 @@
     
     if([name isEqualToString:@"downloadInstrction"]) {
         NSLog(@"instruction JSON string is %@",string);
-        [self.refreshControl endRefreshing];
-        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
+        _countOfFinishedDownloads += 1;
         if ([MyEUtil getResultFromAjaxString:string] == 1) {
             MyESceneInstructionRecived *sceneInstruction = [[MyESceneInstructionRecived alloc] initWithJSONString:string];
             self.instructionRecived = sceneInstruction;
@@ -264,7 +264,7 @@
             };
             [alert show];
         }
-        [HUD hide:YES];
+        [self.tableView reloadData];
     }
     if([name isEqualToString:@"deleteSceneUploader"]) {
         NSLog(@"deleteSceneUploader JSON string is %@",string);
@@ -274,6 +274,7 @@
             [self.tableView reloadData]; //这里必须要更新一下数据，否则会出现不同步
             [MyEUtil showMessageOn:nil withMessage:@"删除场景成功"];
         }
+        return;
     }
     if([name isEqualToString:@"applySceneUploader"]) {
         [HUD hide:YES];
@@ -290,6 +291,12 @@
         }else{
             [MyEUtil showMessageOn:self.navigationController.view withMessage:@"场景应用发送错误，请检查"];
         }
+        return;
+    }
+    if (_countOfFinishedDownloads == 2) {
+        [HUD hide:YES];
+        [self.refreshControl endRefreshing];
+        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
     }
 }
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{

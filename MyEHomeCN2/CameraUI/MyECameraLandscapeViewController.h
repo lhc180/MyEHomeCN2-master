@@ -23,6 +23,8 @@
 @property (weak, nonatomic) IBOutlet UIView *playbackView;
 @property (weak, nonatomic) IBOutlet UIView *cameraControlView;
 
+@property (weak, nonatomic) IBOutlet UISegmentedControl *videoControlSeg;
+
 @property (weak, nonatomic) IBOutlet UIButton *videoBtn;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;
 

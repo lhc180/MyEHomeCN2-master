@@ -4,33 +4,22 @@
 //  The contents of this file are implicitly included at the beginning of every source file.
 //
 
-//
-// Close all NSLog()    下面的这段代码相当的有用，很是值得注意
-
-//#ifdef __OPTIMIZE__
-//# define NSLog(...) {}
-//#else
-//# define NSLog(...) NSLog(__VA_ARGS__)
-//#endif
-
-//#ifdef DEBUG
-//#define NSLog(...) NSLog(__VA_ARGS__)
-//#define debugMethod() NSLog(@"%s", __func__)
-//#else
-//#define NSLog(...)
-//#define debugMethod()
-//#endif
+#import <Availability.h>
 
 #ifndef __IPHONE_5_0
-// "This project uses features only available in iOS SDK 5.0 and later."
+#warning "This project uses features only available in iOS SDK 5.0 and later."
 #endif
 
 #ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+#endif
 
-#import <UIKit/UIKit.h>
-#import <Foundation/Foundation.h>
-#import <AVFoundation/AVFoundation.h>
-#import <Availability.h>
+#ifdef __OPTIMIZE__
+# define NSLog(...) {}
+#else
+# define NSLog(...) NSLog(__VA_ARGS__)
+#endif
 
 #import "MyEAppDelegate.h"
 #import "MyEDataLoader.h"
@@ -94,11 +83,7 @@
 #import "MyESwitchAutoControl.h"
 #import "MyESwitchElec.h"
 
-#endif
-
-
-#define IOS_NEWER_OR_EQUAL_TO_7 ( [ [ [ UIDevice currentDevice ] systemVersion ] floatValue ] >= 7.0 )
-
+#define IOS_NEWER_OR_EQUAL_TO_7 ( [[[UIDevice currentDevice] systemVersion ] floatValue ] >= 7.0 )
 
 #define screenHigh [UIScreen mainScreen].bounds.size.height
 #define screenwidth [UIScreen mainScreen].bounds.size.width
@@ -106,9 +91,7 @@
 #define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height-568)?NO:YES)
 #define IS_IOS6 (([[UIDevice currentDevice].systemVersion intValue]-6)?NO:YES)
 #define MainColor [UIColor colorWithRed:0.27 green:0.78 blue:0.86 alpha:1]
-
-//http://www.myenergydomain.com.cn
-//http://www.myenergydomain.com.cn
+#define MainDelegate ((MYEAppDelegate *)[[UIApplication sharedApplication] delegate])
 
 /*-------------------------LOGIN-------------------------------*/
 #define URL_FOR_LOGIN  @"http://www.myenergydomain.com.cn/phone/user_login.jhtml"
@@ -132,7 +115,6 @@
 #define URL_FOR_ROOM_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/room_save.jhtml"
 #define URL_FOR_DEVICE_IR_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/ir_device_save.jhtml"
 #define URL_FOR_ROOM_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/room_save.jhtml"
-#define URL_FOR_DEVICE_IR_ADD_EDIT_SAVE @"http://www.myenergydomain.com.cn/phone/ir_device_save.jhtml"
 #define URL_FOR_DEVICE_CONTROL_BY_CLICK_BUTTON @"http://www.myenergydomain.com.cn/phone/ir_Icon_control.jhtml"
 #define URL_FOR_DEVICE_REORDER_DEVICE @"http://www.myenergydomain.com.cn/phone/ir_device_sort.jhtml"
 
@@ -215,3 +197,12 @@
 
 #define URL_FOR_CAMERA_LIST @"http://www.myenergydomain.com.cn/phone/ipcamera_view.jhtml"
 #define URL_FOR_CAMERA_EDIT @"http://www.myenergydomain.com.cn/phone/ipcamera_save.jhtml"
+
+/*--------------------------safe-----------------------------------*/
+#define URL_FOR_SAFE_EDIT @"http://www.myenergydomain.com.cn/phone/system_terminal_security_save.jhtml"
+#define URL_FOR_SAFE_CONTROL @"http://www.myenergydomain.com.cn/phone/security_control.jhtml"
+#define URL_FOR_SAFE_ALARM @"http://www.myenergydomain.com.cn/phone/security_clear_alarm.jhtml"
+#define URL_FOR_SAFE_INFO @"http://www.myenergydomain.com.cn/phone/security_view.jhtml"
+#define URL_FOR_SAFE_SAVE @"http://www.myenergydomain.com.cn/phone/security_save.jhtml"
+#define URL_FOR_SAFE_REQUEST @"http://www.myenergydomain.com.cn/phone/security_request_security_id.jhtml"
+#define URL_FOR_SAFE_RESPONSE @"http://www.myenergydomain.com.cn/phone/security_response_security_id.jhtml"

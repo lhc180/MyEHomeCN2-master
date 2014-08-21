@@ -103,17 +103,35 @@ sceneIndex,saveEditorBtn;
             powerArray = @[@"开",@"关"];
             [self setLabelAndButtonForOthers];
             break;
-        default:
+        case 7:
             deviceArray = _smartArray[1];
             self.deviceIdArray = _smartArray[0];
             NSLog(@"%@",_smartArray[0]);
             _device = [self.accountData findDeviceWithDeviceId:[self.deviceIdArray[_selectedDeviceIndex] intValue]];
             NSLog(@"_device.status.switchStatus is %@",_device.status.switchStatus);
-//            NSMutableArray *array = [NSMutableArray array];
+            //            NSMutableArray *array = [NSMutableArray array];
             
-//            modeArray = @[@"开",@"关"];
+            //            modeArray = @[@"开",@"关"];
             [self setLabelAndButtonForSwitch];
             [self.tableView reloadData];
+            break;
+        case 8:
+            deviceArray = _irArray[1];
+            self.deviceIdArray = _irArray[0];
+            powerArray = @[@"布防",@"撤防"];
+            [self setLabelAndButtonForOthers];
+            break;
+        case 9:
+            deviceArray = _smokeArray[1];
+            self.deviceIdArray = _smokeArray[0];
+            powerArray = @[@"布防",@"撤防"];
+            [self setLabelAndButtonForOthers];
+            break;
+        default:
+            deviceArray = _doorArray[1];
+            self.deviceIdArray = _doorArray[0];
+            powerArray = @[@"布防",@"撤防"];
+            [self setLabelAndButtonForOthers];
             break;
     }
     if ([instructionArray count]) {
@@ -125,7 +143,7 @@ sceneIndex,saveEditorBtn;
         self.instructionIdArray = instructionIds;
     }
     [powerBtn setTitle:powerArray[_selectedPowerIndex] forState:UIControlStateNormal];
-//    NSLog(@"%@",deviceArray);
+    //    NSLog(@"%@",deviceArray);
     [deviceBtn setTitle:deviceArray[_selectedDeviceIndex] forState:UIControlStateNormal];
 }
 -(void)setWindlevelBtnTitle{
@@ -186,7 +204,9 @@ sceneIndex,saveEditorBtn;
     _curturnArray = [NSMutableArray array];
     _socketArray = [NSMutableArray array];
     _smartArray = [NSMutableArray array];
-    
+    _irArray = [NSMutableArray array];
+    _smokeArray = [NSMutableArray array];
+    _doorArray = [NSMutableArray array];
     NSMutableArray *dTArray = [NSMutableArray arrayWithArray:self.accountData.deviceTypes];
     
     for (int i=0; i<[self.accountData.deviceTypes count];i++) {   //终于算是找到了问题的根源了
@@ -208,22 +228,22 @@ sceneIndex,saveEditorBtn;
                             if ([d.brand isEqualToString:@""]) {
                                 [deviceIdArray removeObject:[NSNumber numberWithInteger:deviceId]];
                             }else{
-                            for (int m=0;m<[instructionRecived.allInstructions count];m++) {
-                                MyESceneDevice *sd = instructionRecived.allInstructions[m];
-                                if (deviceId == sd.deviceId) {
-                                    
-                                    instructionAll = [NSMutableArray arrayWithArray:sd.instructions];
-                                    for (MyESceneDeviceInstruction *sdi in sd.instructions) {
-                                        if (sdi.status == 0) {
-                                            [instructionAll removeObject:sdi];
+                                for (int m=0;m<[instructionRecived.allInstructions count];m++) {
+                                    MyESceneDevice *sd = instructionRecived.allInstructions[m];
+                                    if (deviceId == sd.deviceId) {
+                                        
+                                        instructionAll = [NSMutableArray arrayWithArray:sd.instructions];
+                                        for (MyESceneDeviceInstruction *sdi in sd.instructions) {
+                                            if (sdi.status == 0) {
+                                                [instructionAll removeObject:sdi];
+                                            }
                                         }
+                                        break;
                                     }
-                                    break;
                                 }
                             }
-                            }
                         }
-                        else if (d.type == 6 || d.type == 7){
+                        else if (d.type > 5){
                             NSLog(@"开关或插座 %i",deviceId);
                         }else {
                             for (int m=0;m<[instructionRecived.allInstructions count];m++) {
@@ -277,10 +297,17 @@ sceneIndex,saveEditorBtn;
             case 7:
                 _smartArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
+            case 8:
+                _irArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
+                break;
+            case 9:
+                _smokeArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
+                break;
             default:
+                _doorArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
         }
-     }
+    }
     NSLog(@"%@",_acArray);
     NSLog(@"%@",_tvArray);
     NSLog(@"%@",_curturnArray);
@@ -288,10 +315,13 @@ sceneIndex,saveEditorBtn;
     NSLog(@"%@",_otherArray);
     NSLog(@"%@",_socketArray);
     NSLog(@"%@",_smartArray);
+    NSLog(@"%@",_irArray);
+    NSLog(@"%@",_smokeArray);
+    NSLog(@"%@",_doorArray);
     NSMutableArray *nameArray = [NSMutableArray array];
     for (MyEDeviceType *t in dTArray) {
         [nameArray addObject:t.name];
-//        NSLog(@"%@",t.name);
+        //        NSLog(@"%@",t.name);
     }
     self.deviceTypeNameArray = nameArray;
     
@@ -311,24 +341,24 @@ sceneIndex,saveEditorBtn;
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-     //这部分代码主要用于更新带picker的btn的UI
-//    if (!IS_IOS6) {
-        for (UIButton *btn in self.view.subviews) {
-            if ([btn isKindOfClass:[UIButton class]]) {
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
-                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateDisabled];
-                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-            }
+    //这部分代码主要用于更新带picker的btn的UI
+    //    if (!IS_IOS6) {
+    for (UIButton *btn in self.view.subviews) {
+        if ([btn isKindOfClass:[UIButton class]]) {
+            [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateDisabled];
+            [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
         }
-//    }else{
-//        for (UIButton *btn in self.view.subviews) {
-//            if ([btn isKindOfClass:[UIButton class]]) {
-//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-//            }
-//        }
-//    }
-
+    }
+    //    }else{
+    //        for (UIButton *btn in self.view.subviews) {
+    //            if ([btn isKindOfClass:[UIButton class]]) {
+    //                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
+    //                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
+    //            }
+    //        }
+    //    }
+    
     UIView *view = [[UIView alloc] init];
     view.backgroundColor = [UIColor clearColor];
     self.tableView.tableFooterView = view;
@@ -348,7 +378,7 @@ sceneIndex,saveEditorBtn;
         self.navigationItem.rightBarButtonItem.enabled = NO;
         deviceTypeBtn.enabled = NO;
         deviceBtn.enabled = NO;
-
+        
         NSString *instructionName;
         //获取当前设备的控制码数组
         NSMutableArray *instructionNameArray = [NSMutableArray array];
@@ -361,7 +391,7 @@ sceneIndex,saveEditorBtn;
         //更新btn的title
         [deviceTypeBtn setTitle:dt.name forState:UIControlStateNormal];
         [deviceBtn setTitle:device.name forState:UIControlStateNormal];
-
+        
         //设备不是系统定义的空调(自定义空调, 或一般红外设备, 或插座)
         if (device.type != DT_AC ||
             (device.type == DT_AC && !device.isSystemDefined)) {//可以理解为不是空调或者不是系统肯定的空调
@@ -381,40 +411,50 @@ sceneIndex,saveEditorBtn;
                 [self setLabelAndButtonForSwitch];
                 _device.status.switchStatus = dictionaryRecived[@"controlKey"][@"channel"];
                 [self.tableView reloadData];
+            }else if (device.type == 8 || device.type == 9 || device.type == 10){
+                [self setLabelAndButtonForOthers];
+                self.powerArray = @[@"布防",@"撤防"];
+                if ([dictionaryRecived[@"controlKey"][@"powerSwitch"] intValue] == 1) {
+                    [powerBtn setTitle:@"布防" forState:UIControlStateNormal];
+                    _selectedPowerIndex = 0;
+                }else{
+                    [powerBtn setTitle:@"撤防" forState:UIControlStateNormal];
+                    _selectedPowerIndex = 1;
+                }
             }else{
                 [self setLabelAndButtonForOthers];
                 //找到当前设备的控制码数组
                 for (int i=0; i<[instructionRecived.allInstructions count]; i++) {
                     MyESceneDevice *sceneDevice = instructionRecived.allInstructions[i];
                     if (deviceId == sceneDevice.deviceId) {
-                         for (MyESceneDeviceInstruction *instruction in sceneDevice.instructions) {
-                             if (device.type == 1 && !device.isSystemDefined) {  //自学习的空调设备
-                                 _scendDevice = sceneDevice;
-                                 NSString *str = nil;
-                                 if (instruction.status > 0) {
-                                     str = [NSString stringWithFormat:@"%@|%@|%@|%@",
-                                            [MyEAcUtil getStringForPowerSwitch:instruction.powerSwitch],
-                                            [MyEAcUtil getStringForRunMode:instruction.runMode],
-                                            [MyEAcUtil getStringForSetpoint:instruction.setpoint],
-                                            [MyEAcUtil getStringForWindLevel:instruction.windLevel]];
-                                     [instructionNameArray addObject:str];
-                                 }else{
-                                     [_scendDevice.instructions removeObject:instruction];
-                                 }
-                             }
-                             else{   //一般设备
-                                 if (instruction.status > 0) {
-                                     [instructionIds addObject:[NSNumber numberWithInteger:instruction.instructionId]];
-                                     [instructionNameArray addObject:instruction.keyName];
-                                 }
-                              }
+                        for (MyESceneDeviceInstruction *instruction in sceneDevice.instructions) {
+                            if (device.type == 1 && !device.isSystemDefined) {  //自学习的空调设备
+                                _scendDevice = sceneDevice;
+                                NSString *str = nil;
+                                if (instruction.status > 0) {
+                                    str = [NSString stringWithFormat:@"%@|%@|%@|%@",
+                                           [MyEAcUtil getStringForPowerSwitch:instruction.powerSwitch],
+                                           [MyEAcUtil getStringForRunMode:instruction.runMode],
+                                           [MyEAcUtil getStringForSetpoint:instruction.setpoint],
+                                           [MyEAcUtil getStringForWindLevel:instruction.windLevel]];
+                                    [instructionNameArray addObject:str];
+                                }else{
+                                    [_scendDevice.instructions removeObject:instruction];
+                                }
+                            }
+                            else{   //一般设备
+                                if (instruction.status > 0) {
+                                    [instructionIds addObject:[NSNumber numberWithInteger:instruction.instructionId]];
+                                    [instructionNameArray addObject:instruction.keyName];
+                                }
+                            }
                         }
                     }
                 }
                 self.powerArray = instructionNameArray;
                 self.instructionIdArray = instructionIds;
                 
-     //找到该设备所对应的指令
+                //找到该设备所对应的指令
                 if (device.type == 1 && !device.isSystemDefined) {
                     instructionName = [NSString stringWithFormat:@"%@|%@|%@|%@",
                                        [MyEAcUtil getStringForPowerSwitch:[dictionaryRecived[@"controlKey"][@"powerSwitch"] intValue]],
@@ -501,10 +541,10 @@ sceneIndex,saveEditorBtn;
         _selectedRunmodeIndex = 0;
         _selectedWindlevelIndex = 0;
         _selectedSetpointIndex = 7;  //这里之所以值为7，是为了让温度显示为25℃
-
+        
         //初始化设备类型数组
         deviceTypeArray = [self getValidDeviceTypes];   //这句代码可谓是重中之重
-
+        
         MyEDeviceType *dt = deviceTypeArray[_selectedDeviceTypeIndex];
         _deviceTypeIndex = dt.dtId;
         [deviceTypeBtn setTitle:dt.name forState:UIControlStateNormal];
@@ -586,6 +626,14 @@ sceneIndex,saveEditorBtn;
             [string replaceOccurrencesOfString:@"2" withString:@"0" options:NSCaseInsensitiveSearch range:NSMakeRange(0, string.length)];
             [controlKeyDictionary setObject:[NSString stringWithString:string] forKey:@"channel"];
             [controlKeyDictionary setObject:@0 forKey:@"keyId"];
+        }else if (device.type == 8 || device.type == 9 || device.type == 10){
+            [sceneDetailDictionary setObject:[NSNumber numberWithInteger:device.type - 5] forKey:@"isAc"];
+            [controlKeyDictionary setObject:@0 forKey:@"keyId"];
+            if ([powerBtn.currentTitle isEqualToString:@"布防"]) {
+                [controlKeyDictionary setObject:[NSNumber numberWithInteger:1] forKey:@"powerSwitch"];
+            }else{
+                [controlKeyDictionary setObject:[NSNumber numberWithInteger:0] forKey:@"powerSwitch"];
+            }
         }else{//一般设备
             [controlKeyDictionary setObject:self.instructionIdArray[_selectedPowerIndex] forKey:@"keyId"];
         }

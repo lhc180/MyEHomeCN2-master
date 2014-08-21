@@ -56,6 +56,13 @@
         [saveProcessBtn.layer setBorderWidth:1];
         [saveProcessBtn.layer setBorderColor:saveProcessBtn.tintColor.CGColor];
     }
+    if (IS_IOS6) {
+        self.daySegmentedControl.layer.borderColor = MainColor.CGColor;
+        self.daySegmentedControl.layer.borderWidth = 1.0f;
+        self.daySegmentedControl.layer.cornerRadius = 4.0f;
+        self.daySegmentedControl.layer.masksToBounds = YES;
+    }
+
     self.daySegmentedControl.mydelegate = self;
 }
 

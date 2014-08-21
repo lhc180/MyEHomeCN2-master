@@ -37,6 +37,12 @@
     }else{
         self.brandLabel.text = @"空调未初始化";
     }
+    if (IS_IOS6) {
+        self.selectSeg.layer.borderColor = MainColor.CGColor;
+        self.selectSeg.layer.borderWidth = 1.0f;
+        self.selectSeg.layer.cornerRadius = 4.0f;
+        self.selectSeg.layer.masksToBounds = YES;
+    }
 
     standard = [self.storyboard instantiateViewControllerWithIdentifier:@"standard"];
     custom = [self.storyboard instantiateViewControllerWithIdentifier:@"custom"];

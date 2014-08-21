@@ -13,4 +13,6 @@
 @property (weak, nonatomic) IBOutlet UIView *mainView;
 @property (weak, nonatomic) MyEAccountData *accountData;
 @property (strong, nonatomic) MyEDevice *device;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *selectSeg;
+
 @end

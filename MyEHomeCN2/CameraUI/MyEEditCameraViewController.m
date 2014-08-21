@@ -13,6 +13,8 @@
 #import "MyECameraSDRecordViewController.h"
 @interface MyEEditCameraViewController (){
     MBProgressHUD *HUD;
+    NSCondition* _m_PPPPChannelMgtCondition;
+    BOOL _isPushSub;
 }
 @end
 
@@ -27,30 +29,57 @@
     self.passwordTxt.text = self.camera.password;
     self.nameTxt.delegate = self;
     self.passwordTxt.delegate = self;
-    [self defineTapGestureRecognizer];
+    _m_PPPPChannelMgtCondition = [[NSCondition alloc] init];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didEnterBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(willEnterForeground)
+                                                 name:UIApplicationWillEnterForegroundNotification
+                                               object:nil];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    if (!_isPushSub) {
+        _isPushSub = NO;
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationWillEnterForegroundNotification object:nil];
+    }
+}
+#pragma mark - Notification methods
+- (void) didEnterBackground{
+    [_m_PPPPChannelMgtCondition lock];
+    if (_m_PPPPChannelMgt == NULL) {
+        [_m_PPPPChannelMgtCondition unlock];
+        return;
+    }
+    _m_PPPPChannelMgt->StopAll();
+    [_m_PPPPChannelMgtCondition unlock];
+}
+
+- (void) willEnterForeground{
+    [_m_PPPPChannelMgtCondition lock];
+    if (_m_PPPPChannelMgt == NULL) {
+        [_m_PPPPChannelMgtCondition unlock];
+        return;
+    }
+    _m_PPPPChannelMgt->StopAll();
+    _m_PPPPChannelMgt->Start([_camera.UID UTF8String], [self.camera.username UTF8String], [self.camera.password UTF8String]);
+    [_m_PPPPChannelMgtCondition unlock];
+
 }
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-
 }
 #pragma mark - private methods
--(void)defineTapGestureRecognizer{
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-    tapGesture.cancelsTouchesInView = NO;
-    [self.view addGestureRecognizer:tapGesture];
-}
--(void)hideKeyboard{
-    [self.nameTxt endEditing:YES];
-    [self.passwordTxt endEditing:YES];
-}
 
 -(void) saveCamera
 {
     if ([self.nameTxt.text length] == 0)
     {
-        [MyEUtil showErrorOn:self.navigationController.view withMessage:@"名称不能为空！"];
+        [MyEUtil showErrorOn:self.navigationController.view withMessage:@"名称不能为空!"];
         return;
     }
     
@@ -124,6 +153,7 @@
 #pragma mark Navigation methods
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     UIViewController *vc = segue.destinationViewController;
+    _isPushSub = YES;
     [vc setValue:self.camera forKey:@"camera"];
     if ([segue.identifier isEqualToString:@"wifi"]) {
         MyECameraWIFISetViewController *wifi = (MyECameraWIFISetViewController *)vc;
@@ -175,8 +205,8 @@
     if ([name isEqualToString:@"edit"]) {
         NSInteger i = [MyEUtil getResultFromAjaxString:string];
         if (i == 1) {
-            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
-            vc.needRefresh = YES;
+//            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
+//            vc.needRefresh = YES;
         }else if (i == 0){
             [MyEUtil showMessageOn:nil withMessage:@"传入数据有误"];
         }else if (i == -3){

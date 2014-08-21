@@ -33,6 +33,10 @@
                                                  name:UITextFieldTextDidChangeNotification
                                                object:nil];
 }
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+}
 - (void)viewDidUnload
 {
     [self setCurrentPasswordTextField:nil];

@@ -190,7 +190,7 @@
                 vc.needRefresh = YES;
                 [self uploadInfoToServer];
             };
-            alert.rightBlock = ^{
+            alert.leftBlock = ^{
                 [self.tableView reloadData];
             };
             [alert show];

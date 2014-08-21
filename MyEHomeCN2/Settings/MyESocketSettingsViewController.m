@@ -25,13 +25,14 @@
     nameTextField.delegate = self;
     deviceId.text = terminal.tId;
     
-    [self setDeviceType];
-    [self setSignalImage];
-    
-    if (terminal.irType == 2) {
-        self.title = @"智能插座";
-    }else
-        self.title = @"智能开关";
+    if (terminal.irType < 4) {
+        [self setSignalImage];
+    }
+    NSArray *nameArray = @[@"智能插座",@"智能开关",@"红外入侵探测器",@"烟雾探测器",@"门磁"];
+    if (terminal.irType > 1 && terminal.irType < 7) {
+        self.title = nameArray[terminal.irType - 2];
+        deviceType.text = self.title;
+    }
     [self defineTapGestureRecognizer];
 }
 #pragma mark
@@ -47,17 +48,18 @@
 }
 
 -(void)setDeviceType{
-    switch (terminal.irType) {
-        case 1:
-            deviceType.text = @"智控星";
-            break;
-        case 2:
-            deviceType.text = @"智能插座";
-            break;
-        default:
-            deviceType.text = @"智能开关";
-            break;
-    }
+    deviceType.text = self.title;
+//    switch (terminal.irType) {
+//        case 1:
+//            deviceType.text = @"智控星";
+//            break;
+//        case 2:
+//            deviceType.text = @"智能插座";
+//            break;
+//        default:
+//            deviceType.text = @"智能开关";
+//            break;
+//    }
 }
 -(void)setSignalImage{
     switch (terminal.conSignal) {
@@ -106,6 +108,16 @@
 {
     [super didReceiveMemoryWarning];
 }
+#pragma mark - UITableView delegate method
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    if (section == 1) {
+        if (self.terminal.irType < 4) {  //这里是插座
+            return 3;
+        }
+        return 2;
+    }
+    return 1;
+}
 -(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
     if (IS_IOS6) {
         return 10;
@@ -113,6 +125,7 @@
         return 1;
     }
 }
+#pragma mark - URL delegate method
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     NSLog(@"receive string is %@",string);
     if ([MyEUtil getResultFromAjaxString:string] == -3) {

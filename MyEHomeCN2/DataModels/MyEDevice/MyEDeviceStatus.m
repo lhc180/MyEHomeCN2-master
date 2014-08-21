@@ -55,6 +55,8 @@
         acTmax = [dictionary[@"acTmax"] intValue];
         acTmin = [dictionary[@"acTmin"] intValue];
         self.switchStatus = dictionary[@"switchStatus"];
+        self.protectionStatus = [dictionary[@"protectionStatus"] intValue];
+        self.alertStatus = [dictionary[@"alertStatus"] intValue];
         return self;
     }
     return nil;

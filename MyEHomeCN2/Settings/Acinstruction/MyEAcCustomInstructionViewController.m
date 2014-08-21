@@ -15,15 +15,6 @@
 @implementation MyEAcCustomInstructionViewController
 @synthesize brandIdArray,brandNameArray,modelIdArray,modelNameArray,brandBtn,modelBtn,downloadBtn,editInstructionBtn;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
@@ -511,11 +502,13 @@
         NSLog(@"%@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [HUD hide:YES];
+            [timer invalidate];
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
             return;
         }
         if ([MyEUtil getResultFromAjaxString:string] != 1) {
             [HUD hide:YES];
+            [timer invalidate];
             HUD.detailsLabelText = @"进度查询失败!";
 //            [MyEUtil showMessageOn:self.navigationController.view withMessage:@"初始化进度查询失败"];
         }else{
@@ -598,17 +591,20 @@
     if ([name isEqualToString:@"cancelAcInit"]) {
         NSLog(@"%@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
+            [timer invalidate];
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
             return;
         }
         if ([MyEUtil getResultFromAjaxString:string] != 1) {
             HUD.detailsLabelText = @"初始化取消失败";
+            [timer invalidate];
             [HUD hide:YES afterDelay:2];
             [cancelButton removeFromSuperview];
         }else{
             HUD.customView = imageView;
             HUD.mode = MBProgressHUDModeCustomView;
             HUD.detailsLabelText = @"初始化取消成功";
+            [timer invalidate];
             [HUD hide:YES afterDelay:2];
             [cancelButton removeFromSuperview];
             self.device.brand = @"";

@@ -49,7 +49,8 @@
     NSInteger result = _m_PPPPChannelMgt->SetUserPwd((char *)[_camera.UID UTF8String], (char *)[@"" UTF8String], (char *)[@"" UTF8String], (char *)[@"" UTF8String], (char *)[@"" UTF8String], (char *)[_camera.username UTF8String], (char *)[self.Pwdnew1.text UTF8String]);
     if (result == 1) {
         self.camera.password = self.Pwdnew.text;
-        [MyEUtil showMessageOn:nil withMessage:@"修改成功,重启后生效"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"密码设置成功,需要摄像头重启后才能生效,现在重启摄像机么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alert show];
     }else
         [MyEUtil showMessageOn:nil withMessage:@"修改失败"];
 }
@@ -61,5 +62,13 @@
      user3:admin pwd3:888888
      */
     NSLog(@"UID:%@\n user1:%@ pwd1:%@\n user2:%@ pwd2:%@ \n user3:%@ pwd3:%@",did,strUser1,strPwd1,strUser2,strPwd2,strUser3,strPwd3);
+}
+
+#pragma mark - UIAlertView delegate method
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 1) {
+        _m_PPPPChannelMgt->PPPPSetSystemParams((char*)[_camera.UID UTF8String], MSG_TYPE_REBOOT_DEVICE, NULL, 0);
+        [MyEUtil showMessageOn:nil withMessage:@"摄像机重启时间较长,请耐心等待"];
+    }
 }
 @end

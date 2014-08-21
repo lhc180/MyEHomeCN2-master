@@ -13,7 +13,7 @@
 #import "MyECitySettingViewController.h"
 #import "MyESettingFeedbackViewController.h"
 #import "MyESettingsTerminalsViewController.h"
-#import "MyEsettingsMediatorViewController.h"
+#import "MyESettingsMediatorViewController.h"
 
 @interface MyESettingsViewController : UITableViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate,MyECitySettingViewControllerDelegate,UITextFieldDelegate>{
          MBProgressHUD *HUD;

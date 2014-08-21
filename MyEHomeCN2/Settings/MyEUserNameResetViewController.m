@@ -15,21 +15,19 @@
 @implementation MyEUserNameResetViewController
 @synthesize userNameTextFiled;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 #pragma mark - life circle methods
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidChangeNotification object:nil];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     userNameTextFiled.text = self.accountData.userName;
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [userNameTextFiled becomeFirstResponder];
+    });
     [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *noti){
         if (![userNameTextFiled.text isEqualToString:self.accountData.userName]) {
 //            if ([userNameTextFiled.text length] > 16) {

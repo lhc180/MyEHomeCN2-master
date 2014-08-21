@@ -13,31 +13,25 @@
 
 #define ROOM_DELETE_UPLOADER_NMAE @"RoomDeleteUploader"
 
-@interface MyERoomsViewController ()
+@interface MyERoomsViewController (){
+    BOOL _isAdd;
+    MyERoom *_editRoom;
+    NSString *_roomName;
+}
 
 @end
 
 @implementation MyERoomsViewController
 @synthesize accountData;
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     self.tableView.tableFooterView = [[UIView alloc] init];
     UIRefreshControl *rc = [[UIRefreshControl alloc] init];
     rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
-    [rc addTarget:self
-                            action:@selector(downloadDeviceAndRoomListFromServer)
-                  forControlEvents:UIControlEventValueChanged];
+    [rc addTarget:self action:@selector(downloadDeviceAndRoomListFromServer) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = rc;
 }
 
@@ -53,6 +47,21 @@
     [super didReceiveMemoryWarning];
 }
 
+#pragma mark - private methods
+-(void)doThisToAddOrEditRoom{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_isAdd?@"添加新房间":@"编辑此房间" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    UITextField *text = [alert textFieldAtIndex:0];
+    text.textAlignment = NSTextAlignmentCenter;
+    text.font = [UIFont systemFontOfSize:20];
+    if (_isAdd) {
+        text.placeholder = @"请输入房间名称";
+    }else{
+        text.text = _editRoom.name;
+    }
+    alert.tag = 100;
+    [alert show];
+}
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -82,13 +91,25 @@
 }
 
 #pragma mark - tableView delegate methods
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    MyEDevicesViewController *devicesViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"devicesVC"];
+    devicesViewController.preivousPanelType = 1;
+    
+    MyERoom *room = [self.accountData.rooms objectAtIndex:indexPath.row];
+    [devicesViewController setTitle:room.name];
+    devicesViewController.room = room;
+    //        devicesViewController.devices = room.devices;
+    devicesViewController.accountData = self.accountData;
+    [self.navigationController pushViewController:devicesViewController animated:YES];
+}
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //这里可以判断是否进行编辑，不管是插入，删除还是排序
     if (indexPath.row > 0) {
         return YES;
     }else
-    return NO;
+        return NO;
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -120,18 +141,27 @@
     return @"删除";
 }
 #pragma mark - IBAction methods
+- (IBAction)addRoom:(UIBarButtonItem *)sender {
+    _editRoom = [[MyERoom alloc] init];
+    _isAdd = YES;
+    [self doThisToAddOrEditRoom];
+}
+
 - (IBAction)editDevice:(UIButton *)sender forEvent:(UIEvent *)event {
     UITouch *touch = [[event touchesForView:sender] anyObject];
     CGPoint location = [touch locationInView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
-    MyERoomAddOrEditViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"roomAddOrEdit"];
-    MyERoom *room = [self.accountData.rooms objectAtIndex:indexPath.row];
-    [vc setTitle:room.name];
-    vc.room = room;
-    vc.accountData = self.accountData;
-    vc.actionType = 1; // indicate edit new room
-    vc.index = indexPath;
-    [self.navigationController pushViewController:vc animated:YES];
+    _editRoom = self.accountData.rooms[indexPath.row];
+    _isAdd = NO;  //表示此时是在编辑房间
+    [self doThisToAddOrEditRoom];
+//    MyERoomAddOrEditViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"roomAddOrEdit"];
+//    MyERoom *room = [self.accountData.rooms objectAtIndex:indexPath.row];
+//    [vc setTitle:room.name];
+//    vc.room = room;
+//    vc.accountData = self.accountData;
+//    vc.actionType = 1; // indicate edit new room
+//    vc.index = indexPath;
+//    [self.navigationController pushViewController:vc animated:YES];
 }
 #pragma mark - Navigation methods
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -150,26 +180,26 @@
 //        devicesViewController.devices = room.devices;
         devicesViewController.accountData = self.accountData;
     }
-    if ([[segue identifier] isEqualToString:@"RoomToRoomEdit"]) {
-        // @see http://stackoverflow.com/questions/13517414/get-indexpath-for-selected-accessory-button-in-uitableview?answertab=active#tab-top
-        UITableViewCell *cell = (UITableViewCell *)[sender superview];
-        NSInteger index = [self.tableView indexPathForCell:cell].row; // use this one to get the index of the accessory taped
-//        NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];// we can not use this, because there is no selected row when accessory buttong taped
-        MyERoomAddOrEditViewController *vc = [segue destinationViewController];
-        
-        MyERoom *room = [self.accountData.rooms objectAtIndex:index];
-        [vc setTitle:room.name];
-        vc.room = room;
-        vc.accountData = self.accountData;
-        vc.actionType = 1; // indicate edit new room
-    }
-    if ([[segue identifier] isEqualToString:@"RoomToRoomAdd"]) {
-        MyERoomAddOrEditViewController *vc = [segue destinationViewController];
-        MyERoom *room = [[MyERoom alloc] init];
-        vc.room = room;
-        vc.accountData = self.accountData;
-        vc.actionType = 0; // indicate add new room
-    }
+//    if ([[segue identifier] isEqualToString:@"RoomToRoomEdit"]) {
+//        // @see http://stackoverflow.com/questions/13517414/get-indexpath-for-selected-accessory-button-in-uitableview?answertab=active#tab-top
+//        UITableViewCell *cell = (UITableViewCell *)[sender superview];
+//        NSInteger index = [self.tableView indexPathForCell:cell].row; // use this one to get the index of the accessory taped
+////        NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];// we can not use this, because there is no selected row when accessory buttong taped
+//        MyERoomAddOrEditViewController *vc = [segue destinationViewController];
+//        
+//        MyERoom *room = [self.accountData.rooms objectAtIndex:index];
+//        [vc setTitle:room.name];
+//        vc.room = room;
+//        vc.accountData = self.accountData;
+//        vc.actionType = 1; // indicate edit new room
+//    }
+//    if ([[segue identifier] isEqualToString:@"RoomToRoomAdd"]) {
+//        MyERoomAddOrEditViewController *vc = [segue destinationViewController];
+//        MyERoom *room = [[MyERoom alloc] init];
+//        vc.room = room;
+//        vc.accountData = self.accountData;
+//        vc.actionType = 0; // indicate add new room
+//    }
 }
 #pragma mark - URL Loading System methods
 -(void)downloadDeviceAndRoomListFromServer{
@@ -185,7 +215,6 @@
 {
     if(HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        HUD.delegate = self;
     } else
         [HUD show:YES];
     
@@ -230,6 +259,24 @@
             [self.tableView reloadData];
         }
     }
+    if([name isEqualToString:@"edit"]) {
+        NSLog(@"ajax json = %@", string);
+        if ([MyEUtil getResultFromAjaxString:string] != 1) {
+            if (_isAdd) {
+                [MyEUtil showErrorOn:self.navigationController.view withMessage:@"添加房间失败，请修改名称后重试！"];
+            } else
+                [MyEUtil showErrorOn:self.navigationController.view withMessage:@"修改房间失败，请修改名称后重试！"];
+        } else{
+            SBJsonParser *parser = [[SBJsonParser alloc] init];
+            NSDictionary *result_dict = [parser objectWithString:string];
+            _editRoom.name = _roomName;
+            if (_isAdd) {
+                _editRoom.roomId = [[result_dict objectForKey:@"roomId"] integerValue];
+                [self.accountData.rooms addObject:_editRoom];
+            }
+            [self.tableView reloadData];
+        }
+    }
 }
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     
@@ -244,5 +291,40 @@
     
     [MyEUtil showSuccessOn:self.navigationController.view withMessage:msg];
     [HUD hide:YES];
+}
+
+#pragma mark - UIAlertView delegate method
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        UITextField *txt = [alertView textFieldAtIndex:0];
+        _roomName = txt.text;
+        if (_roomName.length < 2 || _roomName.length > 11) {
+            [MyEUtil showMessageOn:nil withMessage:@"房间名称长度不对"];
+            [alertView performSelector:@selector(show) withObject:nil afterDelay:1.5];
+            return;
+        }
+        BOOL hasOne = NO;
+        for (MyERoom *r in self.accountData.rooms) {
+            if ([r isKindOfClass:[MyERoom class]]) {
+                if ([_roomName isEqualToString:r.name]) {
+                    hasOne = YES;
+                    break;
+                }
+            }
+        }
+        if (hasOne) {
+            [MyEUtil showMessageOn:nil withMessage:@"该房间名称已存在"];
+            [alertView performSelector:@selector(show) withObject:nil afterDelay:1.5];
+        }else{
+            if(HUD == nil) {
+                HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+            } else
+                [HUD show:YES];
+            
+            NSString *urlStr = [NSString stringWithFormat:@"%@?id=%ld&name=%@&action=%i",URL_FOR_ROOM_ADD_EDIT_SAVE,_isAdd?0:(long)_editRoom.roomId,_roomName, _isAdd?0:1];
+            MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"edit"  userDataDictionary:nil];
+            NSLog(@"%@",downloader.name);
+        }
+    }
 }
 @end

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "MYEAppDelegate.h"
 
 // 定义tip显示的标志位的key，该可以会用于NSDefaults里面存储此标志位
 #define KEY_FOR_HIDE_TIP_OF_DASHBOARD1 @"hide_tip_of_dashboard1"

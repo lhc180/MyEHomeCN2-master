@@ -61,7 +61,7 @@
     NSLog(@"%@%@",moduleNameArray,moduleIdArray);
 }
 -(void)doThisWhenInstructionSendSuccess{
-#warning 这里修改了,当用户点击停止的时候，不再继续显示下一个品牌和型号
+//#warning 这里修改了,当用户点击停止的时候，不再继续显示下一个品牌和型号
     if (autoCheckStop) {
         return;
     }

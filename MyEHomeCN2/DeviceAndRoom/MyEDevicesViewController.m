@@ -24,12 +24,15 @@
 #import "MyESocketElecViewController.h"
 #import "MyESocketAutoControlViewController.h"
 
+#import "MyESafeDeviceControlViewController.h"
+#import "MyESafeDeviceEditViewController.h"
 #import "MyESettingsViewController.h"
 
 #define DEVICE_ADD_EDIT_UPLOADER_NMAE @"DeviceAddEditUploader"
 #define SOCKET_SWITCH_CONTROL_UPLOADER_NMAE @"SocketSwitchChangeUploader"
 #define DEVICE_HOME_LIST_DOWNLOAD_NAME @"deviceAndRoomListDownloader"
-@interface MyEDevicesViewController ()
+@interface MyEDevicesViewController (){
+}
 
 @end
 
@@ -183,16 +186,32 @@
         case 6:
             str = @"socket";
             break;
-        default:
+        case 7:
             str = @"switch";
             break;
+        case 8:
+            str = @"ir";
+            break;
+        case 9:
+            str = @"smoke";
+            break;
+        default:
+            str = @"door";
+            break;
     }
-    if (device.type == 7) {
-        if ([device.status.switchStatus integerValue] == 0) {
-            [deviceBtn setImage:[UIImage imageNamed:@"switch-off"] forState:UIControlStateNormal];
-        }else{
-            [deviceBtn setImage:[UIImage imageNamed:@"switch-on"] forState:UIControlStateNormal];
-        }
+    //    if (device.type == 7) {
+    //        if ([device.status.switchStatus integerValue] == 0) {
+    //            [deviceBtn setImage:[UIImage imageNamed:@"switch-off"] forState:UIControlStateNormal];
+    //        }else{
+    //            [deviceBtn setImage:[UIImage imageNamed:@"switch-on"] forState:UIControlStateNormal];
+    //        }
+    //        return;
+    //    }
+    if (device.type == 8 || device.type == 9 || device.type == 10) {
+        if (device.status.protectionStatus == 1) {
+            [deviceBtn setImage:[UIImage imageNamed:[str stringByAppendingString:@"-on"]] forState:UIControlStateNormal];
+        }else
+            [deviceBtn setImage:[UIImage imageNamed:[str stringByAppendingString:@"-off"]] forState:UIControlStateNormal];
         return;
     }
     if (device.status.powerSwitch == 0) {
@@ -240,9 +259,14 @@
     [self doThisWhenNeedChangeBtnImage:device andBtn:deviceBtn];
     
     NSString *imageFilename;
-    if (device.isOrphan) {
+    if (device.type == 8 || device.type == 9 || device.type == 10) {
+        if (device.status.alertStatus == 1) {
+            imageFilename = @"safeAlert";
+        }else
+            imageFilename = @"";
+    }else if (device.isOrphan) {
         imageFilename= @"noconnection";
-    } else
+    }else
         imageFilename= [NSString stringWithFormat:@"signal%ld", (long)device.status.connection];
     
     [signalImage setImage:[UIImage imageNamed:imageFilename]];
@@ -278,13 +302,19 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     MyEDevice *device = [self.devices objectAtIndex:indexPath.row];
-    
+    if (device.type == 8 || device.type == 9 || device.type == 10) {
+        UIStoryboard *story = [UIStoryboard storyboardWithName:@"Safe" bundle:nil];
+        MyESafeDeviceControlViewController *vc = [story instantiateInitialViewController];
+        vc.device = device;
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
     if([device isOrphan]){
         [MyEUtil showMessageOn:self.view withMessage:@"该设备没有绑定到智控星"];
         return;
     }
     if(![device isConnected]){
-        [MyEUtil showMessageOn:self.view withMessage:@"该设备没有连接, 请检查"];
+        [MyEUtil showMessageOn:self.view withMessage:@"该设备没有连接,请检查"];
         return;
     }
     
@@ -314,7 +344,7 @@
         //            tabBarController.edgesForExtendedLayout = UIRectEdgeNone;
         //        }
         
-//        UINavigationController *nav0 = [tabBarController childViewControllers][0];
+        //        UINavigationController *nav0 = [tabBarController childViewControllers][0];
         MyEACManualControlNavController *nav0 = tabBarController.childViewControllers[0];
         UINavigationController *nav1 = [tabBarController childViewControllers][1];
         UINavigationController *nav2 = [tabBarController childViewControllers][2];
@@ -331,14 +361,14 @@
         if (!device.isSystemDefined) {
             nav2.tabBarItem.enabled = NO;
         }
-//        MyEAcManualControlViewController *acManualControlViewController = [[nav0 childViewControllers] objectAtIndex:0];
+        //        MyEAcManualControlViewController *acManualControlViewController = [[nav0 childViewControllers] objectAtIndex:0];
         MyEAutoControlViewController *acAutoControlViewController = [[nav1 childViewControllers] objectAtIndex:0];
         MyEAcEnergySavingViewController *acComfortViewController = [[nav2 childViewControllers] objectAtIndex:0];
         MyEAcTempMonitorViewController *tempVC = [[nav3 childViewControllers] objectAtIndex:0];
         
         tabBarController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
-//        acManualControlViewController.device = device;
-//        acManualControlViewController.accountData = self.accountData;
+        //        acManualControlViewController.device = device;
+        //        acManualControlViewController.accountData = self.accountData;
         nav0.device = device;
         nav0.accountData = self.accountData;
         
@@ -397,7 +427,7 @@
         socketTimedControlViewController.accountData = self.accountData;
         
         socketAutoControlViewController.device = device;
-//        socketAutoControlViewController.accountData = self.accountData;
+        //        socketAutoControlViewController.accountData = self.accountData;
         
         vc.device = device;
         [self presentViewController:tabBarController animated:YES completion:nil];
@@ -516,16 +546,16 @@
 #pragma mark - IBAction methods
 - (IBAction)addDeviceAction:(id)sender {
     //如果terminal数组为零，此时不能添加
-    NSMutableArray *array = [NSMutableArray array];
-    for (MyETerminal *t in self.accountData.terminals) {
-        if ([[t.tId substringToIndex:2] isEqualToString:@"01"]) {
-            [array addObject:t];
-        }
-    }
-    if ([array count] == 0) {
-        [self doThisWhenNeedAlert];
-        return;
-    }
+//    NSMutableArray *array = [NSMutableArray array];
+//    for (MyETerminal *t in self.accountData.terminals) {
+//        if ([[t.tId substringToIndex:2] isEqualToString:@"01"]) {
+//            [array addObject:t];
+//        }
+//    }
+//    if ([array count] == 0) {
+//        [self doThisWhenNeedAlert];
+//        return;
+//    }
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
     MyEDeviceAddOrEditViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"AddOrEDitIrDeviceVC"];
     MyEDevice *device = [[MyEDevice alloc] init];
@@ -545,18 +575,18 @@
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:location];
     
     MyEDevice *device = [self.devices objectAtIndex:indexPath.row];
-    if (device.type != 7 && device.type != 6) {
-        NSMutableArray *array = [NSMutableArray array];
-        for (MyETerminal *t in self.accountData.terminals) {
-            if ([[t.tId substringToIndex:2] isEqualToString:@"01"]) {
-                [array addObject:t];
-            }
-        }
-        if ([array count] == 0) {
-            [self doThisWhenNeedAlert];
-            return;
-        }
-    }
+//    if (device.type != 7 && device.type != 6) {
+//        NSMutableArray *array = [NSMutableArray array];
+//        for (MyETerminal *t in self.accountData.terminals) {
+//            if ([[t.tId substringToIndex:2] isEqualToString:@"01"]) {
+//                [array addObject:t];
+//            }
+//        }
+//        if ([array count] == 0) {
+//            [self doThisWhenNeedAlert];
+//            return;
+//        }
+//    }
     if (device.type == 1) {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
         MyEDeviceAddOrEditViewController *vc = (MyEDeviceAddOrEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ACAddOrEDitIrDeviceVC"];
@@ -580,6 +610,12 @@
         vc.accountData = self.accountData;
         vc.device = device;
         [self.navigationController pushViewController:vc animated:YES];
+    }else if (device.type == 8 || device.type == 9 || device.type == 10){
+        UIStoryboard *story = [UIStoryboard storyboardWithName:@"Safe" bundle:nil];
+        MyESafeDeviceEditViewController *vc = [story instantiateViewControllerWithIdentifier:@"safeDeviceEdit"];
+        vc.device = device;
+        vc.accountData = self.accountData;
+        [self.navigationController pushViewController:vc animated:YES];
     }else{
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
         MyEDeviceAddOrEditViewController *viewController = (MyEDeviceAddOrEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AddOrEDitIrDeviceVC"];
@@ -598,10 +634,18 @@
     CGPoint hit = [sender convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:hit];
     MyEDevice *device = self.devices[indexPath.row];
-    if (device.type == 3 || device.type == 5) {
+    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+    UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:202];
+    act.hidden = NO;
+    [act startAnimating];
+    sender.hidden = YES;
+    _selectIndexPath = indexPath;
+
+    if (device.type == 8 || device.type == 9 || device.type == 10) {
+        MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@&protectionStatus=%i",URL_FOR_SAFE_CONTROL,device.tId,1-device.status.protectionStatus] postData:nil delegate:self loaderName:@"safeDeviceControl" userDataDictionary:nil];
+        NSLog(@"loader name is %@",loader.name);
         return;
     }
-    
     if([device isOrphan]){
         [MyEUtil showMessageOn:self.view withMessage:@"设备没有绑定智控星,无法进行操作"];
         return;
@@ -610,13 +654,6 @@
         [MyEUtil showMessageOn:self.view withMessage:@"设备没有信号, 无法进行控制"];
         return;
     }
-    
-    UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
-    UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:202];
-    act.hidden = NO;
-    [act startAnimating];
-    sender.hidden = YES;
-    _selectIndexPath = indexPath;
     
     if (device.type == 7) {
         NSString *url = [NSString stringWithFormat:@"%@?id=%li&switchStatus=%i&action=1",URL_FOR_SWITCH_CONTROL,(long)device.deviceId,[device.status.switchStatus integerValue]==0?1:0];  //数组中只要有1路是开的，那么就发送关闭的消息
@@ -887,7 +924,23 @@
         }else{
             [MyEUtil showErrorOn:self.view withMessage:[NSString stringWithFormat:@"开关控制失败"]];
         }
-        
+    }
+    if ([name isEqualToString:@"safeDeviceControl"]) {
+        NSLog(@"safeDeviceControl string is %@",string);
+        UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_selectIndexPath];
+        UIButton *btn = (UIButton *)[cell.contentView viewWithTag:1];
+        UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:202];
+        act.hidden = YES;
+        btn.hidden = NO;
+        MyEDevice *device = self.devices[_selectIndexPath.row];
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        if (i == 1) {
+            device.status.protectionStatus = 1 - device.status.protectionStatus;
+            [self.tableView reloadData];
+        }else if (i == -3){
+            [MyEUtil showMessageOn:nil withMessage:@"用户已注销"];
+        }else
+            [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
     }
 }
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
