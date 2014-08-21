@@ -8,7 +8,9 @@
 
 #import "MyEAcCustomInstructionViewController.h"
 
-@interface MyEAcCustomInstructionViewController ()
+@interface MyEAcCustomInstructionViewController (){
+    BOOL _isFinished;
+}
 
 @end
 
@@ -16,6 +18,10 @@
 @synthesize brandIdArray,brandNameArray,modelIdArray,modelNameArray,brandBtn,modelBtn,downloadBtn,editInstructionBtn;
 
 #pragma mark - life circle methods
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIApplicationDidEnterBackgroundNotification object:nil];
+}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -41,7 +47,11 @@
                 }
             }
         }
-        
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didEnterBackground)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:nil];
+
 //    }else{
 //        for (UIButton *btn in self.view.subviews) {
 //            if (btn.tag == 100 || btn.tag == 101) {
@@ -95,6 +105,24 @@
     }
 }
 #pragma mark - private methods
+-(void)didEnterBackground{
+    if (_isFinished) {
+        [UIApplication sharedApplication].idleTimerDisabled = NO;
+        [cancelButton removeFromSuperview];
+        [timer invalidate];
+        [HUD hide:YES];
+        self.device.brand = @"";
+        self.device.brandId = 0;
+        self.device.model = @"";
+        self.device.modelId = 0;
+        //特别注意此处对于label内容更新的处理
+        for (UILabel *l in self.view.superview.superview.subviews) {
+            if ([l isKindOfClass:[UILabel class]] && l.tag == 100) {
+                l.text = @"空调未初始化";
+            }
+        }
+    }
+}
 -(void)findBrandArrayInData{
     NSMutableArray *brands = [NSMutableArray array];
     NSMutableArray *brandIds= [NSMutableArray array];

@@ -205,8 +205,8 @@
     if ([name isEqualToString:@"edit"]) {
         NSInteger i = [MyEUtil getResultFromAjaxString:string];
         if (i == 1) {
-//            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
-//            vc.needRefresh = YES;
+            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
+            vc.needRefresh = YES;
         }else if (i == 0){
             [MyEUtil showMessageOn:nil withMessage:@"传入数据有误"];
         }else if (i == -3){
