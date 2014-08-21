@@ -8,7 +8,9 @@
 
 #import "MyEAcStandardInstructionViewController.h"
 
-@interface MyEAcStandardInstructionViewController ()
+@interface MyEAcStandardInstructionViewController (){
+    BOOL _isFinished;  //表示当屏幕关掉的时候已经下载完成
+}
 
 @end
 
@@ -88,18 +90,20 @@
 
 #pragma mark - private methods
 -(void)didEnterBackground{
-    [UIApplication sharedApplication].idleTimerDisabled = NO;
-    [cancelButton removeFromSuperview];
-    [timer invalidate];
-    [HUD hide:YES];
-    self.device.brand = @"";
-    self.device.brandId = 0;
-    self.device.model = @"";
-    self.device.modelId = 0;
-    //特别注意此处对于label内容更新的处理
-    for (UILabel *l in self.view.superview.superview.subviews) {
-        if ([l isKindOfClass:[UILabel class]] && l.tag == 100) {
-            l.text = @"空调未初始化";
+    if (_isFinished) {
+        [UIApplication sharedApplication].idleTimerDisabled = NO;
+        [cancelButton removeFromSuperview];
+        [timer invalidate];
+        [HUD hide:YES];
+        self.device.brand = @"";
+        self.device.brandId = 0;
+        self.device.model = @"";
+        self.device.modelId = 0;
+        //特别注意此处对于label内容更新的处理
+        for (UILabel *l in self.view.superview.superview.subviews) {
+            if ([l isKindOfClass:[UILabel class]] && l.tag == 100) {
+                l.text = @"空调未初始化";
+            }
         }
     }
 }
@@ -249,6 +253,7 @@
                     timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(checkAcInitProgress) userInfo:nil repeats:NO];
                 }else{
                     [UIApplication sharedApplication].idleTimerDisabled = NO;
+                    _isFinished = YES;
                     [timer invalidate];
                     [cancelButton removeFromSuperview];
                     HUD.customView = imageView;

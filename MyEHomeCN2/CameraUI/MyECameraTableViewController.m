@@ -33,7 +33,10 @@
 #pragma mark - life circle methods
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
-    [self getCameraStatus];
+    if (self.needRefresh) {
+        self.needRefresh = NO;
+        [self getCameraStatus];
+    }
     if (IS_IOS6) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
         [[UIApplication sharedApplication] setStatusBarHidden:NO];

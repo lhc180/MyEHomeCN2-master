@@ -130,6 +130,15 @@
         vc.schedule = self.control.SSList[[self.tableView indexPathForCell:sender].row];
     }
 }
+-(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
+    if ([identifier isEqualToString:@"add"]) {
+        if (self.control.SSList.count >= 10) {
+            [MyEUtil showMessageOn:nil withMessage:@"当前进程已有十条,无法继续添加"];
+            return NO;
+        }
+    }
+    return YES;
+}
 #pragma mark - url delegate methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];

@@ -75,8 +75,8 @@
         UINavigationController *nav = (UINavigationController *)presentedFSViewController;
         MyECameraAddNewViewController *vc = nav.childViewControllers[0];
         if (!vc.cancelBtnClicked) {
-//            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
-//            vc.needRefresh = YES;
+            MyECameraTableViewController *vc = self.navigationController.childViewControllers[0];
+            vc.needRefresh = YES;
             [self.navigationController popViewControllerAnimated:YES];
         }
     };

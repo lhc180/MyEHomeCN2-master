@@ -14,6 +14,6 @@
 @interface MyECameraTableViewController : UITableViewController <SnapshotProtocol,MyEDataLoaderDelegate>
 
 @property (nonatomic, strong) NSMutableArray *cameraList;
-//@property (nonatomic) BOOL needRefresh;
+@property (nonatomic) BOOL needRefresh;
 
 @end

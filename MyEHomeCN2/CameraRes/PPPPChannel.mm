@@ -977,6 +977,7 @@ void* CPPPPChannel::AlarmThread(void * param)
     return NULL;
 }
 
+#warning 这里是否可以设置报警设置
 void CPPPPChannel::AlarmProcess()
 {
     while(m_bAlarmThreadRuning)
