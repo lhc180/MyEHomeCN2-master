@@ -32,8 +32,10 @@
         _typeLbl.text = @"红外入侵探测器";
     }else if (_device.type == 9){
         _typeLbl.text = @"烟雾探测器";
-    }else
+    }else if (_device.type == 10){
         _typeLbl.text = @"门窗磁";
+    }else
+        _typeLbl.text = @"声光报警器";
     [_roomBtn setTitle:@"获取中..." forState:UIControlStateNormal];
 }
 

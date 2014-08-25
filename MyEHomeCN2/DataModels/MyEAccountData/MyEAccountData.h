@@ -35,7 +35,7 @@
 @property (nonatomic, strong) NSMutableArray *devices;
 @property (nonatomic, strong) NSMutableArray *rooms;
 @property (nonatomic, strong) NSMutableArray *terminals;
-
+@property (nonatomic, strong) NSMutableArray *allTerminals;
 
 - (MyEAccountData *)initWithDictionary:(NSDictionary *)dictionary;
 - (MyEAccountData *)initWithJSONString:(NSString *)jsonString;

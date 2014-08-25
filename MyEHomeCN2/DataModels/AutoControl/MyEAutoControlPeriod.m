@@ -69,7 +69,9 @@
 -(id)copyWithZone:(NSZone *)zone {
     return [[MyEAutoControlPeriod alloc] initWithDictionary:[self JSONDictionary]];
 }
-
+-(NSString *)description{
+    return [NSString stringWithFormat:@"%i  %i",self.stid,self.etid];
+}
 #pragma mark
 #pragma Utilites
 // Utilities

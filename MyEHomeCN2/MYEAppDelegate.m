@@ -95,6 +95,7 @@
 //    UIBarButtonItem *doneBarItem = [[UIBarButtonItem alloc] initWithTitle:@"隐藏"                                                                    style:UIBarButtonItemStyleDone target:self action:@selector(resignKeyboard:)];
 //    [keyboardToolbar setItems:[NSArray arrayWithObjects:spaceBarItem, doneBarItem, nil]];
 //    [UITextField appearance].inputAccessoryView = keyboardToolbar;
+    [UITextField appearance].delegate = self;
     
 }
 - (void)resignKeyboard:(id)sender
@@ -248,5 +249,10 @@
                                           cancelButtonTitle:@"知道了"
                                           otherButtonTitles:nil, nil];
     [alert show];
+}
+#pragma mark - UITextField delegate method
+- (BOOL)textFieldShouldReturn:(UITextField *)textField{
+    [self resignKeyboard:nil];
+    return YES;
 }
 @end

@@ -160,6 +160,7 @@
 #define URL_FOR_SOCKET_SCHEDULE_LIST @"http://www.myenergydomain.com.cn/phone/smart_socket_schedule_view.jhtml"
 #define URL_FOR_SOCKET_SCHEDULE_EDIT @"http://www.myenergydomain.com.cn/phone/socket_schedule_save.jhtml"
 /*-------------------------SCENCE-------------------------------*/
+#define URL_FOR_SCENES_SAFEDEVICE_CONTROL @"http://www.myenergydomain.com.cn/phone/security_batch_control.jhtml"
 #define URL_FOR_SCENES_VIEW  @"http://www.myenergydomain.com.cn/phone/scene_list_view.jhtml"
 #define URL_FOR_SCENES_DOWNLOAD_ALL_DEVICE_INSTRUCTION @"http://www.myenergydomain.com.cn/phone/all_device_instruction_view.jhtml"
 #define URL_FOR_SCENES_APPLY @"http://www.myenergydomain.com.cn/phone/scene_apply_save.jhtml"

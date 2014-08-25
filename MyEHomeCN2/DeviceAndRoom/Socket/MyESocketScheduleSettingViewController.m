@@ -71,6 +71,7 @@
     NSLog(@"%@ is %@",name,loader.name);
 }
 -(void)uploadInfoToServer{
+    _scheduleNew.runFlag = 1;   //保存的时候进程的启用状态肯定为1，不能为0
     // 估计这里会有问题，因为数组没有转变为字符串(特别注意这里是怎么样转化为字符串的)
     [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&scheduleId=%li&onTime=%@&offTime=%@&weeks=%@&runFlag=%i&action=%li",
                                                            URL_FOR_SOCKET_SCHEDULE_EDIT,

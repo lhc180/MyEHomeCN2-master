@@ -231,7 +231,7 @@
             MyESettings *setting = [[MyESettings alloc] initWithJSONString:string];
             self.settings = setting;
             //这里的这个数据会牵扯到整个逻辑
-            accountData.terminals = setting.terminals;
+            accountData.allTerminals = setting.terminals;
             accountData.mStatus = setting.status;
             if (setting.mId) {
                 accountData.mId = setting.mId;
@@ -311,7 +311,7 @@
             statusLabel.text = @"离线";
         [notification setOn:settings.enableNotification == 0?NO:YES animated:YES];
         [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
-        terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[accountData.terminals count]];
+        terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[accountData.allTerminals count]];
         self.subSwitchCount.text = [NSString stringWithFormat:@"%i",self.settings.subSwitchList.count];
         NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
         [prefs setObject:settings.provinceId forKey:@"provinceId"];

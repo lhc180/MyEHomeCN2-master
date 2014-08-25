@@ -127,9 +127,15 @@ sceneIndex,saveEditorBtn;
             powerArray = @[@"布防",@"撤防"];
             [self setLabelAndButtonForOthers];
             break;
-        default:
+        case 10:
             deviceArray = _doorArray[1];
             self.deviceIdArray = _doorArray[0];
+            powerArray = @[@"布防",@"撤防"];
+            [self setLabelAndButtonForOthers];
+            break;
+        default:
+            deviceArray = _slalarmArray[1];
+            self.deviceIdArray = _slalarmArray[0];
             powerArray = @[@"布防",@"撤防"];
             [self setLabelAndButtonForOthers];
             break;
@@ -207,6 +213,7 @@ sceneIndex,saveEditorBtn;
     _irArray = [NSMutableArray array];
     _smokeArray = [NSMutableArray array];
     _doorArray = [NSMutableArray array];
+    _slalarmArray = [NSMutableArray array];
     NSMutableArray *dTArray = [NSMutableArray arrayWithArray:self.accountData.deviceTypes];
     
     for (int i=0; i<[self.accountData.deviceTypes count];i++) {   //终于算是找到了问题的根源了
@@ -303,8 +310,11 @@ sceneIndex,saveEditorBtn;
             case 9:
                 _smokeArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
-            default:
+            case 10:
                 _doorArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
+                break;
+            default:
+                _slalarmArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
         }
     }
@@ -411,7 +421,7 @@ sceneIndex,saveEditorBtn;
                 [self setLabelAndButtonForSwitch];
                 _device.status.switchStatus = dictionaryRecived[@"controlKey"][@"channel"];
                 [self.tableView reloadData];
-            }else if (device.type == 8 || device.type == 9 || device.type == 10){
+            }else if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11){
                 [self setLabelAndButtonForOthers];
                 self.powerArray = @[@"布防",@"撤防"];
                 if ([dictionaryRecived[@"controlKey"][@"powerSwitch"] intValue] == 1) {
@@ -626,7 +636,7 @@ sceneIndex,saveEditorBtn;
             [string replaceOccurrencesOfString:@"2" withString:@"0" options:NSCaseInsensitiveSearch range:NSMakeRange(0, string.length)];
             [controlKeyDictionary setObject:[NSString stringWithString:string] forKey:@"channel"];
             [controlKeyDictionary setObject:@0 forKey:@"keyId"];
-        }else if (device.type == 8 || device.type == 9 || device.type == 10){
+        }else if (device.type == 8 || device.type == 9 || device.type == 10 || device.type ==11){
             [sceneDetailDictionary setObject:[NSNumber numberWithInteger:device.type - 5] forKey:@"isAc"];
             [controlKeyDictionary setObject:@0 forKey:@"keyId"];
             if ([powerBtn.currentTitle isEqualToString:@"布防"]) {

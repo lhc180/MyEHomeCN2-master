@@ -69,7 +69,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9GD-hy-dPj" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="278" y="131"/>
+            <point key="canvasLocation" x="-2466" y="-1237"/>
         </scene>
         <!--MyE Safe Device Edit View Controller - 编辑-->
         <scene sceneID="fQJ-xK-NLP">
@@ -169,7 +169,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="r6D-d3-Nhh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="629" y="131"/>
+            <point key="canvasLocation" x="-2115" y="-1237"/>
         </scene>
     </scenes>
     <resources>

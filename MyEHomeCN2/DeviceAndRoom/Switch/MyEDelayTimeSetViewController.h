@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyEDelayTimeSetViewController : UITableViewController<MyEDataLoaderDelegate>{
+@interface MyEDelayTimeSetViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
     NSMutableArray *_tableArray;
     NSInteger _selectedRow;

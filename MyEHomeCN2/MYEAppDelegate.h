@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MYEAppDelegate : UIResponder <UIApplicationDelegate>
+@interface MYEAppDelegate : UIResponder <UIApplicationDelegate,UITextFieldDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NSString *deviceTokenStr,*alias;

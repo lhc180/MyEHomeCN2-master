@@ -26,7 +26,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    _selectedRow = 61;  //对该值进行初始化
+    _selectedRow = 4;  //对该值进行初始化
     _tableArray = [NSMutableArray arrayWithCapacity:60];
     for (int i = 1; i <= 60; i++) {
         [_tableArray addObject:[NSString stringWithFormat:@"%i分钟",i]];  //可变数组在使用前一定要先初始化
@@ -64,14 +64,8 @@
     if([name isEqualToString:@"checkIfRight"]){
         NSLog(@"checkIfRight string is %@",string);
         if ([MyEUtil getResultFromAjaxString:string] == 1) {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"当前开关路数与启用的定时控制有冲突,确定需要保存么?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-            alert.rightBlock = ^{
-                [self doThisToChangeStatus];
-            };
-//            alert.leftBlock = ^{
-//                [self performSelector:@selector(mz_dismissFormSheetControllerAnimated:completionHandler:) withObject:nil afterDelay:0.1];
-////                [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
-//            };
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"当前设置延时的开关路数与启用的定时控制有冲突,确定需要保存么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+            alert.tag = 100;
             [alert show];
         }
         if ([MyEUtil getResultFromAjaxString:string] == 2) {
@@ -106,27 +100,33 @@
     }
 
 }
+#pragma mark - UITableView dataSource methods
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
     return [_tableArray count];
 }
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     cell.textLabel.text = _tableArray[indexPath.row];
+    cell.accessoryType = UITableViewCellAccessoryNone;
+    if (indexPath.row == _selectedRow) {
+        cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
     return cell;
 }
+#pragma mark - UITableView delegate methods
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     _selectedRow = indexPath.row;
     self.status.delayMinute = indexPath.row+1;
-    
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     [tableView reloadData];
 }
-- (UITableViewCellAccessoryType)tableView:(UITableView *)tableView accessoryTypeForRowWithIndexPath:(NSIndexPath *)indexPath
-{
-    
-    int  row  = [indexPath row];
-    if(row == _selectedRow)
-        return UITableViewCellAccessoryCheckmark;
-    return UITableViewCellAccessoryNone;
+#pragma mark - UIAlertView delegate method
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100) {
+        if (buttonIndex == 0) {
+            [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+        }else
+            [self doThisToChangeStatus];
+    }
 }
 @end

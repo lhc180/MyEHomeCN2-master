@@ -300,7 +300,7 @@
                 return;
             }
         }
-        if ([self.typeBtn.currentTitle isEqualToString:@"红外入侵探测器"] || [self.typeBtn.currentTitle isEqualToString:@"烟雾探测器"] || [self.typeBtn.currentTitle isEqualToString:@"门窗磁"]) {
+        if ([self.typeBtn.currentTitle isEqualToString:@"红外入侵探测器"] || [self.typeBtn.currentTitle isEqualToString:@"烟雾探测器"] || [self.typeBtn.currentTitle isEqualToString:@"门窗磁"] || [self.typeBtn.currentTitle isEqualToString:@"声光报警器"]) {
             
             NSString *str = _safeIdTxt.text;
             NSInteger i = 0;
@@ -308,8 +308,10 @@
                 i = 8;
             }else if ([str hasPrefix:@"09"]){
                 i = 9;
-            }else if ([str hasPrefix:@"0A"] || [str hasPrefix:@"0a"]){
+            }else if ([str hasPrefix:@"0A"]){
                 i = 10;
+            }else if ([str hasPrefix:@"0B"]){
+                i = 11;
             }else{
                 [MyEUtil showMessageOn:nil withMessage:@"设备ID输入有误,请重试"];
                 return;
@@ -604,8 +606,10 @@
                 _safeIdTxt.text = [NSString stringWithFormat:@"08-01-00-00-00-%@",sufix];
             }else if ([self.typeBtn.currentTitle isEqualToString:@"烟雾探测器"]){
                 _safeIdTxt.text = [NSString stringWithFormat:@"09-01-00-00-00-%@",sufix];
-            }else
+            }else if ([self.typeBtn.currentTitle isEqualToString:@"门窗磁"]){
                 _safeIdTxt.text = [NSString stringWithFormat:@"0A-01-00-00-00-%@",sufix];
+            }else
+                _safeIdTxt.text = [NSString stringWithFormat:@"0B-01-00-00-00-%@",sufix];
         }else{
             if (_times < 6) {
                 _timer = [NSTimer scheduledTimerWithTimeInterval:3 target:self selector:@selector(getResponseFromServer) userInfo:nil repeats:NO];
@@ -649,15 +653,16 @@
             break;
         default:
             [_typeBtn setTitle:titles[0] forState:UIControlStateNormal];
-            if ([titles[0] isEqualToString:@"红外入侵探测器"] || [titles[0] isEqualToString:@"烟雾探测器"] || [titles[0] isEqualToString:@"门磁"] || [titles[0] isEqualToString:@"门窗磁"]) {
+            if ([titles[0] isEqualToString:@"红外入侵探测器"] || [titles[0] isEqualToString:@"烟雾探测器"] || [titles[0] isEqualToString:@"声光报警器"] || [titles[0] isEqualToString:@"门窗磁"]) {
                 _safeMainView.hidden = NO;
                 if ([titles[0] isEqualToString:@"红外入侵探测器"]) {
                     _safeIdTxt.text = @"08-01-00-00-00-00-00-00";
                 }else if ([titles[0] isEqualToString:@"烟雾探测器"]) {
                     _safeIdTxt.text = @"09-01-00-00-00-00-00-00";
-                }else{
+                }else if([titles[0] isEqualToString:@"门窗磁"]){
                     _safeIdTxt.text = @"0A-01-00-00-00-00-00-00";
-                }
+                }else
+                    _safeIdTxt.text = @"0B-01-00-00-00-00-00-00";
             }else{
                 _safeMainView.hidden = YES;
                 //这里的btn有个联动的要求

@@ -19,14 +19,6 @@
 
 @implementation MyEAutoPeriodListViewController
 @synthesize periodList = _periodList, accountData, device;
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
@@ -38,7 +30,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+//    NSSortDescriptor *sort = [NSSortDescriptor sortDescriptorWithKey:@"self.stid" ascending:YES];
+//    NSArray *newArray = [self.periodList sortedArrayUsingDescriptors:@[sort]];
+//    NSLog(@"%@",self.periodList);
+//    self.periodList = [NSMutableArray arrayWithArray:newArray];
+    NSMutableArray *sortDescriptors = [NSMutableArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"stid" ascending:YES]];
+    [self.periodList sortUsingDescriptors:sortDescriptors ];
     [self.tableView reloadData];
     
 }
@@ -52,13 +49,11 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    // Return the number of sections.
     return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    // Return the number of rows in the section.
     return [self.periodList count];
 }
 

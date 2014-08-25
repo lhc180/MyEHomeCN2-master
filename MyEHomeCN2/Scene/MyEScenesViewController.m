@@ -14,6 +14,7 @@
 
 @interface MyEScenesViewController (){
     NSInteger _countOfFinishedDownloads;
+    NSInteger _btnTag;
 }
 
 @end
@@ -22,14 +23,6 @@
 @synthesize accountData = _accountData, sceneList = _sceneList,instructionRecived,scenesArray;
 
 #pragma mark - life circle methods
--(void)doThisWhenNeedRefreshData{
-    if (self.refreshControl.isRefreshing) {
-        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
-    }
-    _countOfFinishedDownloads = 0;
-    [self downloadSceneDataFromServer];
-    [self downloadInstructionFromServer];
-}
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -45,7 +38,12 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    if ([self checkeIfHasSafeDevice]) {
+        if (self.tableView.tableHeaderView == nil) {
+            self.tableView.tableHeaderView = self.tableHeaderView;
+        }
+    }else
+        self.tableView.tableHeaderView = nil;
     //从这里可以看出，其实所使用的原理都是相同的，但采用的方法却不相同
     //这里默认只刷新一次 // by YY
     if (self.accountData.needDownloadInstructionsForScene) {
@@ -66,6 +64,25 @@
     [super didReceiveMemoryWarning];
 }
 #pragma mark - private methods
+-(BOOL)checkeIfHasSafeDevice{
+    for (MyEDeviceType *dt in self.accountData.deviceTypes) {
+        if (dt.dtId>7 && dt.dtId < 12) {
+            if (dt.devices.count) {
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+-(void)doThisWhenNeedRefreshData{
+    if (self.refreshControl.isRefreshing) {
+        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
+    }
+    _countOfFinishedDownloads = 0;
+    [self downloadSceneDataFromServer];
+    [self downloadInstructionFromServer];
+}
+
 -(void)checkIfHasScenes{
     if ([scenesArray count] == 0) {
         [MyEUniversal dothisWhenTableViewIsEmptyWithMessage:@"当前没有有效场景，请点击右上角“+”进行添加" andFrame:CGRectMake(20,40,280,80) andVC:self];
@@ -182,11 +199,12 @@
         [alert show];
     } else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"scene" bundle:nil];
-        MyESceneDetailViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"sceneDetail"];
+        MYESceneEditViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"detail"];
         MyEScene *scene = [scenesArray objectAtIndex:indexPath.row];
         vc.scene = scene;
         vc.accountData = self.accountData;
         vc.instructionRecived = self.instructionRecived;
+        vc.isAdd = NO;
         [self.navigationController pushViewController:vc animated:YES];
     }
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
@@ -293,6 +311,30 @@
         }
         return;
     }
+    if ([name isEqualToString:@"control"]) {
+        [HUD hide:YES];
+        NSLog(@"recieve string is %@",string);
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        if (i == 1) {
+            for (MyEDevice *d in self.accountData.devices) {
+                if (d.type >=8 && d.type <= 11) {
+                    if (_btnTag == 101) {
+                        d.status.protectionStatus = 1;
+                    }else if (_btnTag == 102){
+                        d.status.protectionStatus = 0;
+                        d.status.alertStatus = 0;
+                    }else
+                        d.status.alertStatus = 0;
+                }
+            }
+            [MyEUtil showMessageOn:nil withMessage:@"操作成功"];
+        }else if(i == -3){
+            [MyEUtil showMessageOn:nil withMessage:@"用户已断开"];
+        }else{
+            [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
+        }
+        return;
+    }
     if (_countOfFinishedDownloads == 2) {
         [HUD hide:YES];
         [self.refreshControl endRefreshing];
@@ -314,18 +356,33 @@
 }
 
 #pragma mark - IBAction methods
+- (IBAction)headerViewBtnAction:(UIButton *)sender {
+    if(HUD == nil) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        HUD.dimBackground = YES;//容易产生灰条
+    } else
+        [HUD show:YES];
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?action=%i",URL_FOR_SCENES_SAFEDEVICE_CONTROL,sender.tag-100] postData:nil delegate:self loaderName:@"control" userDataDictionary:nil];
+}
+
 - (IBAction)addScene:(UIBarButtonItem *)sender {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入场景名称"
-                                                    message:nil
-                                                   delegate:self
-                                          cancelButtonTitle:@"取消"
-                                          otherButtonTitles:@"确定", nil];
-    alert.tag = 100;
-    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
-    //要想设置textfield的属性，必须先获得这个对象才行
-    UITextField *textField = [alert textFieldAtIndex:0];
-    textField.textAlignment = NSTextAlignmentCenter;
-    [alert show];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"scene" bundle:nil];
+    MYESceneEditViewController *addSceneVC = (MYESceneEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"detail"];
+    addSceneVC.instructionRecived = self.instructionRecived;
+    addSceneVC.accountData = self.accountData;
+    addSceneVC.isAdd = YES;
+    [self.navigationController pushViewController:addSceneVC animated:YES];
+//    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入场景名称"
+//                                                    message:nil
+//                                                   delegate:self
+//                                          cancelButtonTitle:@"取消"
+//                                          otherButtonTitles:@"确定", nil];
+//    alert.tag = 100;
+//    alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+//    //要想设置textfield的属性，必须先获得这个对象才行
+//    UITextField *textField = [alert textFieldAtIndex:0];
+//    textField.textAlignment = NSTextAlignmentCenter;
+//    [alert show];
 }
 - (IBAction)applyScene:(UIButton *)sender forEvent:(UIEvent *)event {
     UITouch *touch = [[event touchesForView:sender] anyObject];
@@ -364,12 +421,12 @@
             alert.tag = 101;
             [alert show];
         }else{
-            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"scene" bundle:nil];
-            MyEscenesAddViewController *addSceneVC = (MyEscenesAddViewController *)[storyboard instantiateViewControllerWithIdentifier:@"sceneAdd"];
-            addSceneVC.sceneName = textField.text;
-            addSceneVC.instructionRecived = self.instructionRecived;
-            addSceneVC.accountData = self.accountData;
-            [self.navigationController pushViewController:addSceneVC animated:YES];
+//            UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"scene" bundle:nil];
+//            MyEscenesAddViewController *addSceneVC = (MyEscenesAddViewController *)[storyboard instantiateViewControllerWithIdentifier:@"sceneAdd"];
+//            addSceneVC.sceneName = textField.text;
+//            addSceneVC.instructionRecived = self.instructionRecived;
+//            addSceneVC.accountData = self.accountData;
+//            [self.navigationController pushViewController:addSceneVC animated:YES];
         }
     }else if(alertView.tag == 101){
         [self addScene:nil];
