@@ -94,9 +94,15 @@ instructionMode, acInstructionSet, irKeySet;
 //    return self.modelId > 0;
 }
 - (BOOL)isOrphan{
-    return [self.tId length] == 0;
+    if (self.type >= 8 && self.type <= 11) {
+        return NO;
+    }else
+        return [self.tId length] == 0;
 }
 - (BOOL)isConnected{
-    return self.status.connection > 0;
+    if (self.type >= 8 && self.type <= 11) {
+        return YES;
+    }else
+        return self.status.connection > 0;
 }
 @end

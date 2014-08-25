@@ -195,19 +195,22 @@
         case 9:
             str = @"smoke";
             break;
-        default:
+        case 10:
             str = @"door";
             break;
+        default:
+            str = @"slalarm";
+            break;
     }
-    //    if (device.type == 7) {
-    //        if ([device.status.switchStatus integerValue] == 0) {
-    //            [deviceBtn setImage:[UIImage imageNamed:@"switch-off"] forState:UIControlStateNormal];
-    //        }else{
-    //            [deviceBtn setImage:[UIImage imageNamed:@"switch-on"] forState:UIControlStateNormal];
-    //        }
-    //        return;
-    //    }
-    if (device.type == 8 || device.type == 9 || device.type == 10) {
+        if (device.type == 7) {
+            if ([device.status.switchStatus integerValue] == 0) {
+                [deviceBtn setImage:[UIImage imageNamed:@"switch-off"] forState:UIControlStateNormal];
+            }else{
+                [deviceBtn setImage:[UIImage imageNamed:@"switch-on"] forState:UIControlStateNormal];
+            }
+            return;
+        }
+    if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11) {
         if (device.status.protectionStatus == 1) {
             [deviceBtn setImage:[UIImage imageNamed:[str stringByAppendingString:@"-on"]] forState:UIControlStateNormal];
         }else
@@ -302,7 +305,7 @@
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     MyEDevice *device = [self.devices objectAtIndex:indexPath.row];
-    if (device.type == 8 || device.type == 9 || device.type == 10) {
+    if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11) {
         UIStoryboard *story = [UIStoryboard storyboardWithName:@"Safe" bundle:nil];
         MyESafeDeviceControlViewController *vc = [story instantiateInitialViewController];
         vc.device = device;
@@ -610,7 +613,7 @@
         vc.accountData = self.accountData;
         vc.device = device;
         [self.navigationController pushViewController:vc animated:YES];
-    }else if (device.type == 8 || device.type == 9 || device.type == 10){
+    }else if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11){
         UIStoryboard *story = [UIStoryboard storyboardWithName:@"Safe" bundle:nil];
         MyESafeDeviceEditViewController *vc = [story instantiateViewControllerWithIdentifier:@"safeDeviceEdit"];
         vc.device = device;
@@ -634,6 +637,16 @@
     CGPoint hit = [sender convertPoint:CGPointZero toView:self.tableView];
     NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:hit];
     MyEDevice *device = self.devices[indexPath.row];
+
+    if([device isOrphan]){
+        [MyEUtil showMessageOn:self.view withMessage:@"设备没有绑定智控星,无法进行操作"];
+        return;
+    }
+    if(![device isConnected]){
+        [MyEUtil showMessageOn:self.view withMessage:@"设备没有信号, 无法进行控制"];
+        return;
+    }
+
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
     UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:202];
     act.hidden = NO;
@@ -646,15 +659,6 @@
         NSLog(@"loader name is %@",loader.name);
         return;
     }
-    if([device isOrphan]){
-        [MyEUtil showMessageOn:self.view withMessage:@"设备没有绑定智控星,无法进行操作"];
-        return;
-    }
-    if(![device isConnected]){
-        [MyEUtil showMessageOn:self.view withMessage:@"设备没有信号, 无法进行控制"];
-        return;
-    }
-    
     if (device.type == 7) {
         NSString *url = [NSString stringWithFormat:@"%@?id=%li&switchStatus=%i&action=1",URL_FOR_SWITCH_CONTROL,(long)device.deviceId,[device.status.switchStatus integerValue]==0?1:0];  //数组中只要有1路是开的，那么就发送关闭的消息
         NSLog(@"control switch string is  %@",url);
@@ -854,8 +858,9 @@
             accountData.devices = account.devices;
             accountData.rooms = account.rooms;
             accountData.deviceTypes = account.deviceTypes;
+            accountData.terminals = account.terminals;
             //这里要同步场景中的数据,否则不会主动更新的
-            UINavigationController *nav = [self.tabBarController childViewControllers][2];
+            UINavigationController *nav = [self.tabBarController childViewControllers][3];
             MyEScenesViewController *vc = [nav childViewControllers][0];
             vc.accountData.devices = account.devices;
             vc.accountData.rooms = account.rooms;

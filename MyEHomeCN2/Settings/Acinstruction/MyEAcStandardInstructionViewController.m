@@ -90,7 +90,7 @@
 
 #pragma mark - private methods
 -(void)didEnterBackground{
-    if (_isFinished) {
+    if (!_isFinished) {
         [UIApplication sharedApplication].idleTimerDisabled = NO;
         [cancelButton removeFromSuperview];
         [timer invalidate];

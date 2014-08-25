@@ -45,7 +45,7 @@
                                                rightButtonTitle:@"知道了"];
         [alert show];
     }else{
-       if ([accountData.terminals count] == 0) {
+       if ([accountData.allTerminals count] == 0) {
            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
                                                        contentText:@"没有有效智能终端,请绑定后重试!"
                                                    leftButtonTitle:nil
@@ -63,7 +63,7 @@
 #pragma mark
 #pragma mark - private methods
 -(void)doThisWhenDeleteTidSuccessWithIndexPath:(NSIndexPath *)indexPath{
-    [accountData.terminals removeObjectAtIndex:indexPath.row];
+    [accountData.allTerminals removeObjectAtIndex:indexPath.row];
     if (indexPath.row == 0) {
         [self.tableView reloadData];
     }else{
@@ -83,10 +83,10 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if ([accountData.terminals count]==0) {
+    if ([accountData.allTerminals count]==0) {
         return 1;
     }else{
-        return [accountData.terminals count];
+        return [accountData.allTerminals count];
     }
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -96,12 +96,12 @@
         cell.textLabel.text = @"没有检测到网关,请绑定!";
         return cell;
     }
-    if ([accountData.terminals count]==0) {
+    if ([accountData.allTerminals count]==0) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"none"];
-        cell.textLabel.text = @"网关没有绑定智控星,请绑定!";
+        cell.textLabel.text = @"网关没有绑定智能终端,请绑定!";
         return cell;
     }else{
-        MyETerminal *terminal = [self.accountData.terminals objectAtIndex:indexPath.row];
+        MyETerminal *terminal = [self.accountData.allTerminals objectAtIndex:indexPath.row];
         NSString *identifier = nil;
         if (terminal.irType == 1) {
             identifier = @"zhikongxing";
@@ -131,7 +131,7 @@
                     break;
             }
         }else{
-            NSArray *array = @[@"ir",@"smoke",@"door"];
+            NSArray *array = @[@"ir",@"smoke",@"door",@"slalarm"];
             cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-off",array[terminal.irType - 4]]];
         }
         return cell;
@@ -187,7 +187,7 @@
         HUD.delegate = self;
     } else
         [HUD show:YES];
-    MyETerminal *terminal = [accountData.terminals objectAtIndex:indexPath.row];
+    MyETerminal *terminal = [accountData.allTerminals objectAtIndex:indexPath.row];
     
     NSDictionary *dic = @{@"indexPath": indexPath};
     NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@",URL_FOR_SETTINGS_TERMINAL_DELETE,terminal.tId];
@@ -201,7 +201,7 @@
     } else
         [HUD show:YES];
     NSIndexPath *indexPath = (NSIndexPath *)_checkTimer.userInfo;
-    MyETerminal *terminal = [accountData.terminals objectAtIndex:indexPath.row];
+    MyETerminal *terminal = [accountData.allTerminals objectAtIndex:indexPath.row];
     NSDictionary *dic = @{@"indexPath": indexPath};
     NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@",URL_FOR_SETTINGS_TERMINAL_DELETE_CHECK,terminal.tId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"checkDeleteTerminalFromServer"  userDataDictionary:dic];
@@ -269,7 +269,7 @@
             [MyEUtil showMessageOn:nil withMessage:@"下载设置面板数据时发生错误"];
         } else{
             MyESettings *setting = [[MyESettings alloc] initWithJSONString:string];
-            self.accountData.terminals = setting.terminals;
+            self.accountData.allTerminals = setting.terminals;
             [self.tableView reloadData];
         }
     }
@@ -292,7 +292,7 @@
 {
     id vc = segue.destinationViewController;
     NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-    MyETerminal *terminal = [accountData.terminals objectAtIndex:indexPath.row];
+    MyETerminal *terminal = [accountData.allTerminals objectAtIndex:indexPath.row];
     [vc setValue:terminal forKey:@"terminal"];
     if ([vc isKindOfClass:[MyETerminalSettingViewController class]]) {
         [vc setValue:self.accountData forKey:@"accountData"];

@@ -74,7 +74,8 @@
             }
         }
         self.terminals = terminals;
-
+        
+        self.allTerminals = [NSMutableArray array];
         return self;
     }
     return nil;

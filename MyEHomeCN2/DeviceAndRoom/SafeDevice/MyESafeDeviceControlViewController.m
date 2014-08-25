@@ -32,9 +32,12 @@
     }else if (_device.type == 9){
         normal = @"smoke-control-on";
         select = @"smoke-control-off";
-    }else{
+    }else if (_device.type == 10){
         normal = @"door-control-on";
         select = @"door-control-off";
+    }else{
+        normal = @"slalarm-control-on";
+        select = @"slalarm-control-off";
     }
     [_controlBtn setImage:[UIImage imageNamed:normal] forState:UIControlStateNormal];
     [_controlBtn setImage:[UIImage imageNamed:select] forState:UIControlStateSelected];

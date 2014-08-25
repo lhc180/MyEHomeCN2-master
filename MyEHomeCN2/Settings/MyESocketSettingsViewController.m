@@ -28,8 +28,8 @@
     if (terminal.irType < 4) {
         [self setSignalImage];
     }
-    NSArray *nameArray = @[@"智能插座",@"智能开关",@"红外入侵探测器",@"烟雾探测器",@"门磁"];
-    if (terminal.irType > 1 && terminal.irType < 7) {
+    NSArray *nameArray = @[@"智能插座",@"智能开关",@"红外入侵探测器",@"烟雾探测器",@"门磁",@"声光报警器"];
+    if (terminal.irType > 1 && terminal.irType < 8) {
         self.title = nameArray[terminal.irType - 2];
         deviceType.text = self.title;
     }

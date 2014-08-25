@@ -132,7 +132,6 @@
 		8CBC80EA199DFA3E0067D79F /* settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CBC80DD199DFA3E0067D79F /* settings.storyboard */; };
 		8CBC80EB199DFA3E0067D79F /* Socket.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CBC80DF199DFA3E0067D79F /* Socket.storyboard */; };
 		8CBC80EC199DFA3E0067D79F /* Switch.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8CBC80E1199DFA3E0067D79F /* Switch.storyboard */; };
-		8CBC821B199DFA850067D79F /* MyEAcControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC80F1199DFA840067D79F /* MyEAcControlViewController.m */; };
 		8CBC821C199DFA850067D79F /* MyEAcEnergySavingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC80F3199DFA840067D79F /* MyEAcEnergySavingViewController.m */; };
 		8CBC821D199DFA850067D79F /* MyEACManualControlNavController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC80F5199DFA840067D79F /* MyEACManualControlNavController.m */; };
 		8CBC821E199DFA850067D79F /* MyEAcManualControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC80F7199DFA840067D79F /* MyEAcManualControlViewController.m */; };
@@ -225,8 +224,6 @@
 		8CBC8278199DFA850067D79F /* MyEMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81D7199DFA850067D79F /* MyEMainTabBarController.m */; };
 		8CBC8279199DFA850067D79F /* MyEQRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81D9199DFA850067D79F /* MyEQRScanViewController.m */; };
 		8CBC827A199DFA850067D79F /* MyESigeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81DB199DFA850067D79F /* MyESigeUpViewController.m */; };
-		8CBC827C199DFA850067D79F /* MyESceneDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81E0199DFA850067D79F /* MyESceneDetailViewController.m */; };
-		8CBC827D199DFA850067D79F /* MyEscenesAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81E2199DFA850067D79F /* MyEscenesAddViewController.m */; };
 		8CBC827E199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81E4199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.m */; };
 		8CBC827F199DFA850067D79F /* MyEScenesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81E6199DFA850067D79F /* MyEScenesViewController.m */; };
 		8CBC8280199DFA850067D79F /* instructionListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8CBC81E9199DFA850067D79F /* instructionListCell.xib */; };
@@ -260,6 +257,8 @@
 		8CBC82A4199DFB700067D79F /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CBC82A3199DFB700067D79F /* CFNetwork.framework */; };
 		8CBC82A6199DFB8E0067D79F /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CBC82A5199DFB8E0067D79F /* SystemConfiguration.framework */; };
 		8CBC82A8199DFBAC0067D79F /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CBC82A7199DFBAC0067D79F /* Accelerate.framework */; };
+		8CDDEB5219A5D533007774AA /* MYESceneEditViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CDDEB5119A5D533007774AA /* MYESceneEditViewController.m */; };
+		8CFB642A19AAC999003E17CC /* MYERFCurtainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CFB642919AAC999003E17CC /* MYERFCurtainViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -581,8 +580,6 @@
 		8CBC80DE199DFA3E0067D79F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/settings.storyboard; sourceTree = "<group>"; };
 		8CBC80E0199DFA3E0067D79F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Socket.storyboard; sourceTree = "<group>"; };
 		8CBC80E2199DFA3E0067D79F /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Switch.storyboard; sourceTree = "<group>"; };
-		8CBC80F0199DFA840067D79F /* MyEAcControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEAcControlViewController.h; sourceTree = "<group>"; };
-		8CBC80F1199DFA840067D79F /* MyEAcControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEAcControlViewController.m; sourceTree = "<group>"; };
 		8CBC80F2199DFA840067D79F /* MyEAcEnergySavingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEAcEnergySavingViewController.h; sourceTree = "<group>"; };
 		8CBC80F3199DFA840067D79F /* MyEAcEnergySavingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEAcEnergySavingViewController.m; sourceTree = "<group>"; };
 		8CBC80F4199DFA840067D79F /* MyEACManualControlNavController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEACManualControlNavController.h; sourceTree = "<group>"; };
@@ -783,10 +780,6 @@
 		8CBC81D9199DFA850067D79F /* MyEQRScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEQRScanViewController.m; sourceTree = "<group>"; };
 		8CBC81DA199DFA850067D79F /* MyESigeUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESigeUpViewController.h; sourceTree = "<group>"; };
 		8CBC81DB199DFA850067D79F /* MyESigeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESigeUpViewController.m; sourceTree = "<group>"; };
-		8CBC81DF199DFA850067D79F /* MyESceneDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESceneDetailViewController.h; sourceTree = "<group>"; };
-		8CBC81E0199DFA850067D79F /* MyESceneDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESceneDetailViewController.m; sourceTree = "<group>"; };
-		8CBC81E1199DFA850067D79F /* MyEscenesAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEscenesAddViewController.h; sourceTree = "<group>"; };
-		8CBC81E2199DFA850067D79F /* MyEscenesAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEscenesAddViewController.m; sourceTree = "<group>"; };
 		8CBC81E3199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEScenesDeviceEditOrAddViewController.h; sourceTree = "<group>"; };
 		8CBC81E4199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEScenesDeviceEditOrAddViewController.m; sourceTree = "<group>"; };
 		8CBC81E5199DFA850067D79F /* MyEScenesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEScenesViewController.h; sourceTree = "<group>"; };
@@ -845,6 +838,10 @@
 		8CBC82A3199DFB700067D79F /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		8CBC82A5199DFB8E0067D79F /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		8CBC82A7199DFBAC0067D79F /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
+		8CDDEB5019A5D533007774AA /* MYESceneEditViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYESceneEditViewController.h; sourceTree = "<group>"; };
+		8CDDEB5119A5D533007774AA /* MYESceneEditViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYESceneEditViewController.m; sourceTree = "<group>"; };
+		8CFB642819AAC999003E17CC /* MYERFCurtainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYERFCurtainViewController.h; sourceTree = "<group>"; };
+		8CFB642919AAC999003E17CC /* MYERFCurtainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYERFCurtainViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1473,8 +1470,6 @@
 		8CBC80EF199DFA840067D79F /* AC */ = {
 			isa = PBXGroup;
 			children = (
-				8CBC80F0199DFA840067D79F /* MyEAcControlViewController.h */,
-				8CBC80F1199DFA840067D79F /* MyEAcControlViewController.m */,
 				8CBC80F2199DFA840067D79F /* MyEAcEnergySavingViewController.h */,
 				8CBC80F3199DFA840067D79F /* MyEAcEnergySavingViewController.m */,
 				8CBC80F4199DFA840067D79F /* MyEACManualControlNavController.h */,
@@ -1494,14 +1489,14 @@
 			children = (
 				8CBC80FD199DFA840067D79F /* MyEAutoControlViewController.h */,
 				8CBC80FE199DFA840067D79F /* MyEAutoControlViewController.m */,
-				8CBC80FF199DFA840067D79F /* MyEAutoPeriodListViewController.h */,
-				8CBC8100199DFA840067D79F /* MyEAutoPeriodListViewController.m */,
-				8CBC8101199DFA840067D79F /* MyEAutoPeriodViewController.h */,
-				8CBC8102199DFA840067D79F /* MyEAutoPeriodViewController.m */,
 				8CBC8103199DFA840067D79F /* MyEAutoProcessListViewController.h */,
 				8CBC8104199DFA840067D79F /* MyEAutoProcessListViewController.m */,
 				8CBC8105199DFA840067D79F /* MyEAutoProcessViewController.h */,
 				8CBC8106199DFA840067D79F /* MyEAutoProcessViewController.m */,
+				8CBC80FF199DFA840067D79F /* MyEAutoPeriodListViewController.h */,
+				8CBC8100199DFA840067D79F /* MyEAutoPeriodListViewController.m */,
+				8CBC8101199DFA840067D79F /* MyEAutoPeriodViewController.h */,
+				8CBC8102199DFA840067D79F /* MyEAutoPeriodViewController.m */,
 			);
 			path = AutoControl;
 			sourceTree = "<group>";
@@ -1517,6 +1512,8 @@
 				8CBC810F199DFA840067D79F /* MyEIrStudyEditKeyModalViewController.m */,
 				8CBC8110199DFA840067D79F /* MyEIrUserKeyViewController.h */,
 				8CBC8111199DFA840067D79F /* MyEIrUserKeyViewController.m */,
+				8CFB642819AAC999003E17CC /* MYERFCurtainViewController.h */,
+				8CFB642919AAC999003E17CC /* MYERFCurtainViewController.m */,
 				8CBC8112199DFA840067D79F /* TVAudio */,
 			);
 			path = IRDevcie;
@@ -1572,14 +1569,14 @@
 				8CBC8135199DFA840067D79F /* MyEDelayTimeSetViewController.m */,
 				8CBC8136199DFA840067D79F /* MyEScheduleCell.h */,
 				8CBC8137199DFA840067D79F /* MyEScheduleCell.m */,
-				8CBC8138199DFA840067D79F /* MyESwitchAutoViewController.h */,
-				8CBC8139199DFA840067D79F /* MyESwitchAutoViewController.m */,
 				8CBC813A199DFA840067D79F /* MyESwitchEditViewController.h */,
 				8CBC813B199DFA840067D79F /* MyESwitchEditViewController.m */,
 				8CBC813C199DFA840067D79F /* MyESwitchElecInfoViewController.h */,
 				8CBC813D199DFA840067D79F /* MyESwitchElecInfoViewController.m */,
 				8CBC813E199DFA840067D79F /* MyESwitchManualControlViewController.h */,
 				8CBC813F199DFA840067D79F /* MyESwitchManualControlViewController.m */,
+				8CBC8138199DFA840067D79F /* MyESwitchAutoViewController.h */,
+				8CBC8139199DFA840067D79F /* MyESwitchAutoViewController.m */,
 				8CBC8140199DFA840067D79F /* MyESwitchScheduleSettingViewController.h */,
 				8CBC8141199DFA840067D79F /* MyESwitchScheduleSettingViewController.m */,
 			);
@@ -1893,14 +1890,12 @@
 		8CBC81DE199DFA850067D79F /* Scene */ = {
 			isa = PBXGroup;
 			children = (
-				8CBC81DF199DFA850067D79F /* MyESceneDetailViewController.h */,
-				8CBC81E0199DFA850067D79F /* MyESceneDetailViewController.m */,
-				8CBC81E1199DFA850067D79F /* MyEscenesAddViewController.h */,
-				8CBC81E2199DFA850067D79F /* MyEscenesAddViewController.m */,
 				8CBC81E3199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.h */,
 				8CBC81E4199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.m */,
 				8CBC81E5199DFA850067D79F /* MyEScenesViewController.h */,
 				8CBC81E6199DFA850067D79F /* MyEScenesViewController.m */,
+				8CDDEB5019A5D533007774AA /* MYESceneEditViewController.h */,
+				8CDDEB5119A5D533007774AA /* MYESceneEditViewController.m */,
 			);
 			path = Scene;
 			sourceTree = "<group>";
@@ -2103,12 +2098,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CBC7ED3199DEAC00067D79F /* H264Decoder.mm in Sources */,
-				8CBC821B199DFA850067D79F /* MyEAcControlViewController.m in Sources */,
 				8CBC7EE1199DEAC00067D79F /* PCMPlayer.mm in Sources */,
 				8CBC8263199DFA850067D79F /* SBJsonParser.m in Sources */,
 				8CBC8248199DFA850067D79F /* EColor.m in Sources */,
 				8CBC80BD199DFA320067D79F /* MyEIrKeySet.m in Sources */,
-				8CBC827D199DFA850067D79F /* MyEscenesAddViewController.m in Sources */,
 				8CBC80B1199DFA320067D79F /* MyEAcStudyInstructionList.m in Sources */,
 				8CBC8269199DFA850067D79F /* SBJsonStreamWriter.m in Sources */,
 				8CBC8232199DFA850067D79F /* MyESafeDeviceControlViewController.m in Sources */,
@@ -2182,7 +2175,6 @@
 				8CBC823A199DFA850067D79F /* MyEDelayTimeSetViewController.m in Sources */,
 				8CBC8235199DFA850067D79F /* MyESocketEditViewController.m in Sources */,
 				8CBC8233199DFA850067D79F /* MyESafeDeviceEditViewController.m in Sources */,
-				8CBC827C199DFA850067D79F /* MyESceneDetailViewController.m in Sources */,
 				8CBC8281199DFA850067D79F /* MyEAcAddNewBrandAndModuleViewController.m in Sources */,
 				8CBC80BA199DFA320067D79F /* MyEDeviceStatus.m in Sources */,
 				8CBC8247199DFA850067D79F /* DXAlertView.m in Sources */,
@@ -2251,6 +2243,7 @@
 				8CBC7EE6199DEAC00067D79F /* PPPPChannelManagement.mm in Sources */,
 				8CBC80C8199DFA320067D79F /* MyESceneDeviceInstruction.m in Sources */,
 				8CBC80A8199DFA320067D79F /* MyECameraWIFISetViewController.m in Sources */,
+				8CDDEB5219A5D533007774AA /* MYESceneEditViewController.m in Sources */,
 				8CBC809D199DFA320067D79F /* MyECameraLandscapeViewController.m in Sources */,
 				8CBC80A2199DFA320067D79F /* MyECameraSDRecordViewController.m in Sources */,
 				8CBC80BB199DFA320067D79F /* MyEDeviceType.m in Sources */,
@@ -2278,6 +2271,7 @@
 				8CBC7EEA199DEAC00067D79F /* SearchListMgt.mm in Sources */,
 				8CBC7D63199DE51E0067D79F /* main.m in Sources */,
 				8CBC828F199DFA850067D79F /* MyESettingsViewController.m in Sources */,
+				8CFB642A19AAC999003E17CC /* MYERFCurtainViewController.m in Sources */,
 				8CBC80CB199DFA320067D79F /* MyESwitchAutoControl.m in Sources */,
 				8CBC8099199DFA320067D79F /* MyECameraAddNewViewController.m in Sources */,
 				8CBC8254199DFA850067D79F /* IQActionSheetPickerView.m in Sources */,

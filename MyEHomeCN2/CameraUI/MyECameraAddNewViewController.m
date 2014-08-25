@@ -144,7 +144,10 @@
     self.camera.username = self.txtUsername.text;
     self.camera.password = self.txtPassword.text;
     self.camera.name = self.txtName.text;
-    self.camera.UID = self.txtUID.text;
+    NSMutableString *str = [self.txtUID.text mutableCopy];
+    [str replaceOccurrencesOfString:@"-" withString:@"" options:NSCaseInsensitiveSearch range:NSMakeRange(0, self.txtUID.text.length)];
+    self.camera.UID = str;
+
     NSLog(@"%@",self.camera);
     if ([_camera.username length] == 0)
     {

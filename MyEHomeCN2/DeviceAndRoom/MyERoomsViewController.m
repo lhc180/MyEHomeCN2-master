@@ -8,7 +8,6 @@
 
 #import "MyERoomsViewController.h"
 #import "MyEDevicesViewController.h"
-#import "MyERoomAddOrEditViewController.h"
 #import "MyESettingsViewController.h"
 
 #define ROOM_DELETE_UPLOADER_NMAE @"RoomDeleteUploader"

@@ -118,8 +118,11 @@
         case 9:
             return [UIImage imageNamed:@"smoke-off"];
             break;
-        default:
+        case 10:
             return [UIImage imageNamed:@"door-off"];
+            break;
+        default:
+            return [UIImage imageNamed:@"slalarm-off"];
             break;
     }
     return [UIImage imageNamed:@"other-off"];

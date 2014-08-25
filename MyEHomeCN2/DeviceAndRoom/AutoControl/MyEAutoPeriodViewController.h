@@ -32,7 +32,6 @@
 @property (nonatomic, retain) MyEAutoControlPeriod *period;
 @property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
-
 @property (weak, nonatomic) IBOutlet UIButton *timePeriodBtn;
 @property (weak, nonatomic) IBOutlet UIButton *instructionButton;
 @property (weak, nonatomic) IBOutlet UIView *pickerViewContainer;

@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "MyESceneDetailViewController.h"
-#import "MyEscenesAddViewController.h"
+#import "MYESceneEditViewController.h"
 
 @interface MyEScenesViewController : UITableViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
@@ -19,5 +18,6 @@
 @property (nonatomic, retain) MyESceneInstructionRecived *instructionRecived;
 
 @property (nonatomic, strong) NSMutableArray *scenesArray;
+@property (weak, nonatomic) IBOutlet UIView *tableHeaderView;
 
 @end

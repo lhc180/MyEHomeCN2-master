@@ -106,6 +106,7 @@
     NSLog(@"%@ is %@",name,loader.name);
 }
 -(void)uploadInfoToServer{
+    _scheduleNew.runFlag = 1;   //保存的时候进程的启用状态肯定为1，不能为0
     // 估计这里会有问题，因为数组没有转变为字符串(特别注意这里是怎么样转化为字符串的)
     [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&scheduleId=%li&onTime=%@&offTime=%@&channels=%@&weeks=%@&runFlag=%i&action=%li",
                                                            URL_FOR_SWITCH_SCHEDULE_SAVE,
@@ -265,14 +266,8 @@
             [self uploadInfoToServer];
         }
         if ([MyEUtil getResultFromAjaxString:string] == 1) {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"当前开关路数已经开启了延时控制,确定保存此定时设置吗?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-            alert.rightBlock = ^{
-                //这里也要进行手动控制面板的刷新
-                UINavigationController *nav = self.tabBarController.childViewControllers[0];
-                MyESwitchManualControlViewController *vc = nav.childViewControllers[0];
-                vc.needRefresh = YES;
-                [self uploadInfoToServer];
-            };
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"当前开关路数已经开启了延时控制,确定保存此定时设置吗?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+            alert.tag = 100;
             [alert show];
         }
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
@@ -311,5 +306,16 @@
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     [MyEUtil showMessageOn:nil withMessage:@"与服务器通讯失败"];
+}
+
+#pragma mark - UIAlertView delegate methods
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        //这里也要进行手动控制面板的刷新
+        UINavigationController *nav = self.tabBarController.childViewControllers[0];
+        MyESwitchManualControlViewController *vc = nav.childViewControllers[0];
+        vc.needRefresh = YES;
+        [self uploadInfoToServer];
+    }
 }
 @end

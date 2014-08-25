@@ -191,17 +191,8 @@
             [self uploadInfoToServer];
         }
         if ([MyEUtil getResultFromAjaxString:string] == 1) {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"当前开关路数已经开启了延时控制,确定保存此定时设置吗?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-            alert.rightBlock = ^{
-                //这里也要进行手动控制面板的刷新
-                UINavigationController *nav = self.tabBarController.childViewControllers[0];
-                MyESwitchManualControlViewController *vc = nav.childViewControllers[0];
-                vc.needRefresh = YES;
-                [self uploadInfoToServer];
-            };
-            alert.leftBlock = ^{
-                [self.tableView reloadData];
-            };
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"当前开关路数已经开启了延时控制,确定保存此定时设置吗?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+            alert.tag = 100;
             [alert show];
         }
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
@@ -215,5 +206,18 @@
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     [MyEUtil showErrorOn:nil withMessage:@"与服务器通讯失败"];
+}
+#pragma mark - UIAlertView delegate
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100) {
+        if (buttonIndex == 1) {
+            //这里也要进行手动控制面板的刷新
+            UINavigationController *nav = self.tabBarController.childViewControllers[0];
+            MyESwitchManualControlViewController *vc = nav.childViewControllers[0];
+            vc.needRefresh = YES;
+            [self uploadInfoToServer];
+        }else
+            [self.tableView reloadData];
+    }
 }
 @end
