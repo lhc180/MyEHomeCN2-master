@@ -196,7 +196,7 @@
 #pragma mark - URL private methods
 -(void)autoCheckInstructionWithModuleId:(NSInteger)moduleId{
     NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&moduleId=%li",
-                        URL_FOR_AC_AUTO_CHECK_MODULE,self.device.tId,(long)moduleId];
+                        GetRequst(URL_FOR_AC_AUTO_CHECK_MODULE),self.device.tId,(long)moduleId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"autoCheck" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }

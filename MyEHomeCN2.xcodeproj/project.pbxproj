@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8C5FA46119AEDB3100C79724 /* MYEActiveBtn.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5FA45E19AEDB3000C79724 /* MYEActiveBtn.m */; };
+		8C5FA46219AEDB3100C79724 /* MYESwitchCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C5FA46019AEDB3000C79724 /* MYESwitchCell.m */; };
 		8CAD5FF719A43CCC00E76BC9 /* MyESettingsTerminalsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAD5FF619A43CCC00E76BC9 /* MyESettingsTerminalsViewController.m */; };
 		8CAD5FFA19A4909F00E76BC9 /* MYESettingsMediatorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAD5FF919A4909F00E76BC9 /* MYESettingsMediatorViewController.m */; };
 		8CBC7D57199DE51E0067D79F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8CBC7D56199DE51E0067D79F /* Foundation.framework */; };
@@ -272,6 +274,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8C5FA45D19AEDB3000C79724 /* MYEActiveBtn.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYEActiveBtn.h; sourceTree = "<group>"; };
+		8C5FA45E19AEDB3000C79724 /* MYEActiveBtn.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYEActiveBtn.m; sourceTree = "<group>"; };
+		8C5FA45F19AEDB3000C79724 /* MYESwitchCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYESwitchCell.h; sourceTree = "<group>"; };
+		8C5FA46019AEDB3000C79724 /* MYESwitchCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYESwitchCell.m; sourceTree = "<group>"; };
 		8CAD5FF619A43CCC00E76BC9 /* MyESettingsTerminalsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESettingsTerminalsViewController.m; sourceTree = "<group>"; };
 		8CAD5FF819A4909F00E76BC9 /* MYESettingsMediatorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYESettingsMediatorViewController.h; sourceTree = "<group>"; };
 		8CAD5FF919A4909F00E76BC9 /* MYESettingsMediatorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYESettingsMediatorViewController.m; sourceTree = "<group>"; };
@@ -899,6 +905,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8C5FA45C19AEDB3000C79724 /* MYE */ = {
+			isa = PBXGroup;
+			children = (
+				8C5FA45D19AEDB3000C79724 /* MYEActiveBtn.h */,
+				8C5FA45E19AEDB3000C79724 /* MYEActiveBtn.m */,
+				8C5FA45F19AEDB3000C79724 /* MYESwitchCell.h */,
+				8C5FA46019AEDB3000C79724 /* MYESwitchCell.m */,
+			);
+			path = MYE;
+			sourceTree = "<group>";
+		};
 		8CBC7D4A199DE51E0067D79F = {
 			isa = PBXGroup;
 			children = (
@@ -1451,15 +1468,15 @@
 		8CBC80EE199DFA840067D79F /* DeviceAndRoom */ = {
 			isa = PBXGroup;
 			children = (
-				8CBC80EF199DFA840067D79F /* AC */,
-				8CBC80FC199DFA840067D79F /* AutoControl */,
-				8CBC8107199DFA840067D79F /* IRDevcie */,
 				8CBC8119199DFA840067D79F /* MyEDeviceAddOrEditViewController.h */,
 				8CBC811A199DFA840067D79F /* MyEDeviceAddOrEditViewController.m */,
 				8CBC811B199DFA840067D79F /* MyEDevicesViewController.h */,
 				8CBC811C199DFA840067D79F /* MyEDevicesViewController.m */,
 				8CBC811F199DFA840067D79F /* MyERoomsViewController.h */,
 				8CBC8120199DFA840067D79F /* MyERoomsViewController.m */,
+				8CBC80EF199DFA840067D79F /* AC */,
+				8CBC80FC199DFA840067D79F /* AutoControl */,
+				8CBC8107199DFA840067D79F /* IRDevcie */,
 				8CBC8121199DFA840067D79F /* SafeDevice */,
 				8CBC8126199DFA840067D79F /* Socket */,
 				8CBC8133199DFA840067D79F /* Switch */,
@@ -1586,6 +1603,7 @@
 		8CBC8144199DFA840067D79F /* libs */ = {
 			isa = PBXGroup;
 			children = (
+				8C5FA45C19AEDB3000C79724 /* MYE */,
 				8CBC8145199DFA850067D79F /* Additional */,
 				8CBC814A199DFA850067D79F /* dropDownTableView */,
 				8CBC8151199DFA850067D79F /* DXAlertView */,
@@ -2104,6 +2122,7 @@
 				8CBC80BD199DFA320067D79F /* MyEIrKeySet.m in Sources */,
 				8CBC80B1199DFA320067D79F /* MyEAcStudyInstructionList.m in Sources */,
 				8CBC8269199DFA850067D79F /* SBJsonStreamWriter.m in Sources */,
+				8C5FA46219AEDB3100C79724 /* MYESwitchCell.m in Sources */,
 				8CBC8232199DFA850067D79F /* MyESafeDeviceControlViewController.m in Sources */,
 				8CBC80CD199DFA320067D79F /* MyESwitchInfo.m in Sources */,
 				8CBC8285199DFA850067D79F /* MyEAcInstructionListViewController.m in Sources */,
@@ -2210,6 +2229,7 @@
 				8CBC80CC199DFA320067D79F /* MyESwitchElec.m in Sources */,
 				8CBC8246199DFA850067D79F /* UITableView+DelegateBlocks.m in Sources */,
 				8CBC827E199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.m in Sources */,
+				8C5FA46119AEDB3100C79724 /* MYEActiveBtn.m in Sources */,
 				8CBC8229199DFA850067D79F /* MyEIrStudyEditKeyModalViewController.m in Sources */,
 				8CBC823C199DFA850067D79F /* MyESwitchAutoViewController.m in Sources */,
 				8CBC826B199DFA850067D79F /* SBJsonStreamWriterState.m in Sources */,

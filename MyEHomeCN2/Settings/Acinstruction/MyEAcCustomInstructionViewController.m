@@ -367,7 +367,7 @@
 
 -(void)deleteBrandAndModuleToServer{
     NSString *urlStr = [NSString stringWithFormat:@"%@?gId=%@&action=2&brandId=%i&moduleId=%i&tId=%@",
-                        URL_FOR_AC_BRAND_MODEL_EDIT,
+                        GetRequst(URL_FOR_AC_BRAND_MODEL_EDIT),
                         self.accountData.userId,
                         [brandIdArray[[brandNameArray indexOfObject:brandBtn.titleLabel.text]] intValue],
                         [modelIdArray[[modelNameArray indexOfObject:modelBtn.titleLabel.text]] intValue],
@@ -382,14 +382,14 @@
         HUD.delegate = self;
     } else
         [HUD show:YES];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",URL_FOR_IR_LIST_AC_MODELS, self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_IR_LIST_AC_MODELS), self.accountData.userId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"downloadAcBrandsAndModules" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 -(void)doThisWhenAcInit{
     NSString *urlStr = [NSString stringWithFormat:@"%@?id=%li&action=0&brandId=%li&moduleId=%@&tId=%@",
-                        URL_FOR_AC_INIT,
+                        GetRequst(URL_FOR_AC_INIT),
                         (long)self.device.deviceId,
                         (long)[brandIdArray[[brandNameArray indexOfObject:brandBtn.titleLabel.text]] intValue],
                         modelIdArray[[modelNameArray indexOfObject:modelBtn.titleLabel.text]],
@@ -411,7 +411,7 @@
 }
 -(void)cancelAcInit{
     [timer invalidate];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?id=%li&action=2&brandId=%i&moduleId=%@&tId=%@",URL_FOR_AC_INIT, (long)self.device.deviceId,[brandIdArray[[brandNameArray indexOfObject:brandBtn.titleLabel.text]] intValue],modelIdArray[[modelNameArray indexOfObject:modelBtn.titleLabel.text]],self.device.tId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?id=%li&action=2&brandId=%i&moduleId=%@&tId=%@",GetRequst(URL_FOR_AC_INIT), (long)self.device.deviceId,[brandIdArray[[brandNameArray indexOfObject:brandBtn.titleLabel.text]] intValue],modelIdArray[[modelNameArray indexOfObject:modelBtn.titleLabel.text]],self.device.tId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"cancelAcInit" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
@@ -424,7 +424,7 @@
         requestTimes = 0;
     }
     NSString *urlStr = [NSString stringWithFormat:@"%@?id=%li&action=1&brandId=%i&moduleId=%@&tId=%@",
-                        URL_FOR_AC_INIT,
+                        GetRequst(URL_FOR_AC_INIT),
                         (long)self.device.deviceId,
                         [brandIdArray[[brandNameArray indexOfObject:brandBtn.titleLabel.text]] intValue],
                         modelIdArray[[modelNameArray indexOfObject:modelBtn.titleLabel.text]],

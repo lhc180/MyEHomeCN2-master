@@ -205,7 +205,7 @@
     if (self.refreshControl.isRefreshing) {
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
     }
-    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@",URL_FOR_DEVICE_ROOM_LIST,accountData.userId];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_DEVICE_ROOM_LIST),accountData.userId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"deviceAndRoomList"  userDataDictionary:nil];
     NSLog(@"deviceAndRoomList is %@",uploader.name);
 }
@@ -223,7 +223,7 @@
                           indexPath, @"indexPath",
                           nil ];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?id=%ld&name=%@&action=2",URL_FOR_ROOM_ADD_EDIT_SAVE, (long)room.roomId, room.name];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?id=%ld&name=%@&action=2",GetRequst(URL_FOR_ROOM_ADD_EDIT_SAVE), (long)room.roomId, room.name];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:ROOM_DELETE_UPLOADER_NMAE  userDataDictionary:dict];
     NSLog(@"%@",downloader.name);
 }
@@ -320,7 +320,7 @@
             } else
                 [HUD show:YES];
             
-            NSString *urlStr = [NSString stringWithFormat:@"%@?id=%ld&name=%@&action=%i",URL_FOR_ROOM_ADD_EDIT_SAVE,_isAdd?0:(long)_editRoom.roomId,_roomName, _isAdd?0:1];
+            NSString *urlStr = [NSString stringWithFormat:@"%@?id=%ld&name=%@&action=%i",GetRequst(URL_FOR_ROOM_ADD_EDIT_SAVE),_isAdd?0:(long)_editRoom.roomId,_roomName, _isAdd?0:1];
             MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"edit"  userDataDictionary:nil];
             NSLog(@"%@",downloader.name);
         }

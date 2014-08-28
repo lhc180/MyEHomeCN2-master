@@ -389,7 +389,7 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
     HUD.mode = MBProgressHUDModeText;
     HUD.labelText = message;
 	HUD.margin = 10.f;
-	HUD.yOffset = 40.f;
+//	HUD.yOffset = 40.f;
     if (yes) {
         HUD.color = [UIColor greenColor];
     }else{

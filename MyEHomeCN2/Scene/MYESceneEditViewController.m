@@ -77,7 +77,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=%i&name=%@&id=%li&byOrder=%i&deviceControls=%@&custom=1",URL_FOR_SCENES_EDIT,_accountData.userId,_isAdd?0:1,_isAdd?self.nameTxt.text:self.scene.name,_isAdd?0:(long)self.scene.sceneId,_orderBtn.selected,str];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=%i&name=%@&id=%li&byOrder=%i&deviceControls=%@&custom=1",GetRequst(URL_FOR_SCENES_EDIT),_accountData.userId,_isAdd?0:1,_isAdd?self.nameTxt.text:self.scene.name,_isAdd?0:(long)self.scene.sceneId,_orderBtn.selected,str];
     NSLog(@"%@",[urlStr description]);
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"saveChangesUploader" userDataDictionary:nil];
     NSLog(@"saveChangesUploader is %@",loader.name);

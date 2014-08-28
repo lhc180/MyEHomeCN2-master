@@ -78,14 +78,14 @@
 - (void) downloadTemperatureHumidityFromServer
 {
     // this is a dumb download, don't add progress indicator or spinner here
-    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&id=%ld",URL_FOR_AC_TEMPERATURE_HUMIDITY_VIEW, self.device.tId, (long)self.device.deviceId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&id=%ld",GetRequst(URL_FOR_AC_TEMPERATURE_HUMIDITY_VIEW), self.device.tId, (long)self.device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:AC_TEMPERATURE_HUMIDITY_DOWNLOADER_NMAE  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 -(void)sendInstructionToServer{
     runImage.hidden = NO;
     NSString *urlStr = [NSString stringWithFormat:@"%@?id=%ld&switch_=%li&runMode=%li&setpoint=%li&windLevel=%li",
-                        URL_FOR_AC_CONTROL_SAVE,
+                        GetRequst(URL_FOR_AC_CONTROL_SAVE),
                         (long)self.device.deviceId,
                         (long)self.device.status.powerSwitch,
                         (long)self.device.status.runMode,

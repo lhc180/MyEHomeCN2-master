@@ -121,8 +121,14 @@
         case 10:
             return [UIImage imageNamed:@"door-off"];
             break;
-        default:
+        case 11:
             return [UIImage imageNamed:@"slalarm-off"];
+            break;
+        case 12:
+            return [UIImage imageNamed:@"rf-off"];
+            break;
+        default:
+            return [UIImage imageNamed:@"rfOther-off"];
             break;
     }
     return [UIImage imageNamed:@"other-off"];

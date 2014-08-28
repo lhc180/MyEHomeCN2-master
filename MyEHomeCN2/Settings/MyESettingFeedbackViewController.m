@@ -61,7 +61,7 @@
         HUD.delegate = self;
     } else
         [HUD show:YES];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?title=%@&viewsContent=%@",URL_FOR_SETTINGS_USER_FEEDBACK,titleTextField.text,contentTextView.text];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?title=%@&viewsContent=%@",GetRequst(URL_FOR_SETTINGS_USER_FEEDBACK),titleTextField.text,contentTextView.text];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"uploadUserFeedBackContentsToServer" userDataDictionary:nil];
     NSLog(@"uploadUserFeedBackContentsToServer is %@",downloader.name);

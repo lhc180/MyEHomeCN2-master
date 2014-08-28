@@ -29,17 +29,6 @@
 {
     [super viewDidLoad];
     [self defineTapGestureRecognizer];
-//    if (!IS_IOS6) {
-//        for (UIButton *btn in self.view.subviews) {
-//            if ([btn isKindOfClass:[UIButton class]]) {
-//                [btn.layer setMasksToBounds:YES];
-//                [btn.layer setCornerRadius:5];
-//                [btn.layer setBorderWidth:1];
-//                [btn.layer setBorderColor:btn.tintColor.CGColor];
-//            }
-//        }
-//    }
-
 }
 #pragma mark - private methods
 -(void)defineTapGestureRecognizer{
@@ -69,11 +58,13 @@
         [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令名称不能为空"];
         return;
     }
-    for (int i = 0; i < [self.device.irKeySet.userStudiedKeyList count]; i++) {
-        MyEIrKey *key = [self.device.irKeySet.userStudiedKeyList objectAtIndex:i];
-        if ([self.keyNameTextfield.text isEqualToString:key.keyName]) {
-            [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"按键名称已存在"];
-            return;
+    if (_device.type < 11) {
+        for (int i = 0; i < [self.device.irKeySet.userStudiedKeyList count]; i++) {
+            MyEIrKey *key = [self.device.irKeySet.userStudiedKeyList objectAtIndex:i];
+            if ([self.keyNameTextfield.text isEqualToString:key.keyName]) {
+                [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"按键名称已存在"];
+                return;
+            }
         }
     }
     [self submitNewKeyToServer];
@@ -92,10 +83,15 @@
     } else
         [HUD show:YES];
     
+    if (_device.type > 11) {
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&action=0&id=0&keyName=%@",GetRequst(URL_FOR_RFDEVICE_INSTRUCTION_EDIT),self.device.deviceId,self.keyNameTextfield.text] postData:nil delegate:self loaderName:IR_DEVICE_ADD_KEY_UPLOADER_NMAE userDataDictionary:nil];
+        return;
+    }
+    
     NSString *urlStr;
     MyEDataLoader *uploader;
     urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=0&deviceId=%ld&keyName=%@&tId=%@&type=2&action=0",
-             URL_FOR_IR_DEVICE_ADD_EDIT_KEY_SAVE,
+             GetRequst(URL_FOR_IR_DEVICE_ADD_EDIT_KEY_SAVE),
              self.accountData.userId,
              (long)self.device.deviceId,
              self.keyNameTextfield.text,

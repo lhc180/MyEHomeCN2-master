@@ -15,5 +15,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *roomBtn;
 @property (weak, nonatomic) IBOutlet UILabel *idLbl;
 @property (weak, nonatomic) IBOutlet UILabel *typeLbl;
+@property (weak, nonatomic) IBOutlet UIView *coverView;
 
 @end

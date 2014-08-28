@@ -97,7 +97,7 @@
         [HUD show:YES];
     
     NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@",
-                        URL_FOR_AC_TEMP_MONITOR_VIEW,
+                        GetRequst(URL_FOR_AC_TEMP_MONITOR_VIEW),
                         self.device.tId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc]
                                  initLoadingWithURLString:urlStr
@@ -113,7 +113,7 @@
     } else
         [HUD show:YES];
     NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&id=%ld&temperatureRangeFlag=%ld&autoRunAcFlag=%ld&tmin=%ld&tmax=%ld",
-                        URL_FOR_AC_TEMP_MONITOR_SAVE,
+                        GetRequst(URL_FOR_AC_TEMP_MONITOR_SAVE),
                         self.device.tId,
                         (long)self.device.deviceId,
                         (long)(self.acTempMonitor.monitorFlag?1:0),//这里这种方法不错，也可以使用[NSNumber numberWithBool],这个一样可以进行0和1的判断

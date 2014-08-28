@@ -382,7 +382,7 @@
         [HUD show:YES];
    
     NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&runMode=%ld&setpoint=%ld&windLevel=%ld",
-                        URL_FOR_AC_PERIOD_VALIDATE_INSTRUCTION,
+                        GetRequst(URL_FOR_AC_PERIOD_VALIDATE_INSTRUCTION),
                         self.accountData.userId,
                         self.device.tId,
                         (long)self.period.runMode,

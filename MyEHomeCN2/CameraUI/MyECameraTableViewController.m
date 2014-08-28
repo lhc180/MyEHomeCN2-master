@@ -173,7 +173,7 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }else
         [HUD show:YES];
-    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@",URL_FOR_CAMERA_LIST] postData:nil delegate:self loaderName:@"download" userDataDictionary:nil];
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@",GetRequst(URL_FOR_CAMERA_LIST)] postData:nil delegate:self loaderName:@"download" userDataDictionary:nil];
 }
 
 #pragma mark - IBAction methods
@@ -280,7 +280,7 @@
         alert.rightBlock = ^{
             _selectedIndex = indexPath;
             MyECamera *_camera = _cameraList[indexPath.row];
-            [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&did=%@&user=%@&pwd=%@&name=%@&action=3",URL_FOR_CAMERA_EDIT,(long)_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
+            [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&did=%@&user=%@&pwd=%@&name=%@&action=3",GetRequst(URL_FOR_CAMERA_EDIT),(long)_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
 
 //            [self.cameraList removeObjectAtIndex:indexPath.row];
 //            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];

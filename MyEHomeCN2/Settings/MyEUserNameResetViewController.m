@@ -61,7 +61,7 @@
 }
 #pragma mark - URL private methods
 -(void)resetUserNameToServer{
-    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&name=%@",URL_FOR_SETTINGS_CHANGE_USERNAME,self.accountData.userId,userNameTextFiled.text];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&name=%@",GetRequst(URL_FOR_SETTINGS_CHANGE_USERNAME),self.accountData.userId,userNameTextFiled.text];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"userNameReset"  userDataDictionary:nil];
     NSLog(@"userNameReset is %@",uploader.name);
 }

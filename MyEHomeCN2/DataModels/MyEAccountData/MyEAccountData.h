@@ -29,7 +29,7 @@
 //  原来只是在场景面板内部判断是否需要下载, 但现在吧这个变量移动到这里, 为的是方便传递值,在其他面板设置, 在场景面板访问.
 
 // 注意要在每个指令学习之后, 空调修改品牌/下载控制码之后的地方设置下面变量为YES.  这里应该是新增内容
-@property (nonatomic) BOOL needDownloadInstructionsForScene;
+@property (nonatomic, assign) BOOL needDownloadInstructionsForScene;
 
 @property (nonatomic, strong) NSMutableArray *deviceTypes;
 @property (nonatomic, strong) NSMutableArray *devices;

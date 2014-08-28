@@ -8,6 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MYERFCurtainViewController : UIViewController
+@interface MYERFCurtainViewController : UIViewController<MyEDataLoaderDelegate>
+
+@property (nonatomic, weak) MyEDevice *device;
+@property (nonatomic, weak) MyEAccountData *accountData;
 
 @end

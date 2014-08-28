@@ -175,7 +175,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",URL_FOR_SETTINGS_VIEW, self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SETTINGS_VIEW), self.accountData.userId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"settingsLoader" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
@@ -190,7 +190,7 @@
     MyETerminal *terminal = [accountData.allTerminals objectAtIndex:indexPath.row];
     
     NSDictionary *dic = @{@"indexPath": indexPath};
-    NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@",URL_FOR_SETTINGS_TERMINAL_DELETE,terminal.tId];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_DELETE),terminal.tId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"deleteTerminalFromServer"  userDataDictionary:dic];
     NSLog(@"deleteTerminalFromServer is %@",uploader.name);
 }
@@ -203,7 +203,7 @@
     NSIndexPath *indexPath = (NSIndexPath *)_checkTimer.userInfo;
     MyETerminal *terminal = [accountData.allTerminals objectAtIndex:indexPath.row];
     NSDictionary *dic = @{@"indexPath": indexPath};
-    NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@",URL_FOR_SETTINGS_TERMINAL_DELETE_CHECK,terminal.tId];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_DELETE_CHECK),terminal.tId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"checkDeleteTerminalFromServer"  userDataDictionary:dic];
     NSLog(@"checkDeleteTerminalFromServer is %@",uploader.name);
 

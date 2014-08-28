@@ -62,7 +62,7 @@
     _selectIndex = indexPath;
     NSLog(@"index is %i",indexPath.row);
     MyESwitchSchedule *schedule = self.control.SSList[indexPath.row];
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=2",URL_FOR_SWITCH_TIME_DELAY,(long)self.device.deviceId,[schedule.channels componentsJoinedByString:@","]] andName:@"check"];
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=2",GetRequst(URL_FOR_SWITCH_TIME_DELAY),(long)self.device.deviceId,[schedule.channels componentsJoinedByString:@","]] andName:@"check"];
 }
 
 #pragma mark - private methods
@@ -70,11 +70,11 @@
     if (self.refreshControl.isRefreshing) {
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
     }
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li",URL_FOR_SWITCH_SCHEDULE_LIST,(long)self.device.deviceId] andName:@"scheduleList"];
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li",GetRequst(URL_FOR_SWITCH_SCHEDULE_LIST),(long)self.device.deviceId] andName:@"scheduleList"];
 }
 -(void)uploadInfoToServer{
     MyESwitchSchedule *schedule = self.control.SSList[_selectIndex.row];
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&onTime=%@&offTime=%@&channels=%@&weeks=%@&runFlag=%i&action=2",URL_FOR_SWITCH_SCHEDULE_SAVE,self.device.deviceId,schedule.scheduleId,schedule.onTime,schedule.offTime,[schedule.channels componentsJoinedByString:@","],[schedule.weeks componentsJoinedByString:@","],1-schedule.runFlag] andName:@"scheduleControl"];
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&onTime=%@&offTime=%@&channels=%@&weeks=%@&runFlag=%i&action=2",GetRequst(URL_FOR_SWITCH_SCHEDULE_SAVE),self.device.deviceId,schedule.scheduleId,schedule.onTime,schedule.offTime,[schedule.channels componentsJoinedByString:@","],[schedule.weeks componentsJoinedByString:@","],1-schedule.runFlag] andName:@"scheduleControl"];
 }
 -(void)dismissVC{
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -110,7 +110,7 @@
     alert.rightBlock = ^{
         _selectIndex = indexPath;
         MyESwitchSchedule *schedule = self.control.SSList[indexPath.row];
-        [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&action=3",URL_FOR_SWITCH_SCHEDULE_SAVE,self.device.deviceId,schedule.scheduleId] andName:@"scheduleDelete"];
+        [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&action=3",GetRequst(URL_FOR_SWITCH_SCHEDULE_SAVE),self.device.deviceId,schedule.scheduleId] andName:@"scheduleDelete"];
     };
     [alert show];
 }

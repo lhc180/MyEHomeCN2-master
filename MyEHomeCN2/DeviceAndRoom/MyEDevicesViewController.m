@@ -28,6 +28,8 @@
 #import "MyESafeDeviceEditViewController.h"
 #import "MyESettingsViewController.h"
 
+#import "MYERFCurtainViewController.h"
+
 #define DEVICE_ADD_EDIT_UPLOADER_NMAE @"DeviceAddEditUploader"
 #define SOCKET_SWITCH_CONTROL_UPLOADER_NMAE @"SocketSwitchChangeUploader"
 #define DEVICE_HOME_LIST_DOWNLOAD_NAME @"deviceAndRoomListDownloader"
@@ -65,31 +67,25 @@
     self.refreshControl = rc;
     if (jumpFromMediator == 1) {
         jumpFromMediator = 0;
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                    contentText:@"检测到您未连接智控星，此时所有设备都将不可操作，请连接智控星后重试；如果已连接，请给智控星断电后重试！"
-                                                leftButtonTitle:nil
-                                               rightButtonTitle:@"知道了"];
-        [alert show];
+//        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
+//                                                    contentText:@"检测到您未连接智控星，此时所有设备都将不可操作，请连接智控星后重试；如果已连接，请给智控星断电后重试！"
+//                                                leftButtonTitle:nil
+//                                               rightButtonTitle:@"知道了"];
+//        [alert show];
     }else if (!accountData.mId ||[accountData.mId isEqualToString:@""]) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                    contentText:@"检测到未绑定网关，此时设备都将不可操作，请绑定网关后重试"
-                                                leftButtonTitle:nil
-                                               rightButtonTitle:@"知道了"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到未绑定网关,此时设备都将不可操作,请绑定网关后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
     }else if(!accountData.mStatus || accountData.mStatus == 0){
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                    contentText:@"检测到网关离线，请连接网关后重试"
-                                                leftButtonTitle:nil
-                                               rightButtonTitle:@"知道了"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到网关离线，请连接网关后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
     }else{
-        if ([accountData.terminals count] == 0) {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                        contentText:@"检测到未连接智控星,请连接智控星后重试！"
-                                                    leftButtonTitle:nil
-                                                   rightButtonTitle:@"知道了"];
-            [alert show];
-        }
+//        if ([accountData.terminals count] == 0) {
+//            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
+//                                                        contentText:@"检测到未连接智控星,请连接智控星后重试！"
+//                                                    leftButtonTitle:nil
+//                                                   rightButtonTitle:@"知道了"];
+//            [alert show];
+//        }
     }
 }
 
@@ -198,11 +194,17 @@
         case 10:
             str = @"door";
             break;
-        default:
+        case 11:
             str = @"slalarm";
             break;
+        case 12:
+            str = @"rf";
+            break;
+        default:
+            str = @"rfOther";
+            break;
     }
-        if (device.type == 7) {
+    if (device.type == 7) {
             if ([device.status.switchStatus integerValue] == 0) {
                 [deviceBtn setImage:[UIImage imageNamed:@"switch-off"] forState:UIControlStateNormal];
             }else{
@@ -262,11 +264,13 @@
     [self doThisWhenNeedChangeBtnImage:device andBtn:deviceBtn];
     
     NSString *imageFilename;
-    if (device.type == 8 || device.type == 9 || device.type == 10) {
+    if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11) {
         if (device.status.alertStatus == 1) {
             imageFilename = @"safeAlert";
         }else
             imageFilename = @"";
+    }else if (device.type == 12 || device.type == 13){
+        imageFilename = @"";
     }else if (device.isOrphan) {
         imageFilename= @"noconnection";
     }else
@@ -310,6 +314,26 @@
         MyESafeDeviceControlViewController *vc = [story instantiateInitialViewController];
         vc.device = device;
         [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
+    if (device.type == 12) {
+        MYERFCurtainViewController *vc = [[UIStoryboard storyboardWithName:@"IrDevice" bundle:nil] instantiateViewControllerWithIdentifier:@"rfCurtain"];
+        vc.device = device;
+        vc.accountData = self.accountData;
+        [self.navigationController pushViewController:vc animated:YES];
+        return;
+    }
+    if (device.type == 13) {
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
+        MyEIrUserKeyViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"IrUserKeyVC"];
+        
+        viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
+        viewController.device = device;
+        viewController.accountData = self.accountData;
+        viewController.needDownloadKeyset = YES;
+        viewController.title = device.name;
+        
+        [self.navigationController pushViewController:viewController animated:YES];
         return;
     }
     if([device isOrphan]){
@@ -613,7 +637,7 @@
         vc.accountData = self.accountData;
         vc.device = device;
         [self.navigationController pushViewController:vc animated:YES];
-    }else if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11){
+    }else if (device.type >= 8 && device.type <= 13){
         UIStoryboard *story = [UIStoryboard storyboardWithName:@"Safe" bundle:nil];
         MyESafeDeviceEditViewController *vc = [story instantiateViewControllerWithIdentifier:@"safeDeviceEdit"];
         vc.device = device;
@@ -654,13 +678,13 @@
     sender.hidden = YES;
     _selectIndexPath = indexPath;
 
-    if (device.type == 8 || device.type == 9 || device.type == 10) {
-        MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@&protectionStatus=%i",URL_FOR_SAFE_CONTROL,device.tId,1-device.status.protectionStatus] postData:nil delegate:self loaderName:@"safeDeviceControl" userDataDictionary:nil];
+    if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11) {
+        MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@&protectionStatus=%i",GetRequst(URL_FOR_SAFE_CONTROL),device.tId,1-device.status.protectionStatus] postData:nil delegate:self loaderName:@"safeDeviceControl" userDataDictionary:nil];
         NSLog(@"loader name is %@",loader.name);
         return;
     }
     if (device.type == 7) {
-        NSString *url = [NSString stringWithFormat:@"%@?id=%li&switchStatus=%i&action=1",URL_FOR_SWITCH_CONTROL,(long)device.deviceId,[device.status.switchStatus integerValue]==0?1:0];  //数组中只要有1路是开的，那么就发送关闭的消息
+        NSString *url = [NSString stringWithFormat:@"%@?id=%li&switchStatus=%i&action=1",GetRequst(URL_FOR_SWITCH_CONTROL),(long)device.deviceId,[device.status.switchStatus integerValue]==0?1:0];  //数组中只要有1路是开的，那么就发送关闭的消息
         NSLog(@"control switch string is  %@",url);
         MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:url postData:nil delegate:self loaderName:@"switchControl" userDataDictionary:nil];
         NSLog(@"switch control is %@",loader.name);
@@ -673,7 +697,7 @@
         if(device.status.connection >0){ //这个判断很好，因为如果设备没有连接，那么此时控制设备是多余的
             NSString *urlStr = [NSString stringWithFormat:
                                 @"%@?gid=%@&id=%ld&powerSwitch=%d",
-                                URL_FOR_SOCKET_SWITCH_CONTROL,
+                                GetRequst(URL_FOR_SOCKET_SWITCH_CONTROL),
                                 self.accountData.userId,
                                 (long)device.deviceId,
                                 1-device.status.powerSwitch];
@@ -709,7 +733,7 @@
         
         NSString *urlStr = [NSString stringWithFormat:
                             @"%@?gid=%@&id=%ld&powerSwitch=%d",
-                            URL_FOR_SOCKET_SWITCH_CONTROL,
+                            GetRequst(URL_FOR_SOCKET_SWITCH_CONTROL),
                             self.accountData.userId,
                             (long)device.deviceId,
                             1-device.status.powerSwitch];
@@ -740,14 +764,14 @@
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
     NSString *str = [writer stringWithObject:dic];
     NSLog(@"%@",str);
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&data=%@",URL_FOR_DEVICE_REORDER_DEVICE, self.accountData.userId,str];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&data=%@",GetRequst(URL_FOR_DEVICE_REORDER_DEVICE), self.accountData.userId,str];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"reorderDevice"  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 -(void)controlDeviceToPowerOnOrOff:(MyEDevice *)device withDictionary:(NSDictionary *)dic{
     NSIndexPath *index = dic[@"index"];
     NSLog(@"send index is  %li",(long)index.row);
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&switch_=%i&deviceId=%li",URL_FOR_DEVICE_CONTROL_BY_CLICK_BUTTON, self.accountData.userId, 1-device.status.powerSwitch,(long)device.deviceId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&switch_=%i&deviceId=%li",GetRequst(URL_FOR_DEVICE_CONTROL_BY_CLICK_BUTTON), self.accountData.userId, 1-device.status.powerSwitch,(long)device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"powerOnOrOff"  userDataDictionary:dic];
     NSLog(@"%@",downloader.name);
 }
@@ -755,11 +779,12 @@
     if (self.refreshControl.isRefreshing) {
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
     }
-    UINavigationController *nav = self.tabBarController.childViewControllers[4];
-    MyESettingsViewController *vc = nav.childViewControllers[0];
-    vc.isFresh = YES;
-    
-    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&ver=2",URL_FOR_DEVICE_ROOM_LIST,accountData.userId];
+//    UINavigationController *nav = self.tabBarController.childViewControllers[4];
+//    MyESettingsViewController *vc = nav.childViewControllers[0];
+//    vc.isFresh = YES;
+    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+
+    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&ver=2",GetRequst(URL_FOR_DEVICE_ROOM_LIST),accountData.userId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_HOME_LIST_DOWNLOAD_NAME  userDataDictionary:nil];
     NSLog(@"deviceAndRoomList is %@",uploader.name);
 }
@@ -780,15 +805,15 @@
     MyEDataLoader *uploader;
     switch (device.type){
         case 1: // AC
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&action=2",URL_FOR_AC_ADD_EDIT_SAVE, (long)device.deviceId, device.name, device.tId, (long)device.roomId];
+            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&action=2",GetRequst(URL_FOR_AC_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId];
             uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_ADD_EDIT_UPLOADER_NMAE  userDataDictionary:dict];
             break;
         case 6: // Socket
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=2",URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE, (long)device.deviceId, device.name, device.tId, (long)device.roomId, (long)device.status.maxElectricCurrent];
+            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=2",GetRequst(URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId, (long)device.status.maxElectricCurrent];
             uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_ADD_EDIT_UPLOADER_NMAE  userDataDictionary:dict];
             break;
         default:// other IR device
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&type=%ld&action=2",URL_FOR_DEVICE_IR_ADD_EDIT_SAVE, (long)device.deviceId, device.name, device.tId, (long)device.roomId,(long)device.type];
+            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&type=%ld&action=2",GetRequst(URL_FOR_DEVICE_IR_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId,(long)device.type];
             uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_ADD_EDIT_UPLOADER_NMAE  userDataDictionary:dict];
             break;
     }
@@ -797,7 +822,6 @@
 
 #pragma mark - URL delegate methods
 - (void) didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
-    [HUD hide:YES];
     if ([name isEqualToString:@"reorderDevice"]) {
         NSLog(@"reorderDevice string is %@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
@@ -828,7 +852,7 @@
             MyEDevice *device = self.devices[_selectIndexPath.row];
             device.status.powerSwitch = 1 - device.status.powerSwitch;
             [MyEUtil showSuccessOn:self.view withMessage:[NSString stringWithFormat:device.status.powerSwitch==1?@"设备已打开":@"设备已关闭"]];
-            [self doThisWhenNeedChangeBtnImage:device andBtn:btn];
+//            [self doThisWhenNeedChangeBtnImage:device andBtn:btn];
             [self.tableView reloadData];
         }
     }
@@ -897,7 +921,8 @@
             device.status.powerSwitch = 1 - device.status.powerSwitch;
             
             [MyEUtil showSuccessOn:self.view withMessage:[NSString stringWithFormat:device.status.powerSwitch==1?@"插座已经打开":@"插座已经关闭"]];
-            [self doThisWhenNeedChangeBtnImage:device andBtn:btn];
+            [self.tableView reloadData];
+//            [self doThisWhenNeedChangeBtnImage:device andBtn:btn];
         }else{
             [MyEUtil showErrorOn:self.view withMessage:[NSString stringWithFormat:@"插座控制失败"]];
         }
@@ -925,7 +950,7 @@
             }
             device.status.switchStatus = string;
             [MyEUtil showSuccessOn:self.view withMessage:[NSString stringWithFormat:[device.status.switchStatus integerValue] ==0?@"开关已经关闭":@"开关已经打开"]];
-            [self doThisWhenNeedChangeBtnImage:device andBtn:btn];
+            [self.tableView reloadData];
         }else{
             [MyEUtil showErrorOn:self.view withMessage:[NSString stringWithFormat:@"开关控制失败"]];
         }
@@ -947,6 +972,7 @@
         }else
             [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
     }
+    [HUD hide:YES];
 }
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     if (self.refreshControl.refreshing) {

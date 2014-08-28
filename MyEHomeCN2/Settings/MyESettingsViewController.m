@@ -78,8 +78,13 @@
 #pragma mark
 #pragma mark - provite methods
 -(void)setCityLabelWithProvinceId:(NSString *)provinceId andCityId:(NSString *)cityId{
-
+    
     self.pAndC = [[MyEProvinceAndCity alloc] init];   //这里的逻辑刚开始写错了，还好现在及时更正过来了
+    if ([provinceId isEqualToString:@""] || [cityId isEqualToString:@""]) {
+        cityLabel.text = @"";
+        return;
+    }
+
     for (MyEProvince *p in self.pAndC.provinceAndCity) {
         if ([p.provinceId isEqualToString:provinceId]) {
             provinceName = p.provinceName;
@@ -196,18 +201,18 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",URL_FOR_SETTINGS_VIEW, self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SETTINGS_VIEW), self.accountData.userId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"settingsLoader" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 - (void)uploadModelToServerWithEnableNotification{
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&enableNotification=%i",URL_FOR_SETTINGS_ENABLE_NOTIFICATION, accountData.userId,notification.isOn];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&enableNotification=%i",GetRequst(URL_FOR_SETTINGS_ENABLE_NOTIFICATION), accountData.userId,notification.isOn];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsEnableNotificationUploader" userDataDictionary:nil];
     NSLog(@"SettingsEnableNotificationUploader is %@",loader.name);
 }
 - (void)uploadModelToServerToDeleteUserInfo{
-    NSString *urlStr = [NSString stringWithFormat:@"%@",URL_FOR_SETTINGS_SYSTEM_EXIT];
+    NSString *urlStr = [NSString stringWithFormat:@"%@",GetRequst(URL_FOR_SETTINGS_SYSTEM_EXIT)];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsToDeleteUserInfoUploader" userDataDictionary:nil];
     NSLog(@"SettingsToDeleteUserInfoUploader is %@",loader.name);
 }
@@ -249,10 +254,6 @@
                                                         leftButtonTitle:@"取消"
                                                        rightButtonTitle:@"绑定网关"];
                 [alert show];
-                alert.leftBlock = ^() {
-//MARK: 这里是否需要刷新？
-//                    [self downloadSettingsDataFromServer];
-                };
                 alert.rightBlock = ^{
                     //这里要同步刷新设备列表的数据
                     UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
@@ -283,23 +284,25 @@
                     
                     [self downloadSettingsDataFromServer];
                 };
-            }else if([self.accountData.terminals count] == 0){//再检查有没有智控星
-                [mtc setTabbarButtonEnable:NO];
-                DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"温馨提示"
-                                                            contentText:@"检测到未绑定任何智能设备,请先绑定!"
-                                                        leftButtonTitle:@"取消"
-                                                       rightButtonTitle:@"刷新"];
-                [alert show];
-                alert.rightBlock = ^() {
-                    //这里必须要进行刷新
-                    UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
-                    MyEDevicesViewController *vc = (MyEDevicesViewController *)[nav childViewControllers][0];
-                    NSLog(@"devices needRefresh is %i",vc.needRefresh);
-                    vc.needRefresh = YES;
-
-                    [self downloadSettingsDataFromServer];
-                };
-            }else{  //最后允许用户进行任何操作
+            }
+//            else if([self.accountData.terminals count] == 0){//再检查有没有智控星
+//                [mtc setTabbarButtonEnable:NO];
+//                DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"温馨提示"
+//                                                            contentText:@"检测到未绑定任何智能设备,请先绑定!"
+//                                                        leftButtonTitle:@"取消"
+//                                                       rightButtonTitle:@"刷新"];
+//                [alert show];
+//                alert.rightBlock = ^() {
+//                    //这里必须要进行刷新
+//                    UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
+//                    MyEDevicesViewController *vc = (MyEDevicesViewController *)[nav childViewControllers][0];
+//                    NSLog(@"devices needRefresh is %i",vc.needRefresh);
+//                    vc.needRefresh = YES;
+//
+//                    [self downloadSettingsDataFromServer];
+//                };
+//            }
+            else{  //最后允许用户进行任何操作
                 [mtc setTabbarButtonEnable:YES];
             }
         }

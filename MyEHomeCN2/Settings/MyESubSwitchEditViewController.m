@@ -43,7 +43,7 @@
         return;
     }
     [HUD show:YES];
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?mainTId=%@&subTId=%@",URL_FOR_SUBSWITCH_BIND,[self.lblMainTid.text isEqualToString:@"解绑"]?@"":self.lblMainTid.text,self.subSwitch.tid] postData:nil delegate:self loaderName:@"save" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?mainTId=%@&subTId=%@",GetRequst(URL_FOR_SUBSWITCH_BIND),[self.lblMainTid.text isEqualToString:@"解绑"]?@"":self.lblMainTid.text,self.subSwitch.tid] postData:nil delegate:self loaderName:@"save" userDataDictionary:nil];
     NSLog(@"%@",loader.name);
 }
 
@@ -64,7 +64,7 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }else
         [HUD show:YES];
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@",URL_FOR_SUBSWITCH_INFO,self.subSwitch.tid] postData:nil delegate:self loaderName:@"download" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@",GetRequst(URL_FOR_SUBSWITCH_INFO),self.subSwitch.tid] postData:nil delegate:self loaderName:@"download" userDataDictionary:nil];
     NSLog(@"loader is %@",loader.name);
 }
 

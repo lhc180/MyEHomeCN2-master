@@ -25,7 +25,7 @@
     [_roomBtn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
     [_roomBtn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
     
-    [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?deviceId=%i",URL_FOR_SAFE_INFO,_device.deviceId] andName:@"info"];
+//    [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?deviceId=%i",GetRequst(URL_FOR_SAFE_INFO),_device.deviceId] andName:@"info"];
     _nameTxt.text = _device.name;
     _idLbl.text = _device.tId;
     if (_device.type == 8) {
@@ -34,9 +34,18 @@
         _typeLbl.text = @"烟雾探测器";
     }else if (_device.type == 10){
         _typeLbl.text = @"门窗磁";
-    }else
+    }else if(_device.type == 11){
         _typeLbl.text = @"声光报警器";
-    [_roomBtn setTitle:@"获取中..." forState:UIControlStateNormal];
+    }else if (_device.type == 12){
+        _typeLbl.text = @"RF自动窗帘";
+    }else
+        _typeLbl.text = @"其他RF遥控设备";
+    
+    if (_device.type > 11) {
+        _coverView.hidden = NO;
+    }else
+        _coverView.hidden = YES;
+    [_roomBtn setTitle:[self findRoomNameByRoomId:_device.roomId] forState:UIControlStateNormal];
 }
 
 - (void)didReceiveMemoryWarning
@@ -83,12 +92,12 @@
         [MyEUtil showMessageOn:nil withMessage:@"房间未指定"];
         return;
     }
-    [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?id=%i&name=%@&roomId=%i&action=1&type=%i&tId=%@",URL_FOR_DEVICE_IR_ADD_EDIT_SAVE,_device.deviceId,_nameTxt.text,[self findRoomIdByRoomName:_roomBtn.currentTitle],_device.type,_device.tId] andName:@"save"];
+    [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?id=%i&name=%@&roomId=%i&action=1&type=%i&tId=%@",GetRequst(_device.type > 11?URL_FOR_RFDEVICE_EDIT:URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),_device.deviceId,_nameTxt.text,[self findRoomIdByRoomName:_roomBtn.currentTitle],_device.type,_device.tId] andName:@"save"];
 }
 - (IBAction)deleteDevice:(UIButton *)sender {
     DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"确定删除该设备吗?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
     alert.rightBlock = ^{
-        [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?id=%i&tId=%@&name=%@&type=%i&action=2&roomId=%i",URL_FOR_DEVICE_IR_ADD_EDIT_SAVE,_device.deviceId,_device.tId,_device.name,_device.type,_device.roomId] andName:@"delete"];
+        [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?id=%i&tId=%@&name=%@&type=%i&action=2&roomId=%i",GetRequst(_device.type > 11?URL_FOR_RFDEVICE_EDIT:URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),_device.deviceId,_device.tId,_device.name,_device.type,_device.roomId] andName:@"delete"];
     };
     [alert show];
 }

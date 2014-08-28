@@ -16,30 +16,25 @@
 #define IR_DEVICE_VALIDATE_KEY_LOADER_NMAE @"IRDeviceValidateKeyLoader"
 
 
-@interface MyEIrStudyEditKeyModalViewController ()
+@interface MyEIrStudyEditKeyModalViewController (){
+    NSTimer *_timer;
+}
 
 @end
 
 @implementation MyEIrStudyEditKeyModalViewController
 @synthesize key = _key, device = _device, accountData = _accountData;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
+    
     if (!IS_IOS6) {
         for (UIButton *btn in self.view.subviews) {
-            if ([btn isKindOfClass:[UIButton class]] && btn.tag != 100) {
+            if ([btn isKindOfClass:[UIButton class]]) {
                 [btn.layer setMasksToBounds:YES];
-                [btn.layer setCornerRadius:5];
+                [btn.layer setCornerRadius:4];
                 [btn.layer setBorderWidth:1];
                 [btn.layer setBorderColor:btn.tintColor.CGColor];
             }
@@ -66,7 +61,7 @@
 //            self.validateKeyBtn.enabled = NO;
 //            [self.validateKeyBtn setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
 //        }
-//        
+//
 //        if(_key.type == 2){
 //            self.keyNameTextfield.enabled = YES;
 //            self.deleteKeyBtn.enabled = YES;
@@ -90,8 +85,8 @@
     //设置自动行数与字符换行
     [label setNumberOfLines:0];
     label.lineBreakMode = NSLineBreakByWordWrapping;
-    label.text = @"当智控星屏幕显示Lr--时,请按下遥控器按键进行学习";
-
+    label.text = _device.type > 11?@"请按下RF设备按键进行学习": @"当智控星屏幕显示Lr--时,请按下遥控器按键进行学习";
+    
     UIFont *font = [UIFont fontWithName:@"Arial" size:12];
     //设置一个行高上限
     CGSize size = CGSizeMake(320,2000);
@@ -110,11 +105,19 @@
     learnHUD.mode = MBProgressHUDModeCustomView;
     learnHUD.cornerRadius = 2;
     learnHUD.margin = 10;
+    learnHUD.dimBackground = YES;
+    
+    if (_device.type > 11) {
+        NSLog(@"%i",self.key.keyId);
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&deviceId=%i&keyName=%@&irType=%i&instructionType=%i",GetRequst(URL_FOR_RFDEVICE_INSTRUCTION_STUDY),self.key.keyId,self.device.deviceId,self.keyNameTextfield.text,self.device.type,self.key.type] postData:nil delegate:self loaderName:IR_DEVICE_STUDY_KEY_LOADER_NMAE userDataDictionary:nil];
+        return;
+    }
+    
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&keyName=%@&tId=%@&irType=%ld&instructionType=%ld",
-                        URL_FOR_IR_DEVICE_STUDY_KEY,
+                        GetRequst(URL_FOR_IR_DEVICE_STUDY_KEY),
                         self.accountData.userId,
                         (long)self.key.keyId,
-                       (long)self.device.deviceId,
+                        (long)self.device.deviceId,
                         self.keyNameTextfield.text,
                         self.device.tId,
                         (long)self.device.type,
@@ -136,16 +139,9 @@
         HUD.delegate = self;
     } else
         [HUD show:YES];
-    
-    NSString * urlStr= [NSString stringWithFormat:@"%@?id=%ld",
-                        URL_FOR_IR_DEVICE_VALIDATE_KEY,
-                        (long)self.key.keyId];
-    MyEDataLoader *downloader = [[MyEDataLoader alloc]
-                                 initLoadingWithURLString:urlStr
-                                 postData:nil
-                                 delegate:self loaderName:IR_DEVICE_VALIDATE_KEY_LOADER_NMAE
-                                 userDataDictionary:nil];
-    NSLog(@"%@",downloader.name);
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%ld",
+                                              GetRequst(_device.type>11?URL_FOR_RFDEVICE_INSTRUCTION_VALIDATE:URL_FOR_IR_DEVICE_VALIDATE_KEY),
+                                              (long)self.key.keyId] postData:nil delegate:self loaderName: IR_DEVICE_VALIDATE_KEY_LOADER_NMAE userDataDictionary:nil];
 }
 - (IBAction)deleteKey:(id)sender {
     if(HUD == nil) {
@@ -153,9 +149,13 @@
         HUD.delegate = self;
     } else
         [HUD show:YES];
-
+    
+    if (_device.type > 11) {
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&action=2&id=%i&keyName=%@",GetRequst(URL_FOR_RFDEVICE_INSTRUCTION_EDIT),self.device.deviceId,self.key.keyId,self.keyNameTextfield.text] postData:nil delegate:self loaderName:IR_DEVICE_DELETE_KEY_UPLOADER_NMAE userDataDictionary:nil];
+        return;
+    }
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&keyName=%@&tId=%@&type=2&action=2",
-                        URL_FOR_IR_DEVICE_ADD_EDIT_KEY_SAVE,
+                        GetRequst(URL_FOR_IR_DEVICE_ADD_EDIT_KEY_SAVE),
                         self.accountData.userId,
                         (long)self.key.keyId,
                         (long)self.device.deviceId,
@@ -170,17 +170,17 @@
 }
 
 - (IBAction)closeModal:(id)sender {
-    
-    NSString * urlStr= [NSString stringWithFormat:@"%@?deviceId=%ld",
-                        URL_FOR_IR_DEVICE_GET_STATUS,
-                        (long)self.device.deviceId];
-    MyEDataLoader *downloader = [[MyEDataLoader alloc]
-                                 initLoadingWithURLString:urlStr
-                                 postData:nil
-                                 delegate:self
-                                 loaderName:IR_DEVICE_GET_STATUS_LOADER_NMAE
-                                 userDataDictionary:nil];
-    NSLog(@"%@",downloader.name);
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+//    NSString * urlStr= [NSString stringWithFormat:@"%@?deviceId=%ld",
+//                        GetRequst(URL_FOR_IR_DEVICE_GET_STATUS),
+//                        (long)self.device.deviceId];
+//    MyEDataLoader *downloader = [[MyEDataLoader alloc]
+//                                 initLoadingWithURLString:urlStr
+//                                 postData:nil
+//                                 delegate:self
+//                                 loaderName:IR_DEVICE_GET_STATUS_LOADER_NMAE
+//                                 userDataDictionary:nil];
+//    NSLog(@"%@",downloader.name);
 }
 
 #pragma mark -
@@ -213,21 +213,26 @@
 #pragma mark - URL private methods
 -(void)queryStudayProgress
 {
-   
-        studyQueryTimes ++;
-        
-        NSString * urlStr= [NSString stringWithFormat:@"%@?id=%ld&tId=%@",
-                            URL_FOR_IR_DEVICE_STUDY_KEY_QUERY_PROGRESS,
-                            (long)self.key.keyId,
-                            self.device.tId];
-        MyEDataLoader *downloader = [[MyEDataLoader alloc]
-                                     initLoadingWithURLString:urlStr
-                                     postData:nil
-                                     delegate:self
-                                     loaderName:IR_DEVICE_QUERY_STUDY_KEY_LOADER_NMAE
-                                     userDataDictionary:nil];
-        NSLog(@"%@",downloader.name);
-
+    
+    studyQueryTimes ++;
+    
+    if (self.device.type > 11) {
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i",GetRequst(URL_FOR_RFDEVICE_INSTRUCTION_STUDY_CHECK),self.key.keyId] postData:nil delegate:self loaderName:IR_DEVICE_QUERY_STUDY_KEY_LOADER_NMAE userDataDictionary:nil];
+        return;
+    }
+    
+    NSString * urlStr= [NSString stringWithFormat:@"%@?id=%ld&tId=%@",
+                        GetRequst(URL_FOR_IR_DEVICE_STUDY_KEY_QUERY_PROGRESS),
+                        (long)self.key.keyId,
+                        self.device.tId];
+    MyEDataLoader *downloader = [[MyEDataLoader alloc]
+                                 initLoadingWithURLString:urlStr
+                                 postData:nil
+                                 delegate:self
+                                 loaderName:IR_DEVICE_QUERY_STUDY_KEY_LOADER_NMAE
+                                 userDataDictionary:nil];
+    NSLog(@"%@",downloader.name);
+    
 }
 -(void) sendInstructionStudyTimeout
 {
@@ -238,7 +243,7 @@
         [HUD show:YES];
     
     NSString * urlStr= [NSString stringWithFormat:@"%@?tId=%ld",
-                        URL_FOR_IR_DEVICE_SEND_STUDY_TIMEOUT,
+                        GetRequst(URL_FOR_IR_DEVICE_SEND_STUDY_TIMEOUT),
                         (long)self.device.tId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc]
                                  initLoadingWithURLString:urlStr
@@ -252,7 +257,7 @@
 #pragma mark - URL delegate methods
 // 响应下载上传
 - (void) didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
-    
+    NSLog(@"ajax json = %@", string);
     if ([MyEUtil getResultFromAjaxString:string] == -3) {
         [HUD hide:YES];
         [MyEUniversal doThisWhenUserLogOutWithVC:self];
@@ -260,7 +265,6 @@
     }
     if([name isEqualToString:IR_DEVICE_DELETE_KEY_UPLOADER_NMAE]) {
         [HUD hide:YES];
-        NSLog(@"ajax json = %@", string);
         if ([MyEUtil getResultFromAjaxString:string] == -1) {
             [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"删除按键时发生错误！"];
         } else if ([MyEUtil getResultFromAjaxString:string] == 1){
@@ -268,7 +272,6 @@
             [self mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
             }];
             self.accountData.needDownloadInstructionsForScene = YES;
-
         }
     }
     if([name isEqualToString:IR_DEVICE_STUDY_KEY_LOADER_NMAE]) {
@@ -289,7 +292,6 @@
         }
     }
     if([name isEqualToString:IR_DEVICE_QUERY_STUDY_KEY_LOADER_NMAE]) {
-        NSLog(@"ajax json = %@", string);
         if ([MyEUtil getResultFromAjaxString:string] == 1){
             [learnHUD hide:YES];
             [MyEUtil showInstructionStatusWithYes:YES andView:self.navigationController.navigationBar andMessage:@"指令学习成功"];
@@ -297,19 +299,21 @@
             self.key.status = 1;
             // 把校验按钮enable
             self.validateKeyBtn.enabled = YES;
-//            [self.validateKeyBtn setTitleColor:[UIColor colorWithRed:.196 green:0.3098 blue:0.52 alpha:1.0] forState:UIControlStateNormal];
+            //            [self.validateKeyBtn setTitleColor:[UIColor colorWithRed:.196 green:0.3098 blue:0.52 alpha:1.0] forState:UIControlStateNormal];
             self.accountData.needDownloadInstructionsForScene = YES;
         } else{
             if(studyQueryTimes >= 6){
+                [_timer invalidate];
                 [learnHUD hide:YES];
-                [self sendInstructionStudyTimeout];
+                if (_device.type < 11) {
+                    [self sendInstructionStudyTimeout];
+                }
                 studyQueryTimes = 0;
-                [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"学习超时，请重新开始!"];
+                [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"学习超时,请重新开始!"];
                 //[MyEUtil showErrorOn:self.navigationController.view withMessage:@"学习超时，请重新开始!" ];
                 self.key.status = 0;
             } else {
-                NSTimer *timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(queryStudayProgressTimerFired:) userInfo:nil repeats:NO];
-                NSLog(@"%@",timer);
+                _timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(queryStudayProgressTimerFired:) userInfo:nil repeats:NO];
             }
         }
     }

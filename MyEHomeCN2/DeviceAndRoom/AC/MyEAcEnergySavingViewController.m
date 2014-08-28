@@ -206,7 +206,7 @@
     
     
     NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&id=%ld",
-                        URL_FOR_AC_COMFORT_VIEW,
+                        GetRequst(URL_FOR_AC_COMFORT_VIEW),
                         self.device.tId,
                         (long)self.device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc]
@@ -317,7 +317,7 @@
         [HUD show:YES];
     
     NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&id=%ld&comfortFlag=%ld&comfortRiseTime=%@&comfortSleepTime=%@",
-                        URL_FOR_AC_COMFORT_SAVE,
+                        GetRequst(URL_FOR_AC_COMFORT_SAVE),
                         self.device.tId,
                         (long)self.device.deviceId,
                         (long)(self.comfort.comfortFlag?1:0),

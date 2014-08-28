@@ -97,7 +97,7 @@
     NSString *urlStr;
     MyEDataLoader *uploader;
     urlStr= [NSString stringWithFormat:@"%@?gId=%@&action=1&brandId=%li&moduleId=%li&tId=%@&brandName=%@&moduleName=%@",
-             URL_FOR_AC_BRAND_MODEL_EDIT,
+             GetRequst(URL_FOR_AC_BRAND_MODEL_EDIT),
              self.accountData.userId,
              (long)self.brandId,
              (long)self.moduleId,
@@ -119,7 +119,7 @@
     NSString *urlStr;
     MyEDataLoader *uploader;
     urlStr= [NSString stringWithFormat:@"%@?gId=%@&action=0&brandId=0&moduleId=0&tId=%@&brandName=%@&moduleName=%@",
-             URL_FOR_AC_BRAND_MODEL_EDIT,
+             GetRequst(URL_FOR_AC_BRAND_MODEL_EDIT),
              self.accountData.userId,
              self.device.tId,
              self.brandName.text,

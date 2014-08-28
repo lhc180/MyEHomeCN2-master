@@ -248,7 +248,7 @@
     
     if (self.device.type == 1) {
         NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&action=%ld&data=%@",
-                            URL_FOR_AC_UPLOAD_AC_AUTO_PROCESS_SAVE,
+                            GetRequst(URL_FOR_AC_UPLOAD_AC_AUTO_PROCESS_SAVE),
                             self.accountData.userId,
                             (long)self.process.pId,
                             (long)self.device.deviceId,
@@ -264,7 +264,7 @@
     }
     if (self.device.type == 6) {
         NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&action=%ld&data=%@",
-                            URL_FOR_UPLOAD_SOCKET_AUTO_PROCESS_SAVE,
+                            GetRequst(URL_FOR_UPLOAD_SOCKET_AUTO_PROCESS_SAVE),
                             self.accountData.userId,
                             (long)self.process.pId,
                             (long)self.device.deviceId,

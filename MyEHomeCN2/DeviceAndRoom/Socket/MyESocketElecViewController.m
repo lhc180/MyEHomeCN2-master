@@ -92,7 +92,7 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     }
     [HUD show:YES];
-    NSString *str = [NSString stringWithFormat:@"%@?deviceId=%li&action=%i",URL_FOR_SOCKET_ELEC_INFO,(long)self.device.deviceId,self.dateSegment.selectedSegmentIndex+1];
+    NSString *str = [NSString stringWithFormat:@"%@?deviceId=%li&action=%i",GetRequst(URL_FOR_SOCKET_ELEC_INFO),(long)self.device.deviceId,self.dateSegment.selectedSegmentIndex+1];
     NSLog(@"download elec string is %@",str);
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:str postData:nil delegate:self loaderName:@"downloadElecInfo" userDataDictionary:nil];
     NSLog(@"%@",loader.name);
