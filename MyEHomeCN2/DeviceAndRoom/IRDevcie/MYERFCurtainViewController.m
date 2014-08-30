@@ -101,6 +101,11 @@
 }
 #pragma mark - IBAction methods
 - (IBAction)deviceControl:(UIButton *)sender {
+    if (!self.device.irKeySet.mainArray.count) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"未获取到当前指令信息,服务器返回数据出错" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        return;
+    }
     MyEIrKey *key = self.device.irKeySet.mainArray[sender.tag - 601];
     if (_isControlMode) {
         if (key.status>0) {
