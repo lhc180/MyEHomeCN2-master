@@ -50,4 +50,5 @@
 - (MyEDeviceType *)findDeviceTypeWithId:(NSInteger)deviceTypeId;
 // 给定一个设备id, 找到所有还没有绑定空调的智控星, 如果给定的设备id小于等于0, 就表示为一个不存在的\准备新增的空调寻找有效的智控星列表, 否则返回的智控星列表, 要包含此设备本来就绑定的智控星
 - (NSArray *)findValidTerminalsForACDeviceId:(NSInteger)deviceId;
+
 @end

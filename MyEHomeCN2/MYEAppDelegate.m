@@ -89,6 +89,11 @@
                                                                   UITextAttributeTextShadowOffset: [NSValue valueWithUIOffset:UIOffsetMake(0, 0)]}
                                                        forState:UIControlStateSelected];
         
+//        [[UITableView appearance] setBackgroundColor:[UIColor colorWithWhite:0.92f alpha:1.0f]];
+//        [[UITableView appearance] setBackgroundView:[[UIView alloc] init]];
+//        [[UITableViewCell appearance] setSelectionStyle:UITableViewCellSelectionStyleGray];
+//        [[UITableViewCell appearance] setBackgroundColor:[UIColor whiteColor]];
+//        [[UITableViewCell appearance] setBackgroundView:[[UIView alloc] init]];
     }
 //    UIToolbar *keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.window.bounds.size.width, 38.0f)];
 //    UIBarButtonItem *spaceBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
