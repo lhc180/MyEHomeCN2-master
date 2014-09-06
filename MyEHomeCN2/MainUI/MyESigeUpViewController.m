@@ -134,7 +134,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?username=%@&password=%@&type=1", URL_FOR_LOGIN, userNameField.text, passwoedField.text] ;
+    NSString *urlStr = [NSString stringWithFormat:@"%@?username=%@&password=%@&type=1", GetRequst(URL_FOR_LOGIN), userNameField.text, passwoedField.text] ;
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"LoginDownloader" userDataDictionary:nil];
     NSLog(@"downloader.name is  %@ urlStr =  %@",downloader.name, urlStr);
 }

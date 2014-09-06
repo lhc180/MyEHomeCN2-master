@@ -60,7 +60,7 @@
             [HUD show:YES];
         _selectIndex = indexPath;
         MyESettingSubSwitch *subSwitch = self.settings.subSwitchList[indexPath.row];
-        MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?gid=%@",URL_FOR_SUBSWITCH_DELETE,subSwitch.gid] postData:nil delegate:self loaderName:@"delete" userDataDictionary:nil];
+        MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SUBSWITCH_DELETE),subSwitch.gid] postData:nil delegate:self loaderName:@"delete" userDataDictionary:nil];
         NSLog(@"%@",loader.name);
     };
     [alert show];

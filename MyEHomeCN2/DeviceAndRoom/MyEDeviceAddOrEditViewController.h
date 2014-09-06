@@ -30,8 +30,6 @@
 @property (weak, nonatomic) IBOutlet UIButton *brandBtn;
 
 @property (strong, nonatomic) IBOutlet UIButton *deleteBtn;
-@property (weak, nonatomic) IBOutlet UIButton *sureBtn;
-
 //关键参数
 @property (nonatomic) NSInteger preivousPanelType;// 0表示登录后直接到设备面板在到此面板， 1表示从Rooms面板转移到设备再到此面板
 @property (nonatomic) NSInteger actionType; // 0表示添加，1表示编辑
@@ -42,5 +40,8 @@
 //安防相关
 @property (weak, nonatomic) IBOutlet UIView *safeMainView;
 @property (weak, nonatomic) IBOutlet WTReTextField *safeIdTxt;
+
+//RF设备相关
+@property (weak, nonatomic) IBOutlet UIView *rfDeviceView;
 
 @end

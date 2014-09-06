@@ -78,7 +78,7 @@
     
     NSString *urlStr = [NSString stringWithFormat:
                         @"%@?gid=%@&id=%ld&powerSwitch=%d",
-                        URL_FOR_SOCKET_SWITCH_CONTROL,
+                        GetRequst(URL_FOR_SOCKET_SWITCH_CONTROL),
                         self.accountData.userId,
                         (long)self.device.deviceId,
                         self.powerSwitch.on?1:0];
@@ -120,7 +120,7 @@
         [HUD show:YES];
     NSString *urlStr = [NSString stringWithFormat:
                         @"%@?tId=%@&action=0",
-                        URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL,
+                        GetRequst(URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL),
                         self.device.tId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc]
                                  initLoadingWithURLString:urlStr postData:nil

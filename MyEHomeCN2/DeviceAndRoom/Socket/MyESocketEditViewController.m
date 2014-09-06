@@ -165,7 +165,7 @@
         HUD.delegate = self;
     } else
         [HUD show:YES];
-    NSString *urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=2",URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE, (long)self.device.deviceId, self.device.name, self.device.tId, (long)self.device.roomId, (long)self.device.status.maxElectricCurrent];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=2",GetRequst(URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE), (long)self.device.deviceId, self.device.name, self.device.tId, (long)self.device.roomId, (long)self.device.status.maxElectricCurrent];
    MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"socketDelete"  userDataDictionary:nil];
     NSLog(@"%@",uploader.name);
 }
@@ -177,7 +177,7 @@
     } else
         [HUD show:YES];
     
-     NSString *urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=0",URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE, (long)self.device.deviceId, self.device.name, self.device.tId, (long)self.device.roomId, (long)self.device.status.maxElectricCurrent];
+     NSString *urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=0",GetRequst(URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE), (long)self.device.deviceId, self.device.name, self.device.tId, (long)self.device.roomId, (long)self.device.status.maxElectricCurrent];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:SOCKET_EDIT_UPLOADER_NMAE  userDataDictionary:nil];
     
     NSLog(@"%@",uploader.name);

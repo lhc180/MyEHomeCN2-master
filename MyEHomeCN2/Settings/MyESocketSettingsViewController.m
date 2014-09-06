@@ -83,7 +83,7 @@
 -(void)uploadModelToServerWithDeviceName{
     if (![nameTextField.text isEqualToString:terminal.name]) {
         NSString *urlStr = nil;
-        urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&name=%@",URL_FOR_SETTINGS_TERMINAL_SAVE,_accoutData.userId,terminal.tId,nameTextField.text];
+        urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&name=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_SAVE),_accoutData.userId,terminal.tId,nameTextField.text];
         MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsChangeDeviceNameUploader" userDataDictionary:nil];
         NSLog(@"SettingsChangeDeviceNameUploader is %@",loader.name);
     }else{
@@ -151,6 +151,13 @@
         for (MyEDevice *device in vc.accountData.devices) {
             if ([device.tId isEqualToString:self.terminal.tId]) {
                 device.name = self.nameTextField.text;
+            }
+        }
+        for (MyETerminal *t in vc.accountData.allTerminals) {
+            if ([t isKindOfClass:[MyETerminal class]]) {
+                if ([t.tId isEqualToString:self.terminal.tId]) {
+                    t.name = self.nameTextField.text;
+                }
             }
         }
         [MyEUtil showMessageOn:self.navigationController.view withMessage:@"终端名称更改成功"];

@@ -34,6 +34,16 @@
                             action:@selector(doThisWhenNeedRefreshData)
                   forControlEvents:UIControlEventValueChanged];
     self.refreshControl = rc;
+    
+    if (!IS_IOS6) {
+        for (UIButton *btn in self.tableHeaderView.subviews) {
+            if ([btn isKindOfClass:[UIButton class]]) {
+                btn.layer.cornerRadius = 4;
+                btn.layer.borderColor = btn.tintColor.CGColor;
+                btn.layer.borderWidth = 1.0f;
+            }
+        }
+    }
 }
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -49,7 +59,6 @@
     if (self.accountData.needDownloadInstructionsForScene) {
         if(HUD == nil) {
             HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-            HUD.delegate = self;
         } else
             [HUD show:YES];
 
@@ -227,20 +236,20 @@
 #pragma mark - URL Loading System methods
 -(void) deleteSceneFromServerWithIndexPath:(NSIndexPath *)index{
     MyEScene *scene = self.scenesArray[index.row];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=2&name=%@&id=%li&byOrder=%li&deviceControls=%@",URL_FOR_SCENES_EDIT,self.accountData.userId,scene.name,(long)scene.sceneId,(long)scene.byOrder,[scene JSONStringWithDictionary:scene]];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=2&name=%@&id=%li&byOrder=%li&deviceControls=%@",GetRequst(URL_FOR_SCENES_EDIT),self.accountData.userId,scene.name,(long)scene.sceneId,(long)scene.byOrder,[scene JSONStringWithDictionary:scene]];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"deleteSceneUploader" userDataDictionary:nil];
     NSLog(@"deleteSceneUploader is %@",loader.name);
 }
 - (void) downloadInstructionFromServer{
     [self.refreshControl beginRefreshing];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&ver=2",URL_FOR_SCENES_DOWNLOAD_ALL_DEVICE_INSTRUCTION, self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&ver=2",GetRequst(URL_FOR_SCENES_DOWNLOAD_ALL_DEVICE_INSTRUCTION), self.accountData.userId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"downloadInstrction"  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 - (void) downloadSceneDataFromServer
 {
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",URL_FOR_SCENES_VIEW, self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SCENES_VIEW), self.accountData.userId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:SCENES_DOWNLOADER_NMAE_SCENES  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
@@ -357,12 +366,13 @@
 
 #pragma mark - IBAction methods
 - (IBAction)headerViewBtnAction:(UIButton *)sender {
+    _btnTag = sender.tag;
     if(HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         HUD.dimBackground = YES;//容易产生灰条
     } else
         [HUD show:YES];
-    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?action=%i",URL_FOR_SCENES_SAFEDEVICE_CONTROL,sender.tag-100] postData:nil delegate:self loaderName:@"control" userDataDictionary:nil];
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?action=%i",GetRequst(URL_FOR_SCENES_SAFEDEVICE_CONTROL),sender.tag-100] postData:nil delegate:self loaderName:@"control" userDataDictionary:nil];
 }
 
 - (IBAction)addScene:(UIBarButtonItem *)sender {
@@ -396,7 +406,7 @@
     } else
         [HUD show:YES];
     NSDictionary *dic = @{@"name": scene.name};
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%li",URL_FOR_SCENES_APPLY,self.accountData.userId,(long)scene.sceneId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%li",GetRequst(URL_FOR_SCENES_APPLY),self.accountData.userId,(long)scene.sceneId];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"applySceneUploader" userDataDictionary:dic];
     NSLog(@"applySceneUploader is %@",loader.name);
 

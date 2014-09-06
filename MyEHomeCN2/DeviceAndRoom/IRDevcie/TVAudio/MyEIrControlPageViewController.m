@@ -106,7 +106,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&id=%ld",URL_FOR_KEY_SET_VIEW, self.accountData.userId, self.device.tId, (long)self.device.deviceId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&id=%ld",GetRequst(URL_FOR_KEY_SET_VIEW), self.accountData.userId, self.device.tId, (long)self.device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"keyDownloader"  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }

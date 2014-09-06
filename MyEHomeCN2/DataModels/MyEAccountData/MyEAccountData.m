@@ -86,7 +86,6 @@
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     // 把JSON转为字典
     NSDictionary *dict = [parser objectWithString:jsonString];
-    
     MyEAccountData *account = [[MyEAccountData alloc] initWithDictionary:dict];
     return account;
 }
@@ -132,12 +131,12 @@
 }
 - (MyETerminal *)findFirstTerminalWithTid:(NSString *)tId
 {
-    for(int i = 0; i < [self.terminals count]; i++){
-        MyETerminal *t = [self.terminals objectAtIndex:i];
-        if ([t.tId isEqualToString:tId])
+    for (MyETerminal *t in self.terminals) {
+        if ([t.tId isEqualToString:tId]) {
             return t;
+        }
     }
-    return Nil;
+    return nil;
 }
 
 - (NSInteger)findIndexOfFirstRoomWithRoomId:(NSInteger)roomId
@@ -151,28 +150,28 @@
 }
 - (MyERoom *)findFirstRoomWithRoomId:(NSInteger)roomId
 {
-    for(int i = 0; i < [self.rooms count]; i++){
-        MyERoom *room = [self.rooms objectAtIndex:i];
-        if (room.roomId == roomId)
-            return room;
+    for (MyERoom *r in self.rooms) {
+        if (r.roomId == roomId) {
+            return r;
+        }
     }
-    return Nil;
+    return nil;
 }
 - (MyEDevice *)findDeviceWithDeviceId:(NSInteger)deviceId{
-    for(int i = 0; i < [self.devices count]; i++){
-        MyEDevice *device = [self.devices objectAtIndex:i];
-        if (device.deviceId == deviceId)
-            return device;
+    for (MyEDevice *d in self.devices) {
+        if (d.deviceId == deviceId) {
+            return d;
+        }
     }
-    return Nil;
+    return nil;
 }
 - (MyEDeviceType *)findDeviceTypeWithId:(NSInteger)deviceTypeId{
-    for(int i = 0; i < [self.deviceTypes count]; i++){
-        MyEDeviceType *deviceType = [self.deviceTypes objectAtIndex:i];
-        if (deviceType.dtId == deviceTypeId)
-            return deviceType;
+    for (MyEDeviceType *dt in self.deviceTypes) {
+        if (dt.dtId == deviceTypeId) {
+            return dt;
+        }
     }
-    return Nil;
+    return nil;
 }
 // 给定一个设备id, 找到所有还没有绑定空调的智控星, 如果给定的设备id小于等于0, 就表示为一个不存在的\准备新增的空调寻找有效的智控星列表, 否则返回的智控星列表, 要包含此设备本来就绑定的智控星
 - (NSArray *)findValidTerminalsForACDeviceId:(NSInteger)deviceId

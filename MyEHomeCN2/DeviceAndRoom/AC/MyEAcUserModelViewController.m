@@ -65,14 +65,14 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&moduleId=%ld",URL_FOR_USER_AC_INSTRUCTION_SET_VIEW, self.device.tId, (long)self.device.modelId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&moduleId=%ld",GetRequst(URL_FOR_USER_AC_INSTRUCTION_SET_VIEW), self.device.tId, (long)self.device.modelId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"AC_INSTRUCTION_SET_DOWNLOADER_NMAE"  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 - (void) downloadTemperatureHumidityFromServer
 {
     // this is a dumb download, don't add progress indicator or spinner here
-    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&id=%ld",URL_FOR_AC_TEMPERATURE_HUMIDITY_VIEW, self.device.tId, (long)self.device.deviceId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&id=%ld",GetRequst(URL_FOR_AC_TEMPERATURE_HUMIDITY_VIEW), self.device.tId, (long)self.device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"acStatus"  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
@@ -91,7 +91,7 @@
                           [NSNumber numberWithInteger:setpoint], @"setpoint",
                           [NSNumber numberWithInteger:windLevel], @"windLevel",
                           nil ];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?id=%ld&switch_=%ld&runMode=%ld&setpoint=%ld&windLevel=%ld",URL_FOR_AC_CONTROL_SAVE, (long)self.device.deviceId, (long)powerSwitch,
+    NSString *urlStr = [NSString stringWithFormat:@"%@?id=%ld&switch_=%ld&runMode=%ld&setpoint=%ld&windLevel=%ld",GetRequst(URL_FOR_AC_CONTROL_SAVE), (long)self.device.deviceId, (long)powerSwitch,
                         (long)runMode, (long)setpoint, (long)windLevel];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:AC_CONTROL_UPLOADER_NMAE  userDataDictionary:dict];
     NSLog(@"%@",downloader.name);

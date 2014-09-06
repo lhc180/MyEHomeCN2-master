@@ -152,7 +152,7 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     } else
         [HUD show:YES];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=1&mId=%@&pin=%@",URL_FOR_SETTINGS_BIND_MEDIATOR,self.accountData.userId,_midTextField.text,_pinTextField.text];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=1&mId=%@&pin=%@",GetRequst(URL_FOR_SETTINGS_BIND_MEDIATOR),self.accountData.userId,_midTextField.text,_pinTextField.text];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsBindMedatorUploader" userDataDictionary:nil];
     NSLog(@"SettingsBindMedatorUploader is %@",loader.name);
     
@@ -163,7 +163,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=0&mId=%@",URL_FOR_SETTINGS_BIND_MEDIATOR, _accountData.userId,_accountData.mId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=0&mId=%@",GetRequst(URL_FOR_SETTINGS_BIND_MEDIATOR), _accountData.userId,_accountData.mId];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsDeleteMedatorUploader" userDataDictionary:nil];
     NSLog(@"SettingsDeleteMedatorUploader is %@",loader.name);
 }
@@ -174,12 +174,12 @@
     } else
         [HUD show:YES];
 
-    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@",URL_FOR_DEVICE_ROOM_LIST,_accountData.userId];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_DEVICE_ROOM_LIST),_accountData.userId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"deviceAndRoomList"  userDataDictionary:nil];
     NSLog(@"deviceAndRoomList is %@",uploader.name);
 }
 - (void) downloadSettingsDataFromServer{
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",URL_FOR_SETTINGS_VIEW, self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SETTINGS_VIEW), self.accountData.userId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"settingsLoader" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);

@@ -294,6 +294,16 @@
         return;
     }
     if (_actionType == 0) {
+        
+        if ([self.typeBtn.currentTitle isEqualToString:@"RF自动窗帘"] || [self.typeBtn.currentTitle isEqualToString:@"其他RF遥控设备"]) {
+            NSInteger i = 0;
+            if ([self.typeBtn.currentTitle isEqualToString:@"RF自动窗帘"]) {
+                i = 12;
+            }else
+                i = 13;
+            [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=0&action=0&name=%@&type=%i&roomId=%i",GetRequst(URL_FOR_RFDEVICE_EDIT),_nameField.text,i,[self getDeviceRoomIdByName:_roomBtn.currentTitle]] postData:nil delegate:self loaderName:@"rfDeviceAdd" userDataDictionary:nil];
+            return;
+        }
         for (MyETerminal *t in self.accountData.terminals) {
             if ([t.tId isEqualToString:_safeIdTxt.text]) {
                 [MyEUtil showErrorOn:self.navigationController.view withMessage:@"该设备已存在"];
@@ -321,7 +331,7 @@
                 HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
             }else
                 [HUD show:YES];
-            MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?id=0&tId=%@&name=%@&type=%i&action=0&roomId=%i",URL_FOR_DEVICE_IR_ADD_EDIT_SAVE,_safeIdTxt.text,_nameField.text,i,[self getDeviceRoomIdByName:_roomBtn.currentTitle]] postData:nil delegate:self loaderName:@"safeEdit" userDataDictionary:nil];
+            MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?id=0&tId=%@&name=%@&type=%i&action=0&roomId=%i",GetRequst(URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),_safeIdTxt.text,_nameField.text,i,[self getDeviceRoomIdByName:_roomBtn.currentTitle]] postData:nil delegate:self loaderName:@"safeEdit" userDataDictionary:nil];
             NSLog(@"loader name is %@",loader.name);
             return;
         }
@@ -415,7 +425,7 @@
     tips.dimBackground = YES;
     
     _times = 0; //对times进行初始化
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@",URL_FOR_SAFE_REQUEST] postData:nil delegate:self loaderName:@"safeDeviceRequest" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@",GetRequst(URL_FOR_SAFE_REQUEST)] postData:nil delegate:self loaderName:@"safeDeviceRequest" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
 
@@ -423,11 +433,11 @@
 #pragma mark - URL Loading System methods
 -(void)getResponseFromServer{
     _times++;
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@",URL_FOR_SAFE_RESPONSE] postData:nil delegate:self loaderName:@"safeDeviceResponse" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@",GetRequst(URL_FOR_SAFE_RESPONSE)] postData:nil delegate:self loaderName:@"safeDeviceResponse" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
 -(void)setFeedbackToneToServerWithBool:(BOOL)feedbackToneSwitch{
-    NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@&feedbackToneSwitch=%@",URL_FOR_AC_FEEDBACK_TONE_SWITCH,device.tId,[NSNumber numberWithBool:feedbackToneSwitch]];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@&feedbackToneSwitch=%@",GetRequst(URL_FOR_AC_FEEDBACK_TONE_SWITCH),device.tId,[NSNumber numberWithBool:feedbackToneSwitch]];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"acFeedbackTone"  userDataDictionary:nil];
     NSLog(@"%@",uploader);
 }
@@ -442,15 +452,15 @@
     MyEDataLoader *uploader;
     switch (device.type){
         case 1: // AC
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&action=2",URL_FOR_AC_ADD_EDIT_SAVE, (long)device.deviceId, device.name, device.tId, (long)device.roomId];
+            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&action=2",GetRequst(URL_FOR_AC_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId];
             uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_DELETE_UPLOADER_NAME  userDataDictionary:nil];
             break;
         case 6: // Socket
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=2",URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE, (long)device.deviceId, device.name, device.tId, (long)device.roomId, (long)device.status.maxElectricCurrent];
+            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=2",GetRequst(URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId, (long)device.status.maxElectricCurrent];
             uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_DELETE_UPLOADER_NAME  userDataDictionary:nil];
             break;
         default:// other IR device
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&type=%ld&action=2",URL_FOR_DEVICE_IR_ADD_EDIT_SAVE, (long)device.deviceId, device.name, device.tId, (long)device.roomId,(long)device.type];
+            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&type=%ld&action=2",GetRequst(URL_FOR_DEVICE_IR_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId,(long)device.type];
             uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_DELETE_UPLOADER_NAME  userDataDictionary:nil];
             break;
     }
@@ -479,7 +489,7 @@
     switch (typeId){
         case 1: // AC
             urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%li&action=%li",
-                     URL_FOR_AC_ADD_EDIT_SAVE,
+                     GetRequst(URL_FOR_AC_ADD_EDIT_SAVE),
                      (long)self.device.deviceId,
                      self.nameField.text,
                      [self getDeviceTidByName:self.terminalBtn.titleLabel.text],
@@ -489,7 +499,7 @@
             break;
         default:// other IR device
             urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%li&type=%li&action=%ld",
-                     URL_FOR_DEVICE_IR_ADD_EDIT_SAVE,
+                     GetRequst(URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),
                      (long)self.device.deviceId,
                      self.nameField.text,
                      [self getDeviceTidByName:self.terminalBtn.titleLabel.text],
@@ -596,11 +606,11 @@
     if ([name isEqualToString:@"safeDeviceResponse"]) {
         NSLog(@"response string is %@",string);
         NSInteger i = [MyEUtil getResultFromAjaxString:string];
-        if (i == 2) {
+        if (i == 1) {
             [tips hide:YES];
             NSDictionary *dic = [string JSONValue];
             NSString *sufix = dic[@"msgContent"];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:[NSString stringWithFormat:@"检测到新设备后六位为 %@",sufix] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:[NSString stringWithFormat:@"检测到新设备的后六位为 %@",sufix] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
             [alert show];
             if ([self.typeBtn.currentTitle isEqualToString:@"红外入侵探测器"]) {
                 _safeIdTxt.text = [NSString stringWithFormat:@"08-01-00-00-00-%@",sufix];
@@ -625,7 +635,21 @@
                     [MyEUtil showMessageOn:nil withMessage:@"未获取到设备ID,请重试"];
             }
         }
-        
+    }
+    if ([name isEqualToString:@"rfDeviceAdd"]) {
+        NSLog(@"recieve string is %@",string);
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        if (i == 1) {
+            NSInteger i = [self.navigationController.childViewControllers indexOfObject:self];
+            MyEDevicesViewController *vc = self.navigationController.childViewControllers[i - 1];
+            vc.needRefresh = YES;
+            [self.navigationController popViewControllerAnimated:YES];
+        }else if (i == -2){
+            [MyEUtil showMessageOn:nil withMessage:@"设备名称重复"];
+        }else if (i == -3){
+            [MyEUniversal doThisWhenUserLogOutWithVC:self];
+        }else
+            [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
     }
 }
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
@@ -655,6 +679,7 @@
             [_typeBtn setTitle:titles[0] forState:UIControlStateNormal];
             if ([titles[0] isEqualToString:@"红外入侵探测器"] || [titles[0] isEqualToString:@"烟雾探测器"] || [titles[0] isEqualToString:@"声光报警器"] || [titles[0] isEqualToString:@"门窗磁"]) {
                 _safeMainView.hidden = NO;
+                _rfDeviceView.hidden = YES;
                 if ([titles[0] isEqualToString:@"红外入侵探测器"]) {
                     _safeIdTxt.text = @"08-01-00-00-00-00-00-00";
                 }else if ([titles[0] isEqualToString:@"烟雾探测器"]) {
@@ -663,8 +688,12 @@
                     _safeIdTxt.text = @"0A-01-00-00-00-00-00-00";
                 }else
                     _safeIdTxt.text = @"0B-01-00-00-00-00-00-00";
+            }else if ([titles[0] isEqualToString:@"RF自动窗帘"] || [titles[0] isEqualToString:@"其他RF遥控设备"]){
+                _safeMainView.hidden = YES;
+                _rfDeviceView.hidden = NO;
             }else{
                 _safeMainView.hidden = YES;
+                _rfDeviceView.hidden = YES;
                 //这里的btn有个联动的要求
                 if ([titles[0] isEqualToString:@"空调"]) {
                     _terminalArrayForAc = [self getTerminalArrayForAC];

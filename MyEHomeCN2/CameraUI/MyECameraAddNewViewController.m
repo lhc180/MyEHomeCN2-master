@@ -102,7 +102,7 @@
     [_timer invalidate];
     if (_canAddNew) {
         HUD.labelText = @"正在添加...";
-        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&did=%@&user=%@&pwd=%@&name=%@&action=1",URL_FOR_CAMERA_EDIT,_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"add" userDataDictionary:nil];
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&did=%@&user=%@&pwd=%@&name=%@&action=1",GetRequst(URL_FOR_CAMERA_EDIT),_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"add" userDataDictionary:nil];
 
 //        BOOL isNew = NO;
 //        if ([self.cameraList count]) {

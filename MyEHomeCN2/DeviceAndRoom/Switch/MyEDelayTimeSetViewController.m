@@ -39,7 +39,7 @@
 }
 #pragma mark - IBAction methods
 - (IBAction)submitResult:(id)sender {
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=1",URL_FOR_SWITCH_TIME_DELAY,(long)self.device.deviceId,[NSString stringWithFormat:@"%i",self.index.row+1]] andName:@"checkIfRight"];
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=1",GetRequst(URL_FOR_SWITCH_TIME_DELAY),(long)self.device.deviceId,[NSString stringWithFormat:@"%i",self.index.row+1]] andName:@"checkIfRight"];
 }
 - (IBAction)cancel:(id)sender {
     [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
@@ -56,7 +56,7 @@
 }
 -(void)doThisToChangeStatus{
     self.status.delayStatus = 1;
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?allChannel=%@",URL_FOR_SWITCH_TIME_DELAY_SAVE,[[MyESwitchChannelStatus alloc] jsonStringWithStatus:self.status]] andName:@"uploadDelayInfo"];
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?allChannel=%@",GetRequst(URL_FOR_SWITCH_TIME_DELAY_SAVE),[[MyESwitchChannelStatus alloc] jsonStringWithStatus:self.status]] andName:@"uploadDelayInfo"];
 }
 #pragma mark - url delegate Methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{

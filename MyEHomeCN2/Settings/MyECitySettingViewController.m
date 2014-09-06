@@ -65,6 +65,7 @@
     
     _provinces = [NSMutableArray array];
     _cities = [NSMutableArray array];
+
     for (int i=0; i<[self.pAndC.provinceAndCity count]; i++) {
         MyEProvince *p = self.pAndC.provinceAndCity[i];
         [_provinces addObject:p.provinceName];
@@ -78,10 +79,16 @@
             }
         }
     }
+    if ([_provinceIdRecived isEqualToString:@""] || [_cityIdRecived isEqualToString:@""]) {
+        MyEProvince *p = self.pAndC.provinceAndCity[0];
+        for (MyECity *c in p.cities) {
+            [_cities addObject:c.cityName];
+        }
+    }
     _province_copy = [_province copy];
     _city_copy = [_city copy];
-    [self.picker selectRow:[_provinces indexOfObject:_province] inComponent:0 animated:YES];
-    [self.picker selectRow:[_cities indexOfObject:_city] inComponent:1 animated:YES];
+    [self.picker selectRow:[_provinces containsObject:_province]?[_provinces indexOfObject:_province]:0 inComponent:0 animated:YES];
+    [self.picker selectRow:[_cities containsObject:_city]?[_cities indexOfObject:_city]:0 inComponent:1 animated:YES];
 }
 
 #pragma mark - IBAction Methods
@@ -173,7 +180,7 @@
 
 - (void)uploadModelToServerWithCurrentProvince:(NSString *)nprovince andCity:(NSString *)ncity{
 
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&provinceId=%@&cityId=%@",URL_FOR_SETTINGS_LOCATION, accountData.userId, nprovince, ncity];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&provinceId=%@&cityId=%@",GetRequst(URL_FOR_SETTINGS_LOCATION), accountData.userId, nprovince, ncity];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsLocationUploader" userDataDictionary:nil];
     NSLog(@"SettingsUploader is %@",loader.name);
     

@@ -88,12 +88,12 @@
     } else
         [HUD show:YES];
     if (self.device.type == 1) {
-        NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld",URL_FOR_AC_DOWNLOAD_AC_AUTO_CONTROL_VIEW, self.accountData.userId,(long)self.device.deviceId];
+        NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld",GetRequst(URL_FOR_AC_DOWNLOAD_AC_AUTO_CONTROL_VIEW), self.accountData.userId,(long)self.device.deviceId];
         MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:AUTO_CONTROL_PROCESS_DOWNLOADER_NMAE  userDataDictionary:Nil];
         NSLog(@"%@",downloader.name);
     }
     if (self.device.type == 6) {
-        NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld",URL_FOR_DOWNLOAD_SOCKET_AUTO_CONTROL_VIEW, self.accountData.userId,(long)self.device.deviceId];
+        NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld",GetRequst(URL_FOR_DOWNLOAD_SOCKET_AUTO_CONTROL_VIEW), self.accountData.userId,(long)self.device.deviceId];
         MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:AUTO_CONTROL_PROCESS_DOWNLOADER_NMAE  userDataDictionary:Nil];
         NSLog(@"%@",downloader.name);
     }
@@ -231,7 +231,7 @@
 
     if (self.device.type == 1) { //空调设备
         NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&deviceId=%ld&enable=%ld",
-                            URL_FOR_AC_ENABLE_AC_AUTO_PROCESS_SAVE,
+                            GetRequst(URL_FOR_AC_ENABLE_AC_AUTO_PROCESS_SAVE),
                             self.accountData.userId,
                             (long)self.device.deviceId,
                             1-(long)self.enableProcessSegmentedControl.selectedSegmentIndex];
@@ -240,7 +240,7 @@
     }
     if (self.device.type == 6) {  //插座设备
         NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&deviceId=%ld&enable=%ld",
-                            URL_FOR_ENABLE_SOCKET_AUTO_PROCESS_SAVE,
+                            GetRequst(URL_FOR_ENABLE_SOCKET_AUTO_PROCESS_SAVE),
                             self.accountData.userId,
                             (long)self.device.deviceId,
                             1-(long)self.enableProcessSegmentedControl.selectedSegmentIndex];

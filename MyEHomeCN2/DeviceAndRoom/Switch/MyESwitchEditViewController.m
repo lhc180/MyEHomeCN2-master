@@ -24,7 +24,7 @@
     self.roomLabel.text = _room.name;
     self.terminalID.text = self.device.tId;
     //下载开关信息
-    [self urlLoaderWithUrlString:[NSString stringWithFormat:@"%@?deviceId=%li",URL_FOR_SWITCH_VIEW,(long)self.device.deviceId] loaderName:@"downloadSwitchInfo"];
+    [self urlLoaderWithUrlString:[NSString stringWithFormat:@"%@?deviceId=%li",GetRequst(URL_FOR_SWITCH_VIEW),(long)self.device.deviceId] loaderName:@"downloadSwitchInfo"];
     [self defineTapGestureRecognizer];
 }
 - (void)didReceiveMemoryWarning
@@ -78,7 +78,7 @@
         [MyEUtil showMessageOn:nil withMessage:@"名称长度不符合要求"];
         return;
     }
-    [self urlLoaderWithUrlString:[NSString stringWithFormat:@"%@?deviceId=%li&name=%@&roomId=%li&powerType=%li&reporteTime=%li&loadType=%i&powerFactor=%@",URL_FOR_SWITCH_SAVE,(long)self.device.deviceId,self.nameTextField.text,(long)_room.roomId,(long)self.switchInfo.powerType,(long)self.switchInfo.reportTime,self.switchInfo.type,self.switchInfo.powerFactor] loaderName:@"uploadSwitchInfo"];
+    [self urlLoaderWithUrlString:[NSString stringWithFormat:@"%@?deviceId=%li&name=%@&roomId=%li&powerType=%li&reporteTime=%li&loadType=%i&powerFactor=%@",GetRequst(URL_FOR_SWITCH_SAVE),(long)self.device.deviceId,self.nameTextField.text,(long)_room.roomId,(long)self.switchInfo.powerType,(long)self.switchInfo.reportTime,self.switchInfo.type,self.switchInfo.powerFactor] loaderName:@"uploadSwitchInfo"];
 }
 
 #pragma mark - private methods

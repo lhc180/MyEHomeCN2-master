@@ -102,7 +102,7 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }else
         [HUD show:YES];
-    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&did=%@&user=%@&pwd=%@&name=%@&action=2",URL_FOR_CAMERA_EDIT,_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&did=%@&user=%@&pwd=%@&name=%@&action=2",GetRequst(URL_FOR_CAMERA_EDIT),_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
 
 }
 //-(void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event{

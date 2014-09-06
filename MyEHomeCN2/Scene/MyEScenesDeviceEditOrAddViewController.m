@@ -133,10 +133,22 @@ sceneIndex,saveEditorBtn;
             powerArray = @[@"布防",@"撤防"];
             [self setLabelAndButtonForOthers];
             break;
-        default:
+        case 11:
             deviceArray = _slalarmArray[1];
             self.deviceIdArray = _slalarmArray[0];
             powerArray = @[@"布防",@"撤防"];
+            [self setLabelAndButtonForOthers];
+            break;
+        case 12:
+            instructionArray = _rfArray[2][i];
+            deviceArray = _rfArray[1];
+            self.deviceIdArray = _rfArray[0];
+            [self setLabelAndButtonForOthers];
+            break;
+        default:
+            instructionArray = _rfOtherArray[2][i];
+            deviceArray = _rfOtherArray[1];
+            self.deviceIdArray = _rfOtherArray[0];
             [self setLabelAndButtonForOthers];
             break;
     }
@@ -214,6 +226,8 @@ sceneIndex,saveEditorBtn;
     _smokeArray = [NSMutableArray array];
     _doorArray = [NSMutableArray array];
     _slalarmArray = [NSMutableArray array];
+    _rfArray = [NSMutableArray array];
+    _rfOtherArray = [NSMutableArray array];
     NSMutableArray *dTArray = [NSMutableArray arrayWithArray:self.accountData.deviceTypes];
     
     for (int i=0; i<[self.accountData.deviceTypes count];i++) {   //终于算是找到了问题的根源了
@@ -250,7 +264,7 @@ sceneIndex,saveEditorBtn;
                                 }
                             }
                         }
-                        else if (d.type > 5){
+                        else if (d.type > 5 && d.type < 12){
                             NSLog(@"开关或插座 %i",deviceId);
                         }else {
                             for (int m=0;m<[instructionRecived.allInstructions count];m++) {
@@ -313,21 +327,27 @@ sceneIndex,saveEditorBtn;
             case 10:
                 _doorArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
-            default:
+            case 11:
                 _slalarmArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
+                break;
+            case 12:
+                _rfArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
+                break;
+            default:
+                _rfOtherArray = [NSMutableArray arrayWithObjects:deviceIdArray,deviceNameArray,instructionArray, nil];
                 break;
         }
     }
-    NSLog(@"%@",_acArray);
-    NSLog(@"%@",_tvArray);
-    NSLog(@"%@",_curturnArray);
-    NSLog(@"%@",_audioArray);
-    NSLog(@"%@",_otherArray);
-    NSLog(@"%@",_socketArray);
-    NSLog(@"%@",_smartArray);
-    NSLog(@"%@",_irArray);
-    NSLog(@"%@",_smokeArray);
-    NSLog(@"%@",_doorArray);
+//    NSLog(@"%@",_acArray);
+//    NSLog(@"%@",_tvArray);
+//    NSLog(@"%@",_curturnArray);
+//    NSLog(@"%@",_audioArray);
+//    NSLog(@"%@",_otherArray);
+//    NSLog(@"%@",_socketArray);
+//    NSLog(@"%@",_smartArray);
+//    NSLog(@"%@",_irArray);
+//    NSLog(@"%@",_smokeArray);
+//    NSLog(@"%@",_doorArray);
     NSMutableArray *nameArray = [NSMutableArray array];
     for (MyEDeviceType *t in dTArray) {
         [nameArray addObject:t.name];

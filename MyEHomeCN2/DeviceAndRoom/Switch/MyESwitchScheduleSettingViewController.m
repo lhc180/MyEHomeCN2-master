@@ -109,7 +109,7 @@
     _scheduleNew.runFlag = 1;   //保存的时候进程的启用状态肯定为1，不能为0
     // 估计这里会有问题，因为数组没有转变为字符串(特别注意这里是怎么样转化为字符串的)
     [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&scheduleId=%li&onTime=%@&offTime=%@&channels=%@&weeks=%@&runFlag=%i&action=%li",
-                                                           URL_FOR_SWITCH_SCHEDULE_SAVE,
+                                                           GetRequst(URL_FOR_SWITCH_SCHEDULE_SAVE),
                                                            (long)self.device.deviceId,
                                                            (long)_scheduleNew.scheduleId,
                                                            _scheduleNew.onTime,
@@ -232,7 +232,7 @@
     if (self.actionType == 1) {
         _scheduleNew.scheduleId = 0;
     }
-    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=2",URL_FOR_SWITCH_TIME_DELAY,(long)self.device.deviceId,[_scheduleNew.channels componentsJoinedByString:@","]] andName:@"check"];
+    [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=2",GetRequst(URL_FOR_SWITCH_TIME_DELAY),(long)self.device.deviceId,[_scheduleNew.channels componentsJoinedByString:@","]] andName:@"check"];
 }
 
 #pragma mark - MultiSelectSegmentedControlDelegate methods

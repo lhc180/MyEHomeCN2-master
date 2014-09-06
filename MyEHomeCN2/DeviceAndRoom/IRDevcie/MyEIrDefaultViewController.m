@@ -148,7 +148,7 @@
     }
         
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&type=%ld&runCount=%li",
-                        URL_FOR_IR_DEVICE_SEND_CONTROL_KEY,
+                        GetRequst(URL_FOR_IR_DEVICE_SEND_CONTROL_KEY),
                         self.accountData.userId,
                         (long)key.keyId,
                         (long)self.device.deviceId,
@@ -174,8 +174,8 @@
     }
     switch (longPress.state) {
         case UIGestureRecognizerStateBegan:{
-            MYEAppDelegate *delegate = [UIApplication sharedApplication].delegate;
-            progressHUD = [MBProgressHUD showHUDAddedTo:delegate.window animated:YES];
+//            MYEAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+            progressHUD = [MBProgressHUD showHUDAddedTo:MainDelegate.window animated:YES];
             UIImageView *image = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, 60, 60)];
             image.image = [UIImage imageNamed:@"Volume"];
             progressHUD.mode = MBProgressHUDModeCustomView;
@@ -239,7 +239,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&id=%ld",URL_FOR_KEY_SET_VIEW, self.accountData.userId, self.device.tId, (long)self.device.deviceId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&id=%ld",GetRequst(URL_FOR_KEY_SET_VIEW), self.accountData.userId, self.device.tId, (long)self.device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:IR_KEY_SET_DOWNLOADER_NMAE  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }

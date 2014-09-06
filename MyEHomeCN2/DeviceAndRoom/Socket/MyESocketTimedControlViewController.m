@@ -96,7 +96,7 @@
     if(!_isTiming){
         NSString *urlStr = [NSString stringWithFormat:
                             @"%@?tId=%@&action=1&setTimingMinute=%ld",
-                            URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL,
+                            GetRequst(URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL),
                             self.device.tId,
                             (long)_timingMinutes];
         MyEDataLoader *downloader = [[MyEDataLoader alloc]
@@ -108,7 +108,7 @@
     }else{
         NSString *urlStr = [NSString stringWithFormat:
                             @"%@?tId=%@&action=2&setTimingMinute=%ld",
-                            URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL,
+                            GetRequst(URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL),
                             self.device.tId,
                             (long)_timingMinutes];
         MyEDataLoader *downloader = [[MyEDataLoader alloc]
@@ -231,7 +231,7 @@
     
     NSString *urlStr = [NSString stringWithFormat:
                         @"%@?tId=%@&action=0",
-                        URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL,
+                        GetRequst(URL_FOR_SOCKET_INFORMATION_AND_TIME_CONTROL),
                         self.device.tId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc]
                                  initLoadingWithURLString:urlStr postData:nil

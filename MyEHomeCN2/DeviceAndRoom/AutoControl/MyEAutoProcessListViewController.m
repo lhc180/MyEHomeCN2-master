@@ -136,7 +136,7 @@
         NSString *dataString = [writer stringWithObject:[process JSONDictionary]];
         if (self.device.type == 1){
             NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&action=2&data=%@",
-                                URL_FOR_AC_UPLOAD_AC_AUTO_PROCESS_SAVE,
+                                GetRequst(URL_FOR_AC_UPLOAD_AC_AUTO_PROCESS_SAVE),
                                 parentVC.accountData.userId,
                                 (long)process.pId,
                                 (long)parentVC.device.deviceId,
@@ -150,7 +150,7 @@
         }
         if (self.device.type == 6){
             NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&action=2&data=%@",
-                                URL_FOR_UPLOAD_SOCKET_AUTO_PROCESS_SAVE,
+                                GetRequst(URL_FOR_UPLOAD_SOCKET_AUTO_PROCESS_SAVE),
                                 parentVC.accountData.userId,
                                 (long)process.pId,
                                 (long)parentVC.device.deviceId,

@@ -269,7 +269,7 @@
 }
 - (IBAction)check:(UIButton *)sender {
     NSString * urlStr= [NSString stringWithFormat:@"%@?studyId=%li",
-                        URL_FOR_AC_INSTRUCTION_VALIDATE,
+                        GetRequst(URL_FOR_AC_INSTRUCTION_VALIDATE),
                         (long)instruction.instructionId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc]
                                  initLoadingWithURLString:urlStr
@@ -282,7 +282,7 @@
 #pragma mark - URL private Methods
 -(void)editInstructionToServerWithAction:(NSInteger)action AndId:(NSInteger)instructionId{
     NSString * urlStr= [NSString stringWithFormat:@"%@?moduleId=%li&id=%li&action=%li&tId=%@&switch_=%li&runMode=%li&windLevel=%li&setpoint=%li",
-                        URL_FOR_AC_INSTRUCTION_EDIT,
+                        GetRequst(URL_FOR_AC_INSTRUCTION_EDIT),
                         (long)self.moduleId,
                         (long)instructionId,
                         (long)action,
@@ -302,7 +302,7 @@
 -(void)studyInstructionToServer{
     [self doThisWhenNeedHUD];
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%li&moduleId=%li&tId=%@&switch_=%li&runMode=%li&windLevel=%li&setpoint=%li",
-                        URL_FOR_AC_INSTRUCTION_STUDY2,
+                        GetRequst(URL_FOR_AC_INSTRUCTION_STUDY2),
                         self.accountData.userId,
                         (long)instruction.instructionId,
                         (long)self.moduleId,
@@ -323,7 +323,7 @@
     studyQueryTimes ++;
     
     NSString * urlStr= [NSString stringWithFormat:@"%@?&tId=%@&studyId=%li&moduleId=%li",
-                        URL_FOR_AC_INSTRUCTION_STUDY_FEEDBACK,
+                        GetRequst(URL_FOR_AC_INSTRUCTION_STUDY_FEEDBACK),
                         self.device.tId,
                         (long)instruction.instructionId,
                         (long)self.moduleId];
@@ -344,7 +344,7 @@
 //    } else
 //        [HUD show:YES];
     NSString * urlStr= [NSString stringWithFormat:@"%@?tId=%@&studyId=%li",
-                        URL_FOR_IR_DEVICE_SEND_STUDY_TIMEOUT,
+                        GetRequst(URL_FOR_IR_DEVICE_SEND_STUDY_TIMEOUT),
                         self.device.tId,(long)instruction.instructionId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc]
                                  initLoadingWithURLString:urlStr

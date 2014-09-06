@@ -121,20 +121,20 @@
 
 - (void)uploadModelToServerWithEnableDataCollect{
     NSString *urlStr = nil;
-    urlStr = [NSString stringWithFormat:@"%@?tId=%@&status=%i",URL_FOR_SETTINGS_ENABLE_DATA_COLLECT,terminal.tId,dataCollectSwitch.isOn?2:0];
+    urlStr = [NSString stringWithFormat:@"%@?tId=%@&status=%i",GetRequst(URL_FOR_SETTINGS_ENABLE_DATA_COLLECT),terminal.tId,dataCollectSwitch.isOn?2:0];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsEnableDataCollectUploader" userDataDictionary:nil];
     NSLog(@"SettingsEnableDataCollectUploader is %@",loader.name);
 }
 - (void)uploadModelToServerWithEnablePowerSaveMode{
     NSString *urlStr = nil;
-    urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&powerSaveMode=%i&name=%@",URL_FOR_SETTINGS_TERMINAL_SAVE,accountData.userId,terminal.tId,saveModeSwitch.isOn?1:0,deviceName.text];
+    urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&powerSaveMode=%i&name=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_SAVE),accountData.userId,terminal.tId,saveModeSwitch.isOn?1:0,deviceName.text];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsEnablePowerSaveModeUploader" userDataDictionary:nil];
     NSLog(@"SettingsEnablePowerSaveModeUploader is %@",loader.name);
 }
 - (void)uploadModelToServerWithDeviceName{
     if (![deviceName.text isEqualToString:terminal.name]) {
         NSString *urlStr = nil;
-        urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&name=%@",URL_FOR_SETTINGS_TERMINAL_SAVE,accountData.userId,terminal.tId,deviceName.text];
+        urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&name=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_SAVE),accountData.userId,terminal.tId,deviceName.text];
         MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsChangeDeviceNameUploader" userDataDictionary:nil];
         NSLog(@"SettingsChangeDeviceNameUploader is %@",loader.name);
     }else{
@@ -211,6 +211,14 @@
                     }
                 }
             }
+            for (MyETerminal *t in vc.accountData.allTerminals) {
+                if ([t isKindOfClass:[MyETerminal class]]) {
+                    if ([t.tId isEqualToString:self.terminal.tId]) {
+                        t.name = self.deviceName.text;
+                    }
+                }
+            }
+
             [MyEUtil showMessageOn:self.navigationController.view withMessage:@"终端名称更改成功"];
         }
     }

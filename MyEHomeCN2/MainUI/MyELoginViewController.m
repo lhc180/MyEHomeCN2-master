@@ -453,21 +453,18 @@
     
     // 1.判断是否联网：
     if (![MyEDataLoader isConnectedToInternet]) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                    contentText:@"没有网络连接，请打开网络后重试"
-                                                leftButtonTitle:nil
-                                               rightButtonTitle:@"知道了"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"没有网络连接,请打开网络后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
         return;
     }
-    MYEAppDelegate *delegate = [UIApplication sharedApplication].delegate;
+//    MYEAppDelegate *delegate = [UIApplication sharedApplication].delegate;
     if(HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
         //        HUD.dimBackground = YES; //容易产生灰条
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?username=%@&password=%@&deviceType=0&deviceToken=%@&deviceAlias=%@&appVersion=%@&ver=2", URL_FOR_LOGIN, self.usernameInput.text, self.passwordInput.text,delegate.deviceTokenStr,delegate.alias,[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]] ;
+    NSString *urlStr = [NSString stringWithFormat:@"%@?username=%@&password=%@&deviceType=0&deviceToken=%@&deviceAlias=%@&appVersion=%@&ver=2", GetRequst(URL_FOR_LOGIN), self.usernameInput.text, self.passwordInput.text,MainDelegate.deviceTokenStr,MainDelegate.alias,[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]] ;
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"LoginDownloader" userDataDictionary:nil];
     NSLog(@"downloader.name is  %@ urlStr =  %@",downloader.name, urlStr);
 }

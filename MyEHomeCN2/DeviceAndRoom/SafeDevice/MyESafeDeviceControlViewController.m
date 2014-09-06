@@ -79,7 +79,7 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }else
         [HUD show:YES];
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@&protectionStatus=%i",URL_FOR_SAFE_CONTROL,_device.tId,1-_device.status.protectionStatus] postData:nil delegate:self loaderName:@"control" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@&protectionStatus=%i",GetRequst(URL_FOR_SAFE_CONTROL),_device.tId,1-_device.status.protectionStatus] postData:nil delegate:self loaderName:@"control" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
 - (IBAction)alarmAction:(UIButton *)sender {
@@ -87,7 +87,7 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }else
         [HUD show:YES];
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@&protectionStatus=%i",URL_FOR_SAFE_ALARM,_device.tId,!sender.selected] postData:nil delegate:self loaderName:@"alarm" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?tId=%@&protectionStatus=%i",GetRequst(URL_FOR_SAFE_ALARM),_device.tId,!sender.selected] postData:nil delegate:self loaderName:@"alarm" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
 
@@ -96,7 +96,7 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     }else
         [HUD show:YES];
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i",URL_FOR_SAFE_INFO,_device.deviceId] postData:nil delegate:self loaderName:@"info" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i",GetRequst(URL_FOR_SAFE_INFO),_device.deviceId] postData:nil delegate:self loaderName:@"info" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
 

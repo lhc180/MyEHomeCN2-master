@@ -57,7 +57,7 @@ static NSString *string = @"cell";
     } else
         [HUD show:YES];
     MyEAcStudyInstruction *instruction = self.list.instructionList[index.row - 1];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?id=%li",URL_FOR_AC_INSTRUCTION_DELETE,(long)instruction.instructionId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?id=%li",GetRequst(URL_FOR_AC_INSTRUCTION_DELETE),(long)instruction.instructionId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"deleteInstruction" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
@@ -70,7 +70,7 @@ static NSString *string = @"cell";
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&moduleId=%li",URL_FOR_USER_AC_INSTRUCTION_SET_VIEW,self.device.tId,(long)self.moduleId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&moduleId=%li",GetRequst(URL_FOR_USER_AC_INSTRUCTION_SET_VIEW),self.device.tId,(long)self.moduleId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"downloadAcInstructionList" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);

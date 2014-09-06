@@ -25,7 +25,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9Qa-QX-sxE">
-                                <rect key="frame" x="20" y="65" width="110" height="30"/>
+                                <rect key="frame" x="20" y="75" width="110" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="学  习">
@@ -42,11 +42,10 @@
                                 <textInputTraits key="textInputTraits" autocorrectionType="no"/>
                             </textField>
                             <button opaque="NO" tag="100" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gw8-ZZ-mCF">
-                                <rect key="frame" x="20" y="110" width="240" height="30"/>
+                                <rect key="frame" x="20" y="130" width="110" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <state key="normal" title="删   除" backgroundImage="deleteBtn">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="删   除">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -54,7 +53,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dU5-Tt-mHg">
-                                <rect key="frame" x="150" y="65" width="110" height="30"/>
+                                <rect key="frame" x="150" y="75" width="110" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="校  验">
@@ -65,7 +64,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="r5H-pU-q2b">
-                                <rect key="frame" x="20" y="155" width="240" height="30"/>
+                                <rect key="frame" x="150" y="130" width="110" height="30"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="返   回">
@@ -650,6 +649,11 @@
                                 <color key="textColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ngD-CU-7e2">
+                                <rect key="frame" x="0.0" y="145" width="320" height="194"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.97254901959999995" green="0.97254901959999995" blue="0.97254901959999995" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
                             <view hidden="YES" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="92b-c0-LD2">
                                 <rect key="frame" x="0.0" y="145" width="320" height="194"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -715,6 +719,7 @@
                         <outlet property="alertLabel" destination="eTl-FX-Y9a" id="j63-dk-inc"/>
                         <outlet property="deleteBtn" destination="fre-W3-pQY" id="cJB-Yb-jyZ"/>
                         <outlet property="nameField" destination="kil-a4-vcB" id="kGe-9T-HHP"/>
+                        <outlet property="rfDeviceView" destination="ngD-CU-7e2" id="iPc-yA-bfX"/>
                         <outlet property="roomBtn" destination="9Yt-v1-auB" id="Ozp-Nf-vhf"/>
                         <outlet property="safeIdTxt" destination="dx7-YY-Bjk" id="3uv-T5-Kah"/>
                         <outlet property="safeMainView" destination="92b-c0-LD2" id="tTY-Lb-kj5"/>
@@ -862,10 +867,10 @@
             </objects>
             <point key="canvasLocation" x="-6090" y="-6938"/>
         </scene>
-        <!--View Controller-->
+        <!--Curtain View Controller-->
         <scene sceneID="t0d-Wr-caG">
             <objects>
-                <viewController id="88E-r0-lgx" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="rfCurtain" hidesBottomBarWhenPushed="YES" id="88E-r0-lgx" customClass="MYERFCurtainViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="CFc-P6-O11"/>
                         <viewControllerLayoutGuide type="bottom" id="gTc-Nw-Nre"/>
@@ -874,32 +879,45 @@
                         <rect key="frame" x="0.0" y="64" width="320" height="416"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rET-va-cuU">
-                                <rect key="frame" x="120" y="56" width="80" height="40"/>
+                            <button opaque="NO" tag="601" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="rET-va-cuU">
+                                <rect key="frame" x="110" y="39" width="100" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="开">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="deviceControl:" destination="88E-r0-lgx" eventType="touchUpInside" id="X9Q-9n-5lk"/>
+                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X2h-Mr-ePR">
-                                <rect key="frame" x="120" y="121" width="80" height="40"/>
+                            <button opaque="NO" tag="603" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="X2h-Mr-ePR">
+                                <rect key="frame" x="110" y="209" width="100" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="停">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="deviceControl:" destination="88E-r0-lgx" eventType="touchUpInside" id="LKY-72-KaO"/>
+                                </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Awb-Nw-fr7">
-                                <rect key="frame" x="120" y="186" width="80" height="40"/>
+                            <button opaque="NO" tag="602" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Awb-Nw-fr7">
+                                <rect key="frame" x="110" y="124" width="100" height="60"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <state key="normal" title="关">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="deviceControl:" destination="88E-r0-lgx" eventType="touchUpInside" id="PuC-dR-Plq"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="y9c-X5-ORa">
-                        <barButtonItem key="rightBarButtonItem" title="学习模式" id="TJq-cZ-804"/>
+                        <barButtonItem key="rightBarButtonItem" title="学习模式" id="TJq-cZ-804">
+                            <connections>
+                                <action selector="studyMode:" destination="88E-r0-lgx" id="StQ-jJ-YQI"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" translucent="NO" prompted="NO"/>
                 </viewController>
