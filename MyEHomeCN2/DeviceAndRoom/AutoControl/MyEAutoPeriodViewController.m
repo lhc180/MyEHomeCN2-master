@@ -25,7 +25,7 @@
 
 @implementation MyEAutoPeriodViewController
 @synthesize period = _period, isAddNew = _isAddNew;
-@synthesize delegate = _delegate, accountData, device;
+@synthesize delegate = _delegate,device;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -74,6 +74,7 @@
 
 #pragma mark - IBAction methods
 - (IBAction)timePeriodAction:(id)sender {
+    
     // Show UIPickerView
     [UIView beginAnimations:nil context:NULL];
     [UIView setAnimationDuration:0.3];
@@ -354,8 +355,7 @@
 #pragma mar UIAlertView Delegate methods
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (buttonIndex == 0){
-        NSLog(@"ok");
+    if (alertView.tag == 100 && buttonIndex == 1) {
         self.period.runMode = replaced_runMode;
         self.period.setpoint = replaced_setpoint;
         self.period.windLevel = replaced_windLevel;
@@ -363,12 +363,23 @@
             [_delegate didFinishEditPeriod:self.period isAddNew:self.isAddNew];
         self.period = Nil;
         [self.navigationController popViewControllerAnimated:YES];
+        
     }
-    
-    if (buttonIndex == 1){
-        NSLog(@"cancel");
-        [self.navigationController popViewControllerAnimated:YES];
-    }
+//    if (buttonIndex == 0){
+//        NSLog(@"ok");
+//        self.period.runMode = replaced_runMode;
+//        self.period.setpoint = replaced_setpoint;
+//        self.period.windLevel = replaced_windLevel;
+//        if ([_delegate respondsToSelector:@selector(didFinishEditPeriod:isAddNew:)])
+//            [_delegate didFinishEditPeriod:self.period isAddNew:self.isAddNew];
+//        self.period = Nil;
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
+//    
+//    if (buttonIndex == 1){
+//        NSLog(@"cancel");
+//        [self.navigationController popViewControllerAnimated:YES];
+//    }
 }
 
 #pragma mark -
@@ -383,7 +394,7 @@
    
     NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&runMode=%ld&setpoint=%ld&windLevel=%ld",
                         GetRequst(URL_FOR_AC_PERIOD_VALIDATE_INSTRUCTION),
-                        self.accountData.userId,
+                        MainDelegate.accountData.userId,
                         self.device.tId,
                         (long)self.period.runMode,
                         (long)self.period.setpoint,
@@ -424,21 +435,20 @@
                                        [MyEAcUtil getStringForRunMode:replaced_runMode],
                                        [MyEAcUtil getStringForSetpoint:replaced_setpoint],
                                        [MyEAcUtil getStringForWindLevel:replaced_windLevel]];
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"指令验证"
-                                                        contentText:messageString
-                                                    leftButtonTitle:@"取消"
-                                                   rightButtonTitle:@"确定"];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"指令验证"
+                                                            message:messageString delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+            alert.tag = 100;
             [alert show];
-            alert.rightBlock=^{
-                self.period.runMode = replaced_runMode;
-                self.period.setpoint = replaced_setpoint;
-                self.period.windLevel = replaced_windLevel;
-                if ([_delegate respondsToSelector:@selector(didFinishEditPeriod:isAddNew:)])
-                    [_delegate didFinishEditPeriod:self.period isAddNew:self.isAddNew];
-                self.period = Nil;
-                [self.navigationController popViewControllerAnimated:YES];
-
-            };
+//            alert.rightBlock=^{
+//                self.period.runMode = replaced_runMode;
+//                self.period.setpoint = replaced_setpoint;
+//                self.period.windLevel = replaced_windLevel;
+//                if ([_delegate respondsToSelector:@selector(didFinishEditPeriod:isAddNew:)])
+//                    [_delegate didFinishEditPeriod:self.period isAddNew:self.isAddNew];
+//                self.period = Nil;
+//                [self.navigationController popViewControllerAnimated:YES];
+//
+//            };
         } else {
             [[NSException exceptionWithName:@"错误" reason:@"返回码错误！" userInfo:Nil] raise];
         }
@@ -459,4 +469,5 @@
     [MyEUtil showSuccessOn:self.navigationController.view withMessage:msg];
     [HUD hide:YES];
 }
+
 @end

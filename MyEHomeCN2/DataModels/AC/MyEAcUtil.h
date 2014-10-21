@@ -18,4 +18,8 @@
 
 + (NSString *)getFilenameForRunMode:(NSInteger)runMode;
 +(UIImage *)getImageForDeviceType:(NSInteger)deviceType;
+
++(NSArray *)modesWithAction:(NSInteger)action;  //1表示有通风模式
++(NSArray *)fans;
++(NSArray *)temps;
 @end

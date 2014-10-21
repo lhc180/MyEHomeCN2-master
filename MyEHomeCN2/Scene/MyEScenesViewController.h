@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "MYESceneEditViewController.h"
+#import "MyESceneList.h"
+#import "MyESceneDeviceInstruction.h"
 
 @interface MyEScenesViewController : UITableViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
     NSIndexPath *deleteSceneIndex;
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, retain) MyESceneList *sceneList;
 @property (nonatomic, retain) MyESceneInstructionRecived *instructionRecived;
 

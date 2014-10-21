@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
+#import "ZBarSDK.h"
 @protocol MyEQRScanViewControllerDelegate <NSObject>
 @optional
 -(void)passMID:(NSString *)mid andPIN:(NSString *)pin;

@@ -8,8 +8,6 @@
 
 #import "MYESwitchCell.h"
 @interface MYESwitchCell(){
-    __weak IBOutlet UIButton *timeBtn;
-    
     __weak IBOutlet UILabel *timeSetLbl;
     
     __weak IBOutlet UILabel *timeDelayLbl;
@@ -29,7 +27,7 @@
 #pragma mark - private methods
 -(void)hideOrShowObjectsWith:(BOOL)yes{
     _switchBtn.enabled = yes;
-    timeBtn.enabled = yes;
+    _timeBtn.enabled = yes;
     timeSetLbl.text = @"";
     timeDelayLbl.text = @"";
 }
@@ -48,7 +46,7 @@
     if (_disable) {
         return;
     }
-    timeBtn.selected = !timeOn;
+    _timeBtn.selected = !timeOn;
     _timeOn = timeOn;
 }
 -(void)setTimeDelay:(NSString *)timeDelay{
@@ -74,13 +72,5 @@
         }
     }
 }
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect
- {
- // Drawing code
- }
- */
 
 @end

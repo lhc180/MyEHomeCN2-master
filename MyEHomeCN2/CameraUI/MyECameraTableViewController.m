@@ -276,17 +276,19 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"确定删除该摄像机么?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-        alert.rightBlock = ^{
-            _selectedIndex = indexPath;
-            MyECamera *_camera = _cameraList[indexPath.row];
-            [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&did=%@&user=%@&pwd=%@&name=%@&action=3",GetRequst(URL_FOR_CAMERA_EDIT),(long)_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
-
-//            [self.cameraList removeObjectAtIndex:indexPath.row];
-//            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-//            NSLog(@"%@",self.cameraList);
-//            [self _saveData];
-        };
+        _selectedIndex = indexPath;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"确定删除该摄像机么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        alert.tag = 100;
+//        alert.rightBlock = ^{
+//            _selectedIndex = indexPath;
+//            MyECamera *_camera = _cameraList[indexPath.row];
+//            [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&did=%@&user=%@&pwd=%@&name=%@&action=3",GetRequst(URL_FOR_CAMERA_EDIT),(long)_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
+//
+////            [self.cameraList removeObjectAtIndex:indexPath.row];
+////            [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+////            NSLog(@"%@",self.cameraList);
+////            [self _saveData];
+//        };
         [alert show];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
     }
@@ -411,5 +413,13 @@
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     [HUD hide:YES];
     [MyEUtil showErrorOn:nil withMessage:@"与服务器连接超时"];
+}
+
+#pragma mark - UIAlertView delegate 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        MyECamera *_camera = _cameraList[_selectedIndex.row];
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&did=%@&user=%@&pwd=%@&name=%@&action=3",GetRequst(URL_FOR_CAMERA_EDIT),(long)_camera.deviceId,_camera.UID,_camera.username,_camera.password,_camera.name] postData:nil delegate:self loaderName:@"edit" userDataDictionary:nil];
+    }
 }
 @end

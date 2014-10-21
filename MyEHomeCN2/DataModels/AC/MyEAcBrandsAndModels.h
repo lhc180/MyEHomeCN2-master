@@ -8,17 +8,22 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MyEAcBrandsAndModels : NSObject<NSCopying>
+#import "MyEAcBrand.h"
+#import "MyEAcModel.h"
+#import "SBJson.h"
+@interface MyEAcBrandsAndModels : NSObject<NSCopying,NSCoding>
 
-@property(nonatomic,copy) NSArray *irList;
-@property(nonatomic,copy) NSArray *sysAcBrands;
-@property(nonatomic,copy) NSArray *sysAcModels;
-@property(nonatomic,copy) NSArray *userAcBrands;
-@property(nonatomic,copy) NSArray *userAcModels;
+@property(nonatomic,strong) NSMutableArray *sysAcBrands;
+@property(nonatomic,strong) NSMutableArray *userAcBrands;
 
+@property(nonatomic,assign) NSInteger selectedIndex;  // 0:系统默认指令库  1: 自学习指令库
 
 - (MyEAcBrandsAndModels *)initWithDictionary:(NSDictionary *)dictionary;
 - (MyEAcBrandsAndModels *)initWithJSONString:(NSString *)jsonString;
 - (NSDictionary *)JSONDictionary;
+
+- (MyEAcBrand *)findBrandByBrandId:(NSInteger)brandId;
+- (MyEAcModel *)findModelByModelId:(NSInteger)modelId inBrand:(MyEAcBrand *)brand;
+- (NSArray *)usefullUserAcBrands;
 
 @end

@@ -27,6 +27,10 @@
 @property (nonatomic,strong) MyEDevice *device;
 @property (nonatomic,strong) MyEAcBrandsAndModels *brandsAndModules;
 
+@property (nonatomic,strong) MyEAcBrand *brand;
+@property (nonatomic,strong) MyEAcModel *model;
+@property (nonatomic,assign) NSInteger index;
+
 @property (nonatomic,strong) NSArray *brandIdArray;//这个接收上面传过来的值
 @property (nonatomic,strong) NSArray *brandNameArray;//这个接收上面传过来的值
 @property (nonatomic,strong) NSArray *moduleIdArray;//这个是利用brand查找后得到的

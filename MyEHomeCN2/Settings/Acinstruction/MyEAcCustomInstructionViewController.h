@@ -11,8 +11,10 @@
 #import "MyEAcStandardInstructionViewController.h"
 #import "MyEAcInstructionListViewController.h"
 #import "MyEInstructionManageViewController.h"
-@class MyEAcBrandsAndModels;
-@interface MyEAcCustomInstructionViewController : UIViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate,MyEAcStandardInstructionViewControllerDelegate,MyEAcInstructionListViewControllerDelegate,IQActionSheetPickerView>{
+#import "KAProgressLabel.h"
+#import "MyEAcBrandsAndModels.h"
+
+@interface MyEAcCustomInstructionViewController : UIViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate,MyEAcStandardInstructionViewControllerDelegate,MyEAcInstructionListViewControllerDelegate>{
     MBProgressHUD *HUD;
     NSTimer *timer;
     UITapGestureRecognizer *tapGestureToHideHUD;
@@ -26,7 +28,6 @@
     __block UIImageView *imageView;
     int _selectBrandIndex,_selectModelIndex,_brandDownloadTimes;
 }
-@property(nonatomic,weak) MyEAccountData *accountData;
 @property(nonatomic,strong) MyEDevice *device;
 @property(nonatomic,weak) MyEAcBrandsAndModels *brandsAndModels;
 @property(nonatomic,strong) NSMutableArray *brandNameArray;

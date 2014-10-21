@@ -19,7 +19,6 @@ typedef enum {
 
 @interface MyEMainTabBarController : UITabBarController
 @property (nonatomic) NSInteger selectedTabIndex;
-@property (nonatomic, retain) MyEAccountData *accountData;
 
 -(void)setTabbarButtonEnable:(BOOL)enable;
 

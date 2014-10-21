@@ -10,9 +10,8 @@
 
 @interface MyERoom : NSObject  <NSCopying> 
 @property (nonatomic, retain) NSMutableArray *devices;
-@property (nonatomic, copy) NSString *name;
 @property (nonatomic) NSInteger roomId;
-
+@property (nonatomic, copy) NSString *name;
 
 - (MyERoom *)initWithDictionary:(NSDictionary *)dictionary;
 - (MyERoom *)initWithJSONString:(NSString *)jsonString;

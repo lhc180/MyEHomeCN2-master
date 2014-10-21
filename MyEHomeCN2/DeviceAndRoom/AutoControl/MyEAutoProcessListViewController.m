@@ -25,7 +25,7 @@
 
 @implementation MyEAutoProcessListViewController
 
-@synthesize processList = _processList, accountData, device;
+@synthesize processList = _processList, device;
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -124,7 +124,6 @@
         
         if(HUD == nil) {
             HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-            HUD.delegate = self;
         } else
             [HUD show:YES];
         
@@ -137,7 +136,7 @@
         if (self.device.type == 1){
             NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&action=2&data=%@",
                                 GetRequst(URL_FOR_AC_UPLOAD_AC_AUTO_PROCESS_SAVE),
-                                parentVC.accountData.userId,
+                                MainDelegate.accountData.userId,
                                 (long)process.pId,
                                 (long)parentVC.device.deviceId,
                                 dataString];
@@ -151,7 +150,7 @@
         if (self.device.type == 6){
             NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&action=2&data=%@",
                                 GetRequst(URL_FOR_UPLOAD_SOCKET_AUTO_PROCESS_SAVE),
-                                parentVC.accountData.userId,
+                                MainDelegate.accountData.userId,
                                 (long)process.pId,
                                 (long)parentVC.device.deviceId,
                                 dataString];
@@ -204,7 +203,6 @@
         pvc.delegate = self;
         pvc.isAddNew = NO;
         pvc.device = parentVC.device;
-        pvc.accountData = parentVC.accountData;
     }
 }
 

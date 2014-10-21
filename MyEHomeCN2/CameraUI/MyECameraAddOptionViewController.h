@@ -13,6 +13,7 @@
 #import "defineutility.h"
 #import "MyECamera.h"
 #import "MyEQRScanViewController.h"
+#import "MZFormSheetController.h"
 
 @interface MyECameraAddOptionViewController : UIViewController<SearchCameraResultProtocol,MyEQRScanViewControllerDelegate,UIAlertViewDelegate>{
     CSearchDVS* dvs;

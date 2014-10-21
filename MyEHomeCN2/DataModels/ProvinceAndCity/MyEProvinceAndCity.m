@@ -60,6 +60,9 @@
     return nil;
 }
 
+-(NSString *)description{
+    return [NSString stringWithFormat:@"%@ %@ %@",self.provinceName,self.provinceId,self.cities];
+}
 @end
 
 
@@ -71,6 +74,9 @@
         return self;
     }
     return nil;
+}
+-(NSString *)description{
+    return [NSString stringWithFormat:@"%@ %@",self.cityName,self.cityId];
 }
 @end
 

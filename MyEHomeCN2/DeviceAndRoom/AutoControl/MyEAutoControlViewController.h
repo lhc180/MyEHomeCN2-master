@@ -17,7 +17,6 @@
 @interface MyEAutoControlViewController : UIViewController <MyEDataLoaderDelegate,MBProgressHUDDelegate,MyEAcProcessViewControllerDelegate>{
     MBProgressHUD *HUD;
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic, retain) MyEAutoControlProcessList *processList;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *enableProcessSegmentedControl;

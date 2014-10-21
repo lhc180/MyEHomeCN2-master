@@ -8,7 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MyEDevice.h"
 @interface MyEACManualControlNavController : UINavigationController
+
 @property(nonatomic,strong) MyEDevice *device;
-@property(nonatomic,strong) MyEAccountData *accountData;
 @end

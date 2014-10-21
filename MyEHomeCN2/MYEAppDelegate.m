@@ -7,9 +7,11 @@
 //
 
 #import "MYEAppDelegate.h"
-#import "MyEUtil.h"
 #import "MyELoginViewController.h"
 #import "ZBarReaderView.h"
+#import "APService.h"
+#import "NSString+MD5.h"
+
 
 @implementation MYEAppDelegate
 
@@ -28,6 +30,7 @@
     UIGraphicsEndImageContext();
     return image;
 }
+
 -(void)refreshUI{
     if (!IS_IOS6) {
         [[UINavigationBar appearance] setBackgroundImage:[UIImage imageNamed:@"barImage.png"]  forBarMetrics:UIBarMetricsDefault];   //这个貌似跟位置有关系，之前放在方法最后面竟然没有执行成功，放在这里才算成功了
@@ -41,6 +44,7 @@
         [[UIBarButtonItem appearance] setTintColor:[UIColor whiteColor]];
         [[UITabBar appearance] setBarStyle:UIBarStyleBlack];
         [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
+//        [[UITabBar appearance] setTranslucent:NO];
         [[UIToolbar appearance] setBarStyle:UIBarStyleBlack];
     }else{
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -88,12 +92,11 @@
                                                                   UITextAttributeFont: [UIFont systemFontOfSize:14],
                                                                   UITextAttributeTextShadowOffset: [NSValue valueWithUIOffset:UIOffsetMake(0, 0)]}
                                                        forState:UIControlStateSelected];
-        
-//        [[UITableView appearance] setBackgroundColor:[UIColor colorWithWhite:0.92f alpha:1.0f]];
-//        [[UITableView appearance] setBackgroundView:[[UIView alloc] init]];
-//        [[UITableViewCell appearance] setSelectionStyle:UITableViewCellSelectionStyleGray];
-//        [[UITableViewCell appearance] setBackgroundColor:[UIColor whiteColor]];
-//        [[UITableViewCell appearance] setBackgroundView:[[UIView alloc] init]];
+        [[UISegmentedControl appearance] setTitleTextAttributes:@{
+                                                                  UITextAttributeTextColor: [UIColor lightGrayColor],
+                                                                  UITextAttributeFont: [UIFont systemFontOfSize:14],
+                                                                  UITextAttributeTextShadowOffset: [NSValue valueWithUIOffset:UIOffsetMake(0, 0)]}
+                                                       forState:UIControlStateDisabled];
     }
 //    UIToolbar *keyboardToolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.window.bounds.size.width, 38.0f)];
 //    UIBarButtonItem *spaceBarItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -101,7 +104,6 @@
 //    [keyboardToolbar setItems:[NSArray arrayWithObjects:spaceBarItem, doneBarItem, nil]];
 //    [UITextField appearance].inputAccessoryView = keyboardToolbar;
     [UITextField appearance].delegate = self;
-    
 }
 - (void)resignKeyboard:(id)sender
 {
@@ -110,24 +112,37 @@
 #pragma mark - appDelegate methods
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    [self refreshUI];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self refreshUI];
+    });
     // for test reading property from Info.plist
     //@see https://developer.apple.com/library/ios/documentation/general/Reference/InfoPlistKeyReference/Articles/AboutInformationPropertyListFiles.html
     // @see http://stackoverflow.com/questions/9530075/ios-access-app-info-plist-variables-in-code
-    
-    //以下为APNS部分
-    // Required
-    
-    [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
-                                                   UIRemoteNotificationTypeSound |
-                                                   UIRemoteNotificationTypeAlert)];
-    // Required
-    [APService setupWithOption:launchOptions];
-    //    UILocalNotification *localNotif =
-    //    [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
-    //    if (localNotif) {
-    //        application.applicationIconBadgeNumber = localNotif.applicationIconBadgeNumber-1;
-    //    }
+  
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+                                                       UIRemoteNotificationTypeSound |
+                                                       UIRemoteNotificationTypeAlert)
+                                           categories:nil];
+        [APService setupWithOption:launchOptions];
+        //以下为APNS部分------IOS
+        // Required
+        
+        //    [APService registerForRemoteNotificationTypes:(UIRemoteNotificationTypeBadge |
+        //                                                   UIRemoteNotificationTypeSound |
+        //                                                   UIRemoteNotificationTypeAlert)];
+        //    // Required
+        //    [APService setupWithOption:launchOptions];
+        
+        
+        
+        //    UILocalNotification *localNotif =
+        //    [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+        //    if (localNotif) {
+        //        application.applicationIconBadgeNumber = localNotif.applicationIconBadgeNumber-1;
+        //    }
+    });
+
     [ZBarReaderView class];
     
     //    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
@@ -155,7 +170,7 @@
         
         // 获取程序的主Navigation VC, 这里可以类似地从stroyboard获取任意的VC，然后设置它为rootViewController，这样就可以显示它
         
-        MyELoginViewController *controller = (MyELoginViewController*)[storybord instantiateViewControllerWithIdentifier: @"LoginViewController"];
+        MyELoginViewController *controller = (MyELoginViewController*)[storybord instantiateViewControllerWithIdentifier: IS_IPAD?@"loginForIPad":@"LoginViewController"];
         self.window.rootViewController = controller;// 用主Navigation VC作为程序的rootViewController
         [self.window makeKeyAndVisible];
         

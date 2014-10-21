@@ -47,7 +47,7 @@
 -(void)setWeeks:(NSArray *)weeks{
     for (UILabel *lbl in self.weekLabels) {
         if ([weeks containsObject:@(lbl.tag - 400)]) {
-            lbl.textColor = MainColor;
+            lbl.textColor = NavBarColor;
         }else
             lbl.textColor = [UIColor lightGrayColor];
     }
@@ -55,7 +55,7 @@
 -(void)setChannels:(NSArray *)channels{
     for (UILabel *lbl in self.channelLabels) {
         if ([channels containsObject:@(lbl.tag - 500)]) {
-            lbl.textColor = MainColor;
+            lbl.textColor = NavBarColor;
         }else
             lbl.textColor = [UIColor lightGrayColor];
     }

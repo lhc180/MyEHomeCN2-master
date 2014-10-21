@@ -15,7 +15,6 @@
     MBProgressHUD *learnHUD;
     NSInteger studyQueryTimes;
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic, weak) MyEIrKey *key;
 @property (weak, nonatomic) IBOutlet UITextField *keyNameTextfield;

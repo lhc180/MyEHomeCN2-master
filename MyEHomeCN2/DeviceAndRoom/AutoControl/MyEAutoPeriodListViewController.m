@@ -18,7 +18,7 @@
 @end
 
 @implementation MyEAutoPeriodListViewController
-@synthesize periodList = _periodList, accountData, device;
+@synthesize periodList = _periodList,device;
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
@@ -129,7 +129,6 @@
         NSIndexPath *indexPath = [self.tableView indexPathForSelectedRow];
         MyEAutoControlPeriod *period = [self.periodList objectAtIndex:indexPath.row];
         pvc.period = [period copy];
-        pvc.accountData = parentVC.accountData;
         pvc.device = parentVC.device;
         pvc.isAddNew = NO;
     }

@@ -12,7 +12,6 @@
 #import "MyETerminalSettingViewController.h"
 #import "MyEDevicesViewController.h"
 
-@interface MyESettingsTerminalsViewController : UITableViewController<MBProgressHUDDelegate,MyEDataLoaderDelegate>
-@property(nonatomic,weak) MyEAccountData *accountData;
+@interface MyESettingsTerminalsViewController : UITableViewController<MBProgressHUDDelegate,MyEDataLoaderDelegate,UIAlertViewDelegate>
 
 @end

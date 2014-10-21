@@ -9,6 +9,8 @@
 #import "MyESwitchScheduleSettingViewController.h"
 #import "MyESwitchAutoViewController.h"
 @interface MyESwitchScheduleSettingViewController ()
+@property (weak, nonatomic) IBOutlet UILabel *lblStart;
+@property (weak, nonatomic) IBOutlet UILabel *lblEnd;
 
 @end
 
@@ -18,36 +20,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-//    NSString *string = IS_IOS6?@"detailBtn-ios6":@"detailBtn";
-    for (UIButton *btn in self.view.subviews) {
-        if ([btn isKindOfClass:[UIButton class]]) {
-            [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
-            [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-        }
-    }
-
-//    if (!IS_IOS6) {
-//        for (UIButton *btn in self.view.subviews) {
-//            if ([btn isKindOfClass:[UIButton class]]) {
-//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
-//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-//            }
-//        }
-//    }else{
-//        for (UIButton *btn in self.view.subviews) {
-//            if ([btn isKindOfClass:[UIButton class]]) {
-//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-//            }
-//        }
-//    }
     if (IS_IOS6) {
         self.channelSeg.layer.borderColor = MainColor.CGColor;
         self.channelSeg.layer.borderWidth = 1.0f;
         self.channelSeg.layer.cornerRadius = 4.0f;
         self.channelSeg.layer.masksToBounds = YES;
-    }
-    if (IS_IOS6) {
         self.weekSeg.layer.borderColor = MainColor.CGColor;
         self.weekSeg.layer.borderWidth = 1.0f;
         self.weekSeg.layer.cornerRadius = 4.0f;
@@ -56,29 +33,14 @@
 
     self.channelSeg.mydelegate = self;
     self.weekSeg.mydelegate = self;
-    NSMutableArray *array1 = [NSMutableArray array];
-    NSMutableArray *array2 = [NSMutableArray array];
-    for (int i = 0; i < 24; i++) {
-        if (i < 10) {
-            [array1 addObject:[NSString stringWithFormat:@"0%i",i]];
-        }else
-            [array1 addObject:[NSString stringWithFormat:@"%i",i]];
-    }
-    for (int i = 0; i< 6; i++) {
-        if (i == 0) {
-            [array2 addObject:@"00"];
-        }else
-            [array2 addObject:[NSString stringWithFormat:@"%i",i*10]];
-    }
-    _headTimeArray = array1;
-    _tailTimeArray = array2;
 
     if (self.control.numChannel == 1) {
-        [self.channelSeg removeSegmentAtIndex:1 animated:YES];
-        [self.channelSeg removeSegmentAtIndex:2 animated:YES];
+        [self.channelSeg removeSegmentAtIndex:1 animated:NO];
+        [self.channelSeg removeSegmentAtIndex:2 animated:NO];
     }else if(self.control.numChannel == 2){
-        [self.channelSeg removeSegmentAtIndex:2 animated:YES];
+        [self.channelSeg removeSegmentAtIndex:2 animated:NO];
     }
+    
     for (int idx = 0; idx < self.control.channelDisabledStatus.count; idx++) {
         NSInteger i = [self.control.channelDisabledStatus[idx] intValue];
         if (i == 1) {
@@ -86,8 +48,9 @@
         }
     }
     _scheduleNew = [_schedule copy];
-    [self.startBtn setTitle:_schedule.onTime forState:UIControlStateNormal];
-    [self.endBtn setTitle:_schedule.offTime forState:UIControlStateNormal];
+    self.lblStart.text = _scheduleNew.onTime;
+    self.lblEnd.text = _scheduleNew.offTime;
+
     [self refreshSegment];
 }
 - (void)didReceiveMemoryWarning
@@ -153,8 +116,8 @@
     return YES;
 }
 -(BOOL)isTimeUsefull{
-    NSMutableString *startString = [NSMutableString stringWithString:self.startBtn.currentTitle];
-    NSMutableString *endString = [NSMutableString stringWithString:self.endBtn.currentTitle];
+    NSMutableString *startString = [NSMutableString stringWithString:self.lblStart.text];
+    NSMutableString *endString = [NSMutableString stringWithString:self.lblEnd.text];
     NSInteger startTime = [[startString stringByReplacingCharactersInRange:NSMakeRange(2, 1) withString:@"0"] intValue];
     NSInteger endTime = [[endString stringByReplacingCharactersInRange:NSMakeRange(2, 1) withString:@"0"] intValue];
     if (startTime >= endTime) {
@@ -187,34 +150,29 @@
     [self.channelSeg setSelectedSegmentIndexes:channelIndex];
     [self.weekSeg setSelectedSegmentIndexes:weekIndex];
 }
--(NSArray *)changeStringToInt:(NSString *)title{
-    NSArray *array = [NSArray array];
-    if (title.length !=5) {
-//        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"time is off" leftButtonTitle:nil rightButtonTitle:@"OK"];
-//        [alert show];
-        array = @[@1,@1];
-    }else{
-        NSInteger i = [_headTimeArray indexOfObject:[title substringToIndex:2]];
-        NSInteger j = [_tailTimeArray indexOfObject:[title substringFromIndex:3]];
-        array = @[@(i),@(j)];
-    }
-    return array;
-}
+//-(NSArray *)changeStringToInt:(NSString *)title{
+//    NSArray *array = [NSArray array];
+//    if (title.length !=5) {
+////        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"time is off" leftButtonTitle:nil rightButtonTitle:@"OK"];
+////        [alert show];
+//        array = @[@1,@1];
+//    }else{
+//        NSInteger i = [_headTimeArray indexOfObject:[title substringToIndex:2]];
+//        NSInteger j = [_tailTimeArray indexOfObject:[title substringFromIndex:3]];
+//        array = @[@(i),@(j)];
+//    }
+//    return array;
+//}
 
 #pragma mark - IBAction methods
-- (IBAction)startBtnPressed:(UIButton *)sender{
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择开始时间" andDelegate:self andTag:1 andArray:@[_headTimeArray,_tailTimeArray] andSelectRows:[self changeStringToInt:sender.currentTitle] andViewController:self];
-}
-- (IBAction)endBtnPressed:(UIButton *)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择结束时间" andDelegate:self andTag:2 andArray:@[_headTimeArray,_tailTimeArray] andSelectRows:[self changeStringToInt:sender.currentTitle] andViewController:self];
-}
+
 - (IBAction)saveEditor:(UIBarButtonItem *)sender {
     if (![self isTimeUsefull]) {
         [MyEUtil showMessageOn:nil withMessage:@"开始时间必须小于结束时间"];
         return;
     }
-    _scheduleNew.onTime = self.startBtn.currentTitle;
-    _scheduleNew.offTime = self.endBtn.currentTitle;
+    _scheduleNew.onTime = self.lblStart.text;
+    _scheduleNew.offTime = self.lblEnd.text;
     _scheduleNew.channels = [self changeIndexSetToArrayWithIndexSet:self.channelSeg.selectedSegmentIndexes];
     _scheduleNew.weeks = [self changeIndexSetToArrayWithIndexSet:self.weekSeg.selectedSegmentIndexes];
     if ([_scheduleNew.channels count] == 0) {
@@ -234,6 +192,21 @@
     }
     [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%li&channels=%@&action=2",GetRequst(URL_FOR_SWITCH_TIME_DELAY),(long)self.device.deviceId,[_scheduleNew.channels componentsJoinedByString:@","]] andName:@"check"];
 }
+#pragma mark - UITableView delegate methods
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0) {
+        if (indexPath.row == 0) {
+            MYETimePicker *picker = [[MYETimePicker alloc] initWithView:self.view andTag:1 title:@"请选择开始时间" interval:10 andDelegate:self];
+            picker.time = self.lblStart.text;
+            [picker show];
+        }else{
+            MYETimePicker *picker = [[MYETimePicker alloc] initWithView:self.view andTag:2 title:@"请选择结束时间" interval:10 andDelegate:self];
+            picker.time = self.lblEnd.text;
+            [picker show];
+        }
+    }
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+}
 
 #pragma mark - MultiSelectSegmentedControlDelegate methods
 -(void)multiSelect:(MultiSelectSegmentedControl*) multiSelecSegmendedControl didChangeValue:(BOOL) value atIndex: (NSUInteger) index{
@@ -249,13 +222,12 @@
     }
 }
 #pragma mark - IQActionSheetPickerView delegate methods
--(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didSelectTitles:(NSArray *)titles{
-    //这里本来应该添加内容，当一个btn的title选定时，另外一个btn的title自动增加，出于程序简单的目的，这里就不做了，只是在用户点击保存的时候进行了判断，
-    if (pickerView.tag == 1) {
-        [self.startBtn setTitle:[titles componentsJoinedByString:@":"] forState:UIControlStateNormal];
-    }else{
-        [self.endBtn setTitle:[titles componentsJoinedByString:@":"] forState:UIControlStateNormal];
-    }
+
+-(void)MYETimePicker:(UIView *)picker didSelectString:(NSString *)title{
+    if (picker.tag == 1) {
+        self.lblStart.text = title;
+    }else
+        self.lblEnd.text = title;
 }
 #pragma mark - url delegate methods
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{

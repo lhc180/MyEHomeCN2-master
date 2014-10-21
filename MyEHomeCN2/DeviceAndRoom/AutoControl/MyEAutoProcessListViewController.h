@@ -12,10 +12,9 @@
 @class MyEDevice;
 @class MyEAutoControlProcessList;
 
-@interface MyEAutoProcessListViewController : UITableViewController <MyEDataLoaderDelegate,MBProgressHUDDelegate,MyEAcProcessViewControllerDelegate>{
+@interface MyEAutoProcessListViewController : UITableViewController <MyEDataLoaderDelegate,MyEAcProcessViewControllerDelegate>{
     MBProgressHUD *HUD;
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic, weak) MyEAutoControlProcessList *processList;
 @end

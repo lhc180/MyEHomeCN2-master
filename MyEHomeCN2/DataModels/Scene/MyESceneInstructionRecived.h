@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-
+#import "MyESceneDevice.h"
+#import "MyESceneList.h"
 @interface MyESceneInstructionRecived : NSObject<NSCopying>
 
 @property(nonatomic,retain) NSMutableArray *allInstructions;

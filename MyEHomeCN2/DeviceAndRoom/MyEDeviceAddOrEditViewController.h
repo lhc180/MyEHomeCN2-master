@@ -10,7 +10,8 @@
 #import "MyEInstructionManageViewController.h"
 #import "MyEDevicesViewController.h"
 #import "MyEQRScanViewController.h"
-@interface MyEDeviceAddOrEditViewController : UIViewController<UITextFieldDelegate,MyEDataLoaderDelegate,MBProgressHUDDelegate,IQActionSheetPickerView,MyEQRScanViewControllerDelegate>{
+#import "WTReTextField.h"
+@interface MyEDeviceAddOrEditViewController : UIViewController<UITextFieldDelegate,MyEDataLoaderDelegate,MBProgressHUDDelegate,MyEQRScanViewControllerDelegate>{
     MBProgressHUD *HUD;
     NSMutableArray *_terminalArray;// 所有的智控星的列表
     NSMutableArray *_validTypeArray;// 插座/开关这两个类型是不能在App添加的, 今后有可能又更多类型不能在App添加.

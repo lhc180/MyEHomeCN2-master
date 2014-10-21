@@ -7,8 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MyESettings.h"
 
-@interface MyESubSwitchListViewController : UITableViewController<MyEDataLoaderDelegate>
+@interface MyESubSwitchListViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>
 
 @property(nonatomic, weak) MyESettings *settings;
 @end

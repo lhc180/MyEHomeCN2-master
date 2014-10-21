@@ -8,9 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
+
 @interface MyEUserNameResetViewController : UIViewController<MyEDataLoaderDelegate>
 
 @property (strong, nonatomic) IBOutlet UITextField *userNameTextFiled;
-@property (weak, nonatomic) MyEAccountData *accountData;
 
 @end

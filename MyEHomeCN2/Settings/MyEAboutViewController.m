@@ -9,25 +9,20 @@
 #import "MyEAboutViewController.h"
 
 @interface MyEAboutViewController ()
+@property (weak, nonatomic) IBOutlet UIImageView *image;
 
 @end
 
 @implementation MyEAboutViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+
 #pragma mark - lifeCircle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.versionLabel.text = [NSString stringWithFormat:@"MyE家居 %@",[[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleVersion"]];
-
+    self.image.layer.cornerRadius = 5;
+    self.image.layer.masksToBounds = YES;
 }
 
 - (void)didReceiveMemoryWarning

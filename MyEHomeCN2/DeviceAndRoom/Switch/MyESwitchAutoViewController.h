@@ -8,7 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "MyEScheduleCell.h"
+#import "MyEDevice.h"
+#import "MyESwitchAutoControl.h"
 #import "MyESwitchScheduleSettingViewController.h"
+
 @interface MyESwitchAutoViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
 }

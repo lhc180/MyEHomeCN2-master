@@ -9,14 +9,17 @@
 #import "MyESettingsViewController.h"
 #import "MyEMainTabBarController.h"
 #import "MyESubSwitchListViewController.h"
-@interface MyESettingsViewController ()
+#import "MYECitySetViewController.h"
+@interface MyESettingsViewController (){
+    BOOL _needRefreshCity;
+}
 
 @end
 
 @implementation MyESettingsViewController
 
 
-@synthesize accountData,settings,terminalsCount,cityLabel,cityName,provinceName,notification,statusLabel,userNameLabel;
+@synthesize settings,terminalsCount,cityLabel,cityName,provinceName,notification,statusLabel,userNameLabel;
 
 #pragma mark
 #pragma mark - View lifecycle
@@ -45,7 +48,7 @@
 
 - (void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:animated];
-    userNameLabel.text = self.accountData.userName;
+    userNameLabel.text = MainDelegate.accountData.userName;
     if (self.needRefresh) {
         //这里刷新的时候，设备列表也要进行刷新
         UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
@@ -57,6 +60,11 @@
     if (self.isFresh) {
         self.isFresh = NO;
         [self downloadSettingsDataFromServer];
+    }
+    if (![MainDelegate.accountData.cityId isEqualToString:self.settings.cityId] && self.settings.cityId != nil) {
+        self.settings.provinceId = MainDelegate.accountData.provinceId;
+        self.settings.cityId = MainDelegate.accountData.cityId;
+        [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
     }
     [self.tableView reloadData];
 }
@@ -78,12 +86,11 @@
 #pragma mark
 #pragma mark - provite methods
 -(void)setCityLabelWithProvinceId:(NSString *)provinceId andCityId:(NSString *)cityId{
-    
-    self.pAndC = [[MyEProvinceAndCity alloc] init];   //这里的逻辑刚开始写错了，还好现在及时更正过来了
-    if ([provinceId isEqualToString:@""] || [cityId isEqualToString:@""]) {
+    if ([cityId isEqualToString:@""]) {
         cityLabel.text = @"";
         return;
     }
+    self.pAndC = [[MyEProvinceAndCity alloc] init];   //这里的逻辑刚开始写错了，还好现在及时更正过来了
 
     for (MyEProvince *p in self.pAndC.provinceAndCity) {
         if ([p.provinceId isEqualToString:provinceId]) {
@@ -101,7 +108,7 @@
 }
 -(BOOL)checkIfHasT{
     NSMutableArray *array = [NSMutableArray array];
-    for (MyETerminal *t in self.accountData.terminals) {
+    for (MyETerminal *t in MainDelegate.accountData.terminals) {
         if ([[t.tId substringToIndex:2] isEqualToString:@"01"]) {
             [array addObject:t];
         }
@@ -143,7 +150,6 @@
         case 0:
             if (indexPath.row == 0) {
                 MyEUserNameResetViewController *vc = (MyEUserNameResetViewController *)[storyboard instantiateViewControllerWithIdentifier:@"userNameReset"];
-                vc.accountData = self.accountData;
                 [self.navigationController pushViewController:vc animated:YES];
             }else{
                 MyEPasswordResetViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"passwordReset"];
@@ -151,10 +157,11 @@
             }
             break;
         case 1:{
-            MyECitySettingViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"citySetting"];
-            vc.pAndC = self.pAndC;
-            [vc setValue:self forKey:@"delegate"];
-            [vc setValue:self.accountData forKey:@"accountData"];
+            MYECitySetViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"citySet"];
+            vc.allCities = self.pAndC;
+            vc.isProvince = YES;
+            vc.settings = self.settings;
+            _needRefreshCity = YES;
             [self.navigationController pushViewController:vc animated:YES];
             break;}
         case 2:
@@ -164,11 +171,9 @@
         case 3:
             if (indexPath.row == 0) {
                 MyESettingsTerminalsViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"terminal"];
-                [vc setValue:self.accountData forKey:@"accountData"];
                 [self.navigationController pushViewController:vc animated:YES];
             }else if(indexPath.row == 1){
                 MYESettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"gateway"];
-                vc.accountData = self.accountData;
                 vc.jumpFromSettings = YES;
                 [self.navigationController pushViewController:vc animated:YES];
             }else{
@@ -197,17 +202,16 @@
     }
     if(HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        HUD.delegate = self;
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SETTINGS_VIEW), self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SETTINGS_VIEW), MainDelegate.accountData.userId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"settingsLoader" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 - (void)uploadModelToServerWithEnableNotification{
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&enableNotification=%i",GetRequst(URL_FOR_SETTINGS_ENABLE_NOTIFICATION), accountData.userId,notification.isOn];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&enableNotification=%i",GetRequst(URL_FOR_SETTINGS_ENABLE_NOTIFICATION), MainDelegate.accountData.userId,notification.isOn];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsEnableNotificationUploader" userDataDictionary:nil];
     NSLog(@"SettingsEnableNotificationUploader is %@",loader.name);
 }
@@ -236,54 +240,29 @@
             MyESettings *setting = [[MyESettings alloc] initWithJSONString:string];
             self.settings = setting;
             //这里的这个数据会牵扯到整个逻辑
-            accountData.allTerminals = setting.terminals;
-            accountData.mStatus = setting.status;
+            MainDelegate.accountData.allTerminals = setting.terminals;
+            MainDelegate.accountData.mStatus = setting.status;
             if (setting.mId) {
-                accountData.mId = setting.mId;
+                MainDelegate.accountData.mId = setting.mId;
             }else{
-                accountData.mId = @"";
+                MainDelegate.accountData.mId = @"";
             }
             
             //by YY
             // 根据网关情况, 确定是否允许进入其他面板, 如果网关不在线或没有连接,就提示用户刷新, 并不允许转移到其他面板.
             MyEMainTabBarController *mtc = (MyEMainTabBarController *)self.tabBarController;
-            if (!self.accountData.mId || [self.accountData.mId isEqualToString:@""]) {//先看有没有网关
+            if (!MainDelegate.accountData.mId || [MainDelegate.accountData.mId isEqualToString:@""]) {//先看有没有网关
                 [mtc setTabbarButtonEnable:NO];
-                DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"温馨提示"
-                                                            contentText:@"检测到未绑定智能网关,您将无法操作任何设备,现在需要绑定么?"
-                                                        leftButtonTitle:@"取消"
-                                                       rightButtonTitle:@"绑定网关"];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"检测到未绑定智能网关,您将无法操作任何设备,现在需要绑定么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"绑定网关", nil];
+                alert.tag = 100;
                 [alert show];
-                alert.rightBlock = ^{
-                    //这里要同步刷新设备列表的数据
-                    UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
-                    MyEDevicesViewController *vc0 = (MyEDevicesViewController *)[nav childViewControllers][0];
-                    NSLog(@"devices needRefresh is %i",vc0.needRefresh);
-                    vc0.needRefresh = YES;
-
-                    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"settings" bundle:nil];
-                    MYESettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"gateway"];
-                    vc.accountData = self.accountData;
-                    vc.jumpFromSettings = YES;
-                    [self.navigationController pushViewController:vc animated:YES];
-                };
-            }else if (self.accountData.mStatus == 0 ) { //再看网关在不在线
+            }else if (MainDelegate.accountData.mStatus == 0 ) { //再看网关在不在线
 //                mtc.selectedIndex = 3;
                 [mtc setTabbarButtonEnable:NO];
-                DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"温馨提示"
-                                                            contentText:@"检测到智能网关离线,您将无法操作任何设备,请检查网络状况或给网关断电后重试!"
-                                                        leftButtonTitle:@"取消"
-                                                       rightButtonTitle:@"刷新"];
+                UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"检测到智能网关离线,您将无法操作任何设备,请检查网络状况或给网关断电后重试!" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"刷新", nil];
+                alert.tag = 110;
                 [alert show];
-                alert.rightBlock = ^() {
-                    //这里必须要进行刷新
-                    UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
-                    MyEDevicesViewController *vc = (MyEDevicesViewController *)[nav childViewControllers][0];
-                    NSLog(@"devices needRefresh is %i",vc.needRefresh);
-                    vc.needRefresh = YES;
-                    
-                    [self downloadSettingsDataFromServer];
-                };
+
             }
 //            else if([self.accountData.terminals count] == 0){//再检查有没有智控星
 //                [mtc setTabbarButtonEnable:NO];
@@ -306,19 +285,18 @@
                 [mtc setTabbarButtonEnable:YES];
             }
         }
-        if (accountData.mStatus == 1) {
+        if (MainDelegate.accountData.mStatus == 1) {
             statusLabel.text = @"在线";
-        }else if (accountData.mStatus == 0 && [accountData.mId isEqualToString:@""]){
+        }else if (MainDelegate.accountData.mStatus == 0 && [MainDelegate.accountData.mId isEqualToString:@""]){
             statusLabel.text = @"未注册网关";
         }else
             statusLabel.text = @"离线";
         [notification setOn:settings.enableNotification == 0?NO:YES animated:YES];
+        MainDelegate.accountData.provinceId = self.settings.provinceId;
+        MainDelegate.accountData.cityId = self.settings.cityId;
         [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
-        terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[accountData.allTerminals count]];
+        terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[MainDelegate.accountData.allTerminals count]];
         self.subSwitchCount.text = [NSString stringWithFormat:@"%i",self.settings.subSwitchList.count];
-        NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-        [prefs setObject:settings.provinceId forKey:@"provinceId"];
-        [prefs setObject:settings.cityId forKey:@"cityId"];
         //这里必须要刷新一下tableview，否则有些内容不会显示
         [self.tableView reloadData];
     }
@@ -372,21 +350,45 @@
     [self uploadModelToServerWithEnableNotification];
 }
 - (IBAction)deleteUserInfo:(UIButton *)sender {
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"温馨提示"
-                                                contentText:@"此操作将使您与服务器断开连接，您确定退出登录吗？"
-                                            leftButtonTitle:@"取消"
-                                           rightButtonTitle:@"确定"];
-    [alert show];
-    alert.rightBlock = ^() {
+    UIActionSheet *sheet = [[UIActionSheet alloc] initWithTitle:@"此操作将使您与服务器断开连接,您确定退出登录吗?" delegate:self cancelButtonTitle:@"取消" destructiveButtonTitle:@"退出登录" otherButtonTitles:nil, nil];
+    [sheet showInView:self.view];
+}
+
+#pragma mark - UIActionSheet delegate methods
+-(void)actionSheet:(UIActionSheet *)actionSheet clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 0) {
         NSUserDefaults *defs = [NSUserDefaults standardUserDefaults];
         [defs removeObjectForKey:@"mId"];
         [defs removeObjectForKey:@"provinceId"];
         [defs removeObjectForKey:@"cityId"];
-        self.accountData = nil;
+        MainDelegate.accountData = nil;
         [MainDelegate.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
-        MyELoginViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        MyELoginViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:IS_IPAD?@"loginForIPad":@"LoginViewController"];
         MainDelegate.window.rootViewController = vc;
         [self uploadModelToServerToDeleteUserInfo];
-    };
+    }
+}
+
+#pragma mark - UIAlertView delegate 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
+        MyEDevicesViewController *vc0 = (MyEDevicesViewController *)[nav childViewControllers][0];
+        NSLog(@"devices needRefresh is %i",vc0.needRefresh);
+        vc0.needRefresh = YES;
+        
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"settings" bundle:nil];
+        MYESettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"gateway"];
+        vc.jumpFromSettings = YES;
+        [self.navigationController pushViewController:vc animated:YES];
+    }
+    if (alertView.tag == 110 && buttonIndex == 1) {
+        UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
+        MyEDevicesViewController *vc = (MyEDevicesViewController *)[nav childViewControllers][0];
+        NSLog(@"devices needRefresh is %i",vc.needRefresh);
+        vc.needRefresh = YES;
+        
+        [self downloadSettingsDataFromServer];
+    }
 }
 @end

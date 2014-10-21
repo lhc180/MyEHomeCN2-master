@@ -166,13 +166,15 @@ static const NSUInteger kTagOfRightSideButton = 999;
     NSLog(@"%f",xOffset);
     for (int i=0; i<[_viewArray count]; i++) {
         UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-        [button setFrame:CGRectMake(60+100*i, 0, 100, 30)];
+//        [button setFrame:CGRectMake(IS_IPAD?screenwidth/2-100:60+100*i, 0, 100, 30)];
         button.tag = i+100;   //这句是能够切换的关键
         if (i == 0) {
-            _shadowImageView.frame = CGRectMake(60, 0, 100, _shadowImage.size.height);
+            [button setFrame:CGRectMake(screenwidth/2-100, 0, 100, 30)];
+//            _shadowImageView.frame = CGRectMake(60, 0, 100, _shadowImage.size.height);
             button.selected = YES;
             [button setTitle:@"标准控制" forState:UIControlStateNormal];
         }else{
+            [button setFrame:CGRectMake(screenwidth/2, 0, 100, 30)];
             [button setTitle:@"自定义控制" forState:UIControlStateNormal];
         }
         button.titleLabel.font = [UIFont systemFontOfSize:kFontSizeOfTabButton];

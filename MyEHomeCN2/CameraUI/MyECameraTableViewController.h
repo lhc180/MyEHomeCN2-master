@@ -11,7 +11,7 @@
 #import "defineutility.h"
 #import "PPPPChannelManagement.h"
 
-@interface MyECameraTableViewController : UITableViewController <SnapshotProtocol,MyEDataLoaderDelegate>
+@interface MyECameraTableViewController : UITableViewController <SnapshotProtocol,MyEDataLoaderDelegate,UIAlertViewDelegate>
 
 @property (nonatomic, strong) NSMutableArray *cameraList;
 @property (nonatomic) BOOL needRefresh;

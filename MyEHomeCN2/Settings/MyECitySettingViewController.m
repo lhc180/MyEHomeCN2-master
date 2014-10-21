@@ -20,7 +20,7 @@
 
 @implementation MyECitySettingViewController
 
-@synthesize picker,accountData;
+@synthesize picker;
 
 #pragma mark
 #pragma mark - View lifecycle
@@ -180,7 +180,7 @@
 
 - (void)uploadModelToServerWithCurrentProvince:(NSString *)nprovince andCity:(NSString *)ncity{
 
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&provinceId=%@&cityId=%@",GetRequst(URL_FOR_SETTINGS_LOCATION), accountData.userId, nprovince, ncity];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&provinceId=%@&cityId=%@",GetRequst(URL_FOR_SETTINGS_LOCATION),MainDelegate.accountData.userId,nprovince, ncity];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsLocationUploader" userDataDictionary:nil];
     NSLog(@"SettingsUploader is %@",loader.name);
     

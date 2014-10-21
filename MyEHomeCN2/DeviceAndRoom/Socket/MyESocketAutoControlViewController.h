@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MyEScheduleCell.h"
+#import "MyESwitchAutoControl.h"
 
-@interface MyESocketAutoControlViewController : UITableViewController<MyEDataLoaderDelegate>{
+@interface MyESocketAutoControlViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
 }
 @property(strong, nonatomic) MyEDevice *device;

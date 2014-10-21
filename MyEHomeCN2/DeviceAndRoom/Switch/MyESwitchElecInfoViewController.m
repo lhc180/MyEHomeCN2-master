@@ -14,6 +14,7 @@
 #include <stdlib.h>
 
 @interface MyESwitchElecInfoViewController ()
+@property (weak, nonatomic) IBOutlet UILabel *lblTips;
 
 @end
 
@@ -37,6 +38,9 @@
         self.dateSegment.layer.borderWidth = 1.0f;
         self.dateSegment.layer.cornerRadius = 4.0f;
         self.dateSegment.layer.masksToBounds = YES;
+    }
+    if (IS_IPAD) {
+        self.lblTips.hidden = YES;
     }
 }
 
@@ -80,7 +84,11 @@
 -(void)doThisToChangeChart{
     [_eColumnChart removeFromSuperview];
     _eColumnChart = nil;
-    _eColumnChart = [[EColumnChart alloc] initWithFrame:CGRectMake(40, 140, 270, 200)];
+    if (IS_IPAD) {
+        _eColumnChart = [[EColumnChart alloc] initWithFrame:CGRectMake(100, 99, screenwidth - 125, screenHigh - 99 - 20 - 44 -20-44-20-20)];
+    }else
+        _eColumnChart = [[EColumnChart alloc] initWithFrame:CGRectMake(40, 99, screenwidth - 50, screenHigh - 99 - 20 - 44 -20-44-20)];
+//    _eColumnChart = [[EColumnChart alloc] initWithFrame:CGRectMake(40, 140, 270, 200)];
     [_eColumnChart setColumnsIndexStartFromLeft:YES];
     [_eColumnChart setDataSource:self];
     [_eColumnChart setShowHighAndLowColumnWithColor:YES];
@@ -130,8 +138,8 @@
 //        }
         [self doThisToChangeChart];
         //这里说明了小数点后保留几位有效数字
-        self.currentLabel.text = [NSString stringWithFormat:@"%0.2f瓦",elct.currentPower*220];
-        self.totalLabel.text = [NSString stringWithFormat:@"%0.2f度",elct.totalPower/1000];
+//        self.currentLabel.text = [NSString stringWithFormat:@"%0.2f瓦",elct.currentPower*220];
+//        self.totalLabel.text = [NSString stringWithFormat:@"%0.2f度",elct.totalPower/1000];
     }
     if ([MyEUtil getResultFromAjaxString:string] == -3) {
         [MyEUniversal doThisWhenUserLogOutWithVC:self];
@@ -139,6 +147,10 @@
     if ([MyEUtil getResultFromAjaxString:string] != 1) {
         [MyEUtil showMessageOn:nil withMessage:@"下载数据发生错误"];
     }
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
+    [HUD hide:YES];
+    [MyEUtil showMessageOn:nil withMessage:@"与服务器连接失败"];
 }
 #pragma -mark- EColumnChartDataSource
 
@@ -149,7 +161,7 @@
 
 - (NSInteger)numberOfColumnsPresentedEveryTime:(EColumnChart *)eColumnChart
 {
-    return 6;
+    return IS_IPAD?12:6;
 }
 
 - (EColumnDataModel *)highestValueEColumnChart:(EColumnChart *)eColumnChart

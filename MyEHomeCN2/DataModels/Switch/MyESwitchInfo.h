@@ -19,6 +19,7 @@
 
 -(MyESwitchInfo *)initWithString:(NSString *)string;
 -(MyESwitchInfo *)initWithDic:(NSDictionary *)dic;
+-(NSArray *)powerFactorArray;
 -(NSArray *)typeArray;
 -(NSString *)changeTypeToString;
 @end

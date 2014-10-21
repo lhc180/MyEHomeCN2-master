@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "EColumnChart.h"
+#import "MyESwitchElec.h"
 
 @interface MyESocketElecViewController : UIViewController<EColumnChartDataSource,MyEDataLoaderDelegate>{
     NSArray *_data;
@@ -19,8 +20,4 @@
 @property (strong, nonatomic) EColumnChart *eColumnChart;
 
 @property (weak, nonatomic) IBOutlet UISegmentedControl *dateSegment;
-@property (weak, nonatomic) IBOutlet UILabel *currentLabel;
-@property (weak, nonatomic) IBOutlet UILabel *totalLabel;
-
-
 @end

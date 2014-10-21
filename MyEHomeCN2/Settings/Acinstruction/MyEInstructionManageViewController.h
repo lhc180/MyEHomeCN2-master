@@ -7,11 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "MyEDevice.h"
 @interface MyEInstructionManageViewController : UIViewController
 @property (weak, nonatomic) IBOutlet UILabel *brandLabel;
 @property (weak, nonatomic) IBOutlet UIView *mainView;
-@property (weak, nonatomic) MyEAccountData *accountData;
 @property (strong, nonatomic) MyEDevice *device;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *selectSeg;
 

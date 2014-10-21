@@ -12,6 +12,7 @@
 #import "PPPPDefine.h"
 #import "obj_common.h"
 #import "PPPPChannelManagement.h"
+#import "MZFormSheetController.h"
 @interface MyECameraAddNewViewController : UIViewController<MyEDataLoaderDelegate,SnapshotProtocol>
 @property (weak, nonatomic) MyECamera *camera;
 @property (nonatomic) NSInteger jumpFromWhere;  //1.WIFI搜索，2.二维码扫描，3.手动添加

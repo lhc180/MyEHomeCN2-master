@@ -7,9 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface MyEAcInstructionStudyViewController : UIViewController<MBProgressHUDDelegate,MyEDataLoaderDelegate,IQActionSheetPickerView>{
-    NSInteger pickerTag;
+#import "MYEPickerView.h"
+#import "MyEAcStudyInstruction.h"
+#import "MyEAcStudyInstructionList.h"
+#import "MyEDevice.h"
+@interface MyEAcInstructionStudyViewController : UIViewController<MyEDataLoaderDelegate,MYEPickerViewDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
     UIView *pickerContainer;
     UIPickerView *picker;
@@ -21,7 +23,6 @@
     BOOL _isAdd; //当成功添加指令后，该值变为YES
 }
 
-@property (weak, nonatomic) MyEAccountData *accountData;
 @property (weak, nonatomic) MyEAcStudyInstructionList *list;
 @property (strong, nonatomic) MyEAcStudyInstruction *instruction;
 @property (strong, nonatomic) MyEDevice *device;

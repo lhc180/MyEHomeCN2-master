@@ -19,15 +19,6 @@
 @implementation MyEIrDefaultViewController
 @synthesize isControlMode;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -54,11 +45,12 @@
                 if (key.status >0) {
                     [self sendControlKeyToServer:key andRunTimes:1];
                 }else{
-                    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                                contentText:@"此按键没有学习，请点击右上角【学习模式】学习此按键"
-                                                            leftButtonTitle:nil
-                                                           rightButtonTitle:@"知道了"];
-                    [alert show];
+                    
+//                    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
+//                                                                contentText:@"此按键没有学习，请点击右上角【学习模式】学习此按键"
+//                                                            leftButtonTitle:nil
+//                                                           rightButtonTitle:@"知道了"];
+//                    [alert show];
                 }
             } else
                 [self editStudyKey:key];
@@ -87,7 +79,6 @@
         UINavigationController *navController = (UINavigationController *)presentedFSViewController;
         navController.topViewController.title = @"按键学习";
         MyEIrStudyEditKeyModalViewController *modalVc = (MyEIrStudyEditKeyModalViewController *)navController.topViewController;
-        modalVc.accountData = self.accountData;
         modalVc.device = self.device;
 //        modalVc.delegate = self;
         modalVc.key = key;
@@ -149,7 +140,7 @@
         
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&type=%ld&runCount=%li",
                         GetRequst(URL_FOR_IR_DEVICE_SEND_CONTROL_KEY),
-                        self.accountData.userId,
+                        MainDelegate.accountData.userId,
                         (long)key.keyId,
                         (long)self.device.deviceId,
                         (long)key.type,(long)runTimes];
@@ -239,7 +230,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&id=%ld",GetRequst(URL_FOR_KEY_SET_VIEW), self.accountData.userId, self.device.tId, (long)self.device.deviceId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&id=%ld",GetRequst(URL_FOR_KEY_SET_VIEW), MainDelegate.accountData.userId, self.device.tId, (long)self.device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:IR_KEY_SET_DOWNLOADER_NMAE  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }

@@ -8,10 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyERoomsViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>{
-    MBProgressHUD *HUD;
-}
-@property (nonatomic, weak) MyEAccountData *accountData;
-@property (nonatomic) BOOL needRefresh;
+@interface MyERoomsViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>
 
 @end

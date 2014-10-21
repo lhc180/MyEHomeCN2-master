@@ -32,6 +32,8 @@
     _nameTxt.text = _scene.name;
     _orderBtn.selected = _scene.byOrder==1;
     [self defineTapGestureRecognizer];
+    [MyEUtil makeFlatButton:self.editBtn];
+    [MyEUtil makeFlatButton:self.addDeviceBtn];
 }
 #pragma mark - private methods
 -(void)defineTapGestureRecognizer{
@@ -77,7 +79,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=%i&name=%@&id=%li&byOrder=%i&deviceControls=%@&custom=1",GetRequst(URL_FOR_SCENES_EDIT),_accountData.userId,_isAdd?0:1,_isAdd?self.nameTxt.text:self.scene.name,_isAdd?0:(long)self.scene.sceneId,_orderBtn.selected,str];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=%i&name=%@&id=%li&byOrder=%i&deviceControls=%@&custom=1",GetRequst(URL_FOR_SCENES_EDIT),MainDelegate.accountData.userId,_isAdd?0:1,_isAdd?self.nameTxt.text:self.scene.name,_isAdd?0:(long)self.scene.sceneId,_orderBtn.selected,str];
     NSLog(@"%@",[urlStr description]);
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"saveChangesUploader" userDataDictionary:nil];
     NSLog(@"saveChangesUploader is %@",loader.name);
@@ -99,7 +101,7 @@
     BOOL jumpOutCycle = NO;   //这个变量主要是用来控制循环的，当完成指定情况后，直接跳出嵌套循环
     UIImage *image;
     //找出deviceId所对应的设备类型,从而对每一行进行图标的处理
-    for (MyEDeviceType *dt in self.accountData.deviceTypes) {
+    for (MyEDeviceType *dt in MainDelegate.accountData.deviceTypes) {
         if ([dt.devices count]) {
             for (NSNumber *i in dt.devices) {
                 if ([dic[@"id"] intValue] == [i intValue]) {
@@ -115,10 +117,10 @@
         }
     }
     //找出设备的名称
-    for (MyEDevice *device in _accountData.devices) {
+    for (MyEDevice *device in MainDelegate.accountData.devices) {
         if ([dic[@"id"] intValue] == device.deviceId) {
             deviceName = device.name;
-            for (MyERoom *room in _accountData.rooms) {
+            for (MyERoom *room in MainDelegate.accountData.rooms) {
                 if (room.roomId == device.roomId) {
                     roomName = room.name;
                     break;
@@ -196,12 +198,21 @@
     [tableviewArray removeObjectAtIndex:indexPath.row];
     [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
 }
--(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath{
-    //这个默认的是yes，不需要进行更改
+
+- (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (self.tableView.editing) {
+        return NO;
+    }
     return YES;
 }
 -(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
+}
+-(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (self.tableView.editing) {
+        return UITableViewCellEditingStyleNone;
+    }
+    return UITableViewCellEditingStyleDelete;
 }
 -(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath{
     id object = [tableviewArray objectAtIndex:sourceIndexPath.row];
@@ -221,7 +232,6 @@
         
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
         NSDictionary *dic = [tableviewArray objectAtIndex:indexPath.row];
-        vc.accountData = self.accountData;
         vc.sceneIndex = indexPath;
         vc.instructionRecived = self.instructionRecived;
         vc.dictionaryRecived = dic;
@@ -237,7 +247,6 @@
         MyEScenesDeviceEditOrAddViewController *vc = segue.destinationViewController;
         vc.jumpFromBarBtn = 1;
         vc.instructionRecived = self.instructionRecived;
-        vc.accountData = self.accountData;
         vc.tableArray = tableviewArray;
         vc.delegate = self;
         NSMutableArray *array = [NSMutableArray array];
@@ -247,7 +256,20 @@
         vc.deviceIdArrayRecived = array;
     }
 }
-
+-(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
+    if ([identifier isEqualToString:@"edit"]) {
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        NSDictionary *dic = [tableviewArray objectAtIndex:indexPath.row];
+        MyEDevice *device = [MainDelegate.accountData findDeviceWithDeviceId:[dic[@"id"] intValue]];
+        if ([device isOrphan]) {
+            [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"设备未绑定智控星" message:nil delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+            [alert show];
+            return NO;
+        }
+    }
+    return YES;
+}
 #pragma mark - URL Delegate methods
 - (void) didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     
@@ -258,7 +280,7 @@
             [MyEUtil showMessageOn:self.navigationController.view withMessage:@"场景编辑失败，请重试！"];
         }else{
             [MyEUtil showMessageOn:self.navigationController.view withMessage:@"场景编辑成功！"];
-            self.accountData.needDownloadInstructionsForScene = YES;
+            MainDelegate.accountData.needDownloadInstructionsForScene = YES;
             [self.navigationController popViewControllerAnimated:YES];
         }
     }

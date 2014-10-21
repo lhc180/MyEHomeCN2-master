@@ -80,7 +80,10 @@
     for (MyERoom *r in self.accountData.rooms) {
         [array addObject:r.name];
     }
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"选择房间" andDelegate:self andTag:1 andArray:array andSelectRow:[array containsObject:sender.currentTitle]?[array indexOfObject:sender.currentTitle]:0 andViewController:self];
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:1 title:@"选择房间" dataSource:array andSelectRow:[array containsObject:sender.currentTitle]?[array indexOfObject:sender.currentTitle]:0];
+    picker.delegate = self;
+    [picker show];
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"选择房间" andDelegate:self andTag:1 andArray:array andSelectRow:[array containsObject:sender.currentTitle]?[array indexOfObject:sender.currentTitle]:0 andViewController:self];
 }
 - (IBAction)saveEditor:(UIBarButtonItem *)sender {
     [_nameTxt resignFirstResponder];
@@ -95,11 +98,11 @@
     [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?id=%i&name=%@&roomId=%i&action=1&type=%i&tId=%@",GetRequst(_device.type > 11?URL_FOR_RFDEVICE_EDIT:URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),_device.deviceId,_nameTxt.text,[self findRoomIdByRoomName:_roomBtn.currentTitle],_device.type,_device.tId] andName:@"save"];
 }
 - (IBAction)deleteDevice:(UIButton *)sender {
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"确定删除该设备吗?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-    alert.rightBlock = ^{
-        [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?id=%i&tId=%@&name=%@&type=%i&action=2&roomId=%i",GetRequst(_device.type > 11?URL_FOR_RFDEVICE_EDIT:URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),_device.deviceId,_device.tId,_device.name,_device.type,_device.roomId] andName:@"delete"];
-    };
-    [alert show];
+//    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"确定删除该设备吗?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
+//    alert.rightBlock = ^{
+//        [self doThisWhenNeedNetworkWithURL:[NSString stringWithFormat:@"%@?id=%i&tId=%@&name=%@&type=%i&action=2&roomId=%i",GetRequst(_device.type > 11?URL_FOR_RFDEVICE_EDIT:URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),_device.deviceId,_device.tId,_device.name,_device.type,_device.roomId] andName:@"delete"];
+//    };
+//    [alert show];
 }
 
 #pragma mark - URL methods
@@ -147,7 +150,8 @@
 }
 
 #pragma mark - UIActionSheet Delegate method
--(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didSelectTitles:(NSArray *)titles{
-    [_roomBtn setTitle:titles[0] forState:UIControlStateNormal];
+
+-(void)MYEPickerView:(UIView *)pickerView didSelectTitles:(NSString *)title andRow:(NSInteger)row{
+    [_roomBtn setTitle:title forState:UIControlStateNormal];
 }
 @end

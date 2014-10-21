@@ -18,13 +18,13 @@
 @end
 
 @implementation MyEAccountData
-@synthesize userId = _userId, userName = _userName, 
-            rememberMe = _rememberMe, 
-            loginSuccess = _loginSuccess,
-            mId = _mId, mStatus = _mStatus,
-            deviceTypes = _deviceTypes, devices = _devices,
-            rooms = _rooms, terminals = _terminals,
-            needDownloadInstructionsForScene = _needDownloadInstructionsForScene;
+@synthesize userId = _userId, userName = _userName,
+rememberMe = _rememberMe,
+loginSuccess = _loginSuccess,
+mId = _mId, mStatus = _mStatus,
+deviceTypes = _deviceTypes, devices = _devices,
+rooms = _rooms, terminals = _terminals,
+needDownloadInstructionsForScene = _needDownloadInstructionsForScene;
 
 
 
@@ -38,7 +38,9 @@
         self.mId = [dictionary objectForKey:@"mId"];
         self.mStatus = [[dictionary objectForKey:@"mStatus"] intValue];
         self.needDownloadInstructionsForScene = YES;
-
+        self.provinceId = @"";
+        self.cityId = @"";
+        
         NSArray *array = [dictionary objectForKey:@"irTypes"];
         NSMutableArray *deviceTypes = [NSMutableArray array];
         if ([array isKindOfClass:[NSArray class]]){
@@ -102,7 +104,7 @@
     NSMutableArray *deviceTypes = [NSMutableArray array];
     for (MyEDeviceType *deviceType in self.deviceTypes)
         [deviceTypes addObject:[deviceType JSONDictionary]];
-
+    
     NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
                           self.userId, @"gid",
                           self.userName, @"userName",
@@ -206,5 +208,230 @@
         [terminals addObject:t];
     }
     return terminals;
+}
+- (void)addOrDeleteRoom:(MyERoom *)room isAdd:(BOOL)isAdd{
+    if (isAdd) {
+        [self.rooms addObject:room];
+    }else{
+        if ([self.rooms containsObject:room]) {
+            [self.rooms removeObject:room];
+        }
+    }
+}
+
+- (void)editRoom:(MyERoom *)oldRoom withNewRoom:(MyERoom *)newRoom{
+    if ([self.rooms containsObject:oldRoom]) {
+        NSInteger i = [self.rooms indexOfObject:oldRoom];
+        [self.rooms removeObject:oldRoom];
+        [self.rooms insertObject:newRoom atIndex:i];
+    }
+}
+
+-(void)addOrDeleteDevice:(MyEDevice *)device isAdd:(BOOL)isAdd{
+    if (device) {
+//#warning 这里有个问题
+//        for (MyETerminal *t in self.terminals) {
+//            if ([t.tId isEqualToString:device.tId]) {
+//                device.status.connection = t.conSignal;
+//                break;
+//            }
+//        }
+//        for (MyETerminal *t in self.terminals) {
+//            if ([t.tId isEqualToString:device.tId]) {
+//                device.status.connection = t.conSignal;
+//                break;
+//            }
+//        }
+        for (MyERoom *r in self.rooms) {
+            if (r.roomId == device.roomId) {
+                if (isAdd) {
+                    if (![r.devices containsObject:@(device.deviceId)]) {
+                        [r.devices addObject:@(device.deviceId)];
+                    }
+                }else{
+                    if ([r.devices containsObject:@(device.deviceId)]) {
+                        [r.devices removeObject:@(device.deviceId)];
+                    }
+                }
+                break;
+            }
+        }
+        
+        for (MyEDeviceType *dt in self.deviceTypes) {
+            if (dt.dtId == device.type) {
+                if (isAdd) {
+                    if (![dt.devices containsObject:@(device.deviceId)]) {
+                        [dt.devices addObject:@(device.deviceId)];
+                    }
+                }else{
+                    if ([dt.devices containsObject:@(device.deviceId)]) {
+                        [dt.devices removeObject:@(device.deviceId)];
+                    }
+                }
+                break;
+            }
+        }
+        
+        if (isAdd) {
+            if (![self.devices containsObject:device]) {
+                [self.devices addObject:device];
+            }
+        }else{
+            if ([self.devices containsObject:device]) {
+                [self.devices removeObject:device];
+            }
+        }
+    }
+}
+- (void)editDevice:(MyEDevice *)oldDevice withNewDevice:(MyEDevice *)newDevice{
+    
+    if (![oldDevice.tId isEqualToString:newDevice.tId]) {
+        newDevice.brand = @"";
+        newDevice.brandId = 0;
+        newDevice.model = @"";
+        newDevice.modelId = 0;
+    }
+    
+    if ([self.devices containsObject:oldDevice]) {
+        NSInteger i = [self.devices indexOfObject:oldDevice];
+        [self.devices removeObject:oldDevice];
+        [self.devices insertObject:newDevice atIndex:i];
+    }
+//    for (MyERoom *r in self.rooms) {
+//        if (r.roomId == oldDevice.roomId) {
+//            if ([r.devices containsObject:@(oldDevice.deviceId)]) {
+//                [r.devices removeObject:@(oldDevice.deviceId)];
+//            }
+//            break;
+//        }
+//    }
+//    
+//    for (MyERoom *r in self.rooms) {
+//        if (r.roomId == newDevice.roomId) {
+//            if (![r.devices containsObject:@(newDevice.deviceId)]) {
+//                [r.devices addObject:@(newDevice.deviceId)];
+//            }
+//            break;
+//        }
+//    }
+    
+    for (MyERoom *r in self.rooms) {
+        if (r.roomId == newDevice.roomId) {
+            if (![r.devices containsObject:@(newDevice.deviceId)]) {
+                [r.devices addObject:@(newDevice.deviceId)];
+            }
+        }
+        if (r.roomId == oldDevice.roomId) {
+            if ([r.devices containsObject:@(oldDevice.deviceId)]) {
+                [r.devices removeObject:@(oldDevice.deviceId)];
+            }
+        }
+    }
+    
+}
+
+- (MyETerminal *)findDeviceTerminalWithDevice:(MyEDevice *)device{
+    if (device.type > 11) {
+        MyETerminal *t = [[MyETerminal alloc] init];
+        t.tId = device.tId;
+        return t;
+    }
+    for (MyETerminal *t in self.terminals) {
+        if ([t.tId isEqualToString:device.tId]) {
+            return t;
+        }
+    }
+    
+    return nil;
+}
+- (MyERoom *)findDeviceRoomWithDevice:(MyEDevice *)device{
+    for (MyERoom *r in self.rooms) {
+        if (r.roomId == device.roomId) {
+            return r;
+        }
+    }
+    return nil;
+}
+
+- (MyEDeviceType *)findDeviceDeviceTypeWithDevice:(MyEDevice *)device{
+    for (MyEDeviceType *dt in self.deviceTypes) {
+        if (dt.dtId == device.type) {
+            return dt;
+        }
+    }
+    return nil;
+}
+
+- (NSArray *)validTerminalsForAC{
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self.terminals];
+    for (MyEDevice *d in self.devices) {
+        if (d.type == 1) {
+            MyETerminal *t = [self findDeviceTerminalWithDevice:d];
+            if ([array containsObject:t]) {
+                [array removeObject:t];
+            }
+        }
+    }
+    return array;
+}
+-(NSArray *)validDeviceTypeToAddWithAC:(BOOL)hasAc{
+    NSMutableArray *array = [NSMutableArray arrayWithArray:self.deviceTypes];
+    for (MyEDeviceType *dt in self.deviceTypes) {
+        if (dt.dtId == 1 && !hasAc) {
+            if ([array containsObject:dt]) {
+                [array removeObject:dt];
+            }
+        }
+        if (dt.dtId == 6 || dt.dtId == 7) {
+            if ([array containsObject:dt]) {
+                [array removeObject:dt];
+            }
+        }
+    }
+    return array;
+}
+
+-(NSMutableArray *)allDeviceInRoom:(MyERoom *)room{
+    if (room == nil) {  //这个表示返回所有设备
+        return self.devices;
+    }
+    NSMutableArray *array = [NSMutableArray array];
+    for (NSNumber *i in room.devices) {
+        for (MyEDevice *d in self.devices) {
+            if (d.deviceId == i.intValue) {
+                [array addObject:d];
+                break;
+            }
+        }
+    }
+    return array;
+}
+-(MyEAccountData *)newAccoutData:(MyEAccountData *)AccountData{
+    MyEAccountData *accout = [[MyEAccountData alloc] init];
+    accout.userId = [AccountData.userId copy];
+    accout.userName = [AccountData.userName copy];
+    accout.loginSuccess = AccountData.loginSuccess;
+    accout.mId = [AccountData.mId copy];
+    accout.mStatus = AccountData.mStatus;
+    accout.needDownloadInstructionsForScene = YES;
+    accout.deviceTypes = [AccountData.deviceTypes mutableCopy];
+    accout.devices = [AccountData.devices mutableCopy];
+    accout.rooms = [AccountData.rooms mutableCopy];
+    accout.terminals = [AccountData.terminals mutableCopy];
+    accout.allTerminals = [self.allTerminals mutableCopy];
+    return accout;
+}
+-(BOOL)alertHappen{
+    if ([[self.mId substringToIndex:5] isEqualToString:@"05-00"]) {
+        return NO;
+    }
+    for (MyEDevice *d in self.devices) {
+        if (d.type > 7) {
+            if (d.status.alertStatus == 1) {
+                return YES;
+            }
+        }
+    }
+    return NO;
 }
 @end

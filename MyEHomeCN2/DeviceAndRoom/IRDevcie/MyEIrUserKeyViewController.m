@@ -18,7 +18,7 @@
 @end
 
 @implementation MyEIrUserKeyViewController
-@synthesize accountData, device, needDownloadKeyset,jumpFromCurtain,jumpFromTv;
+@synthesize device, needDownloadKeyset,jumpFromCurtain,jumpFromTv;
 
 #pragma mark - life circle methods
 - (void)viewDidLoad
@@ -44,7 +44,7 @@
 
 #pragma mark - IBAction methods
 - (IBAction)changeMode:(UIBarButtonItem *)sender {
-    if ([sender.title isEqualToString:@"学习模式"]) {
+    if ([sender.title isEqualToString:@"学习"]) {
         self.view.backgroundColor = [UIColor colorWithRed:0.84 green:0.93 blue:0.95 alpha:1];
         sender.title = @"退出学习";
         //        MyEIrUserKeyTableViewController *vc = self.childViewControllers[0];
@@ -52,7 +52,7 @@
         self.isControlMode = NO;
     }else{
         self.view.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
-        sender.title = @"学习模式";
+        sender.title = @"学习";
         //        MyEIrUserKeyTableViewController *vc = self.childViewControllers[0];
         //        vc.tableView.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
         self.isControlMode = YES;
@@ -78,7 +78,6 @@
         navController.topViewController.title = @"添加新按键";
         
         MyEIrDeviceAddKeyModalViewController *modalVc = (MyEIrDeviceAddKeyModalViewController *)navController.topViewController;
-        modalVc.accountData = self.accountData;
         modalVc.device = self.device;
         modalVc.delegate = self;
     };
@@ -178,7 +177,7 @@
     
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&type=%ld",
                         GetRequst(URL_FOR_IR_DEVICE_SEND_CONTROL_KEY),
-                        self.accountData.userId,
+                        MainDelegate.accountData.userId,
                         (long)key.keyId,
                         (long)self.device.deviceId,
                         (long)key.type];
@@ -209,7 +208,6 @@
         UINavigationController *navController = (UINavigationController *)presentedFSViewController;
         navController.topViewController.title = @"按键学习和编辑";
         MyEIrStudyEditKeyModalViewController *modalVc = (MyEIrStudyEditKeyModalViewController *)navController.topViewController;
-        modalVc.accountData = self.accountData;
         modalVc.device = self.device;
         //        modalVc.delegate = self;
         modalVc.key = key;
@@ -244,7 +242,7 @@
         return;
     }
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&id=%ld",GetRequst(URL_FOR_KEY_SET_VIEW), self.accountData.userId, self.device.tId, (long)self.device.deviceId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&id=%ld",GetRequst(URL_FOR_KEY_SET_VIEW), MainDelegate.accountData.userId, self.device.tId, (long)self.device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:IR_KEY_SET_DOWNLOADER_NMAE  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
@@ -267,7 +265,7 @@
             [self.device.irKeySet removeKeyById:key.keyId];
             // Delete the row from the table view
             [self.tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            self.accountData.needDownloadInstructionsForScene = YES;
+            MainDelegate.accountData.needDownloadInstructionsForScene = YES;
         }
     }
     if([name isEqualToString:IR_DEVICE_SEND_CONTROL_KEY_UPLOADER_NMAE]) {
@@ -287,11 +285,12 @@
     if([name isEqualToString:IR_KEY_SET_DOWNLOADER_NMAE]) {
         NSLog(@"%@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -1) {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"该设备的指令没有下载成功!" leftButtonTitle:@"取消" rightButtonTitle:@"重试"];
-            alert.rightBlock = ^{
-                [self downloadKeySetFromServer];
-            };
-            [alert show];
+#warning 这里需要做点事情
+//            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"该设备的指令没有下载成功!" leftButtonTitle:@"取消" rightButtonTitle:@"重试"];
+//            alert.rightBlock = ^{
+//                [self downloadKeySetFromServer];
+//            };
+//            [alert show];
         } else  if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
         } else  if ([MyEUtil getResultFromAjaxString:string] == 1){

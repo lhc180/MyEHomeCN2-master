@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "MyEProvinceAndCity.h"
 @protocol MyECitySettingViewControllerDelegate <NSObject>
 
 -(void)passProvince:(NSString *)province andCity:(NSString *)city;
@@ -15,7 +15,6 @@
 
 @interface MyECitySettingViewController : UIViewController<UIPickerViewDataSource,UIPickerViewDelegate,MyEDataLoaderDelegate>
 
-@property(nonatomic,strong) MyEAccountData *accountData;
 @property(nonatomic,strong) MyEProvinceAndCity *pAndC;
 
 @property (strong, nonatomic) IBOutlet UIPickerView *picker;

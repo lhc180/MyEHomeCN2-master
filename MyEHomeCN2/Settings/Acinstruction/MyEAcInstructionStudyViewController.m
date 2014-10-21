@@ -15,14 +15,7 @@
 
 @implementation MyEAcInstructionStudyViewController
 @synthesize powerBtn,modeBtn,windLevelBtn,setpointBtn,powerArray,modeArray,windLevelArray,setpointArray,jumpFromBarBtn,instruction,studyBtn,checkBtn;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+
 #pragma mark - life circle methods
 //-(void)viewDidDisappear:(BOOL)animated{
 //    MyEAcInstructionListViewController *vc = [self.navigationController childViewControllers][1];
@@ -32,7 +25,7 @@
 {
     [super viewDidLoad];
     self.navigationItem.leftBarButtonItem.title = @"返回";
-    powerArray = @[@"关",@"开"];
+    powerArray = @[@"关机",@"开机"];
     modeArray = @[@"自动",@"制热",@"制冷",@"除湿",@"通风"];
     windLevelArray = @[@"自动",@"一级",@"二级",@"三级"];
     NSMutableArray *array = [NSMutableArray array];
@@ -41,43 +34,19 @@
     }
     setpointArray = array;
 
-//    UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
-//    [btn setFrame:CGRectMake(0, 0, 50, 30)];
-//    if (!IS_IOS6) {
-//        [btn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
-//        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
-//    }else{
-//        [btn setBackgroundImage:[UIImage imageNamed:@"back-ios6"] forState:UIControlStateNormal];
-//        [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-//        btn.titleLabel.font = [UIFont boldSystemFontOfSize:12];
-//        [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-//    }
-//    [btn setTitle:@"返回" forState:UIControlStateNormal];
-//    [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
-//    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
 
-//    if (!IS_IOS6) {
         for (UIButton *btn in self.view.subviews) {
             if ([btn isKindOfClass:[UIButton class]]) {
                 if (btn.tag == 100 || btn.tag == 101) {
-                    btn.layer.masksToBounds = YES;
-                    btn.layer.cornerRadius = 5;
-                    btn.layer.borderColor = btn.tintColor.CGColor;
-                    btn.layer.borderWidth = 1;
+                    [MyEUtil makeFlatButton:btn];
                 }else{
                     [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn"] forState:UIControlStateNormal];
+                    [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateDisabled];
                     [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
                 }
             }
         }
-//    }else{
-//        for (UIButton *btn in self.view.subviews) {
-//            if (btn.tag !=100 && btn.tag !=101) {
-//                [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 30)];
-//                [btn setBackgroundImage:[UIImage imageNamed:@"detailBtn-ios6"] forState:UIControlStateNormal];
-//            }
-//        }
-//    }
+
     
     if (jumpFromBarBtn) {
 //#warning 这里新增一个随机数，从而使得每次新增指令时都会不一样
@@ -164,7 +133,6 @@
     HUD.removeFromSuperViewOnHide = YES;
     HUD.dimBackground = YES;
     HUD.userInteractionEnabled = YES;
-    HUD.delegate = self;
     //初始化label
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,300,50)];
     //设置自动行数与字符换行
@@ -189,61 +157,71 @@
 
 #pragma mark - pickerView dataSource methods 
 
-//定制picker的view，从而是的picker的文本可以居中显示
-- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view{
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [pickerView rowSizeForComponent:0].width, [pickerView rowSizeForComponent:0].height)];
-    label.textAlignment = NSTextAlignmentCenter;
-    label.font = [UIFont boldSystemFontOfSize:20];
-    //这句代码添加之后，整个视图看上去好看多了，主要是label本身是白色的背景
-    label.backgroundColor = [UIColor clearColor];
-    switch (pickerTag) {
-        case 1:
-            label.text = powerArray[row];
-            break;
-        case 2:
-            label.text = modeArray[row];
-            break;
-        case 3:
-            label.text = windLevelArray[row];
-            break;
-        default:
-            label.text = [NSString stringWithFormat:@"%i ℃",[setpointArray[row] intValue]];
-            break;
-    }
-    return label;
-}
+////定制picker的view，从而是的picker的文本可以居中显示
+//- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view{
+//    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, [pickerView rowSizeForComponent:0].width, [pickerView rowSizeForComponent:0].height)];
+//    label.textAlignment = NSTextAlignmentCenter;
+//    label.font = [UIFont boldSystemFontOfSize:20];
+//    //这句代码添加之后，整个视图看上去好看多了，主要是label本身是白色的背景
+//    label.backgroundColor = [UIColor clearColor];
+//    switch (pickerTag) {
+//        case 1:
+//            label.text = powerArray[row];
+//            break;
+//        case 2:
+//            label.text = modeArray[row];
+//            break;
+//        case 3:
+//            label.text = windLevelArray[row];
+//            break;
+//        default:
+//            label.text = [NSString stringWithFormat:@"%i ℃",[setpointArray[row] intValue]];
+//            break;
+//    }
+//    return label;
+//}
 
 #pragma mark - pickerView delegate methods
--(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didSelectTitles:(NSArray *)titles{
+
+-(void)MYEPickerView:(UIView *)pickerView didSelectTitle:(NSString *)title andRow:(NSInteger)row{
     switch (pickerView.tag) {
-        case 1:
-            [powerBtn setTitle:titles[0] forState:UIControlStateNormal];
-            break;
-        case 2:[modeBtn setTitle:titles[0] forState:UIControlStateNormal];break;
-        case 3:[windLevelBtn setTitle:titles[0] forState:UIControlStateNormal];break;
-        default:
-            [setpointBtn setTitle:titles[0] forState:UIControlStateNormal];
-            break;
+        case 1:[powerBtn setTitle:title forState:UIControlStateNormal];break;
+        case 2:[modeBtn setTitle:title forState:UIControlStateNormal];break;
+        case 3:[windLevelBtn setTitle:title forState:UIControlStateNormal];break;
+        default:[setpointBtn setTitle:title forState:UIControlStateNormal];break;
     }
 }
 #pragma mark - IBAction methods
 - (IBAction)power:(UIButton *)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择空调状态" andDelegate:self andTag:1 andArray:powerArray andSelectRow:[powerArray indexOfObject:powerBtn.currentTitle] andViewController:self];
+    MYEPickerView *picke = [[MYEPickerView alloc] initWithView:self.view andTag:1 title:@"请选择空调状态" dataSource:powerArray andSelectRow:[powerArray indexOfObject:powerBtn.currentTitle]];
+    picke.delegate = self;
+    [picke show];
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择空调状态" andDelegate:self andTag:1 andArray:powerArray andSelectRow:[powerArray indexOfObject:powerBtn.currentTitle] andViewController:self];
 }
 
 - (IBAction)mode:(UIButton *)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择空调模式" andDelegate:self andTag:2 andArray:modeArray andSelectRow:[modeArray indexOfObject:modeBtn.titleLabel.text] andViewController:self];
+    
+    MYEPickerView *picke = [[MYEPickerView alloc] initWithView:self.view andTag:2 title:@"请选择空调模式" dataSource:modeArray andSelectRow:[modeArray indexOfObject:modeBtn.titleLabel.text]];
+    picke.delegate = self;
+    [picke show];
 }
 
 - (IBAction)windLevel:(UIButton *)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择风量大小" andDelegate:self andTag:3 andArray:windLevelArray andSelectRow:[windLevelArray indexOfObject:windLevelBtn.titleLabel.text] andViewController:self];
+    
+    MYEPickerView *picke = [[MYEPickerView alloc] initWithView:self.view andTag:3 title:@"请选择风量大小" dataSource:windLevelArray andSelectRow:[windLevelArray indexOfObject:windLevelBtn.titleLabel.text]];
+    picke.delegate = self;
+    [picke show];
+
 }
 
 - (IBAction)setpoint:(UIButton *)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择温度大小" andDelegate:self andTag:4 andArray:setpointArray andSelectRow:[setpointArray indexOfObject:setpointBtn.currentTitle] andViewController:self];
+    MYEPickerView *picke = [[MYEPickerView alloc] initWithView:self.view andTag:4 title:@"请选择温度大小" dataSource:setpointArray andSelectRow:[setpointArray indexOfObject:setpointBtn.currentTitle]];
+    picke.delegate = self;
+    [picke show];
 }
 
 - (IBAction)study:(UIButton *)sender {
+    
     [self changeStringToIntWithPowerName:powerBtn.titleLabel.text andRunModeName:modeBtn.titleLabel.text andWindLevelName:windLevelBtn.titleLabel.text andSetpointName:setpointBtn.titleLabel.text];
     if (jumpFromBarBtn) {
 //        instruction.instructionId = 0;   //这里不需要写值为0，因为int类型变量初始化时默认会将值变为0
@@ -259,13 +237,8 @@
             }
         }
     }
-//    if (jumpFromBarBtn) {
-//        [self editInstructionToServerWithAction:1 AndId:0];
-//    }else{
-//        //这里这么操作也没有影响
-//        [self editInstructionToServerWithAction:2 AndId:instruction.instructionId];
-//    }
-    [self studyInstructionToServer];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:[NSString stringWithFormat:@"您当前选择的指令为\n模式:%@\n温度:%@\n风力:%@\n%@\n请您先将遥控器选定到当前模式,然后开始学习",modeBtn.currentTitle,setpointBtn.currentTitle,windLevelBtn.currentTitle,powerBtn.currentTitle] delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"已设置", nil];
+    [alert show];
 }
 - (IBAction)check:(UIButton *)sender {
     NSString * urlStr= [NSString stringWithFormat:@"%@?studyId=%li",
@@ -303,7 +276,7 @@
     [self doThisWhenNeedHUD];
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%li&moduleId=%li&tId=%@&switch_=%li&runMode=%li&windLevel=%li&setpoint=%li",
                         GetRequst(URL_FOR_AC_INSTRUCTION_STUDY2),
-                        self.accountData.userId,
+                        MainDelegate.accountData.userId,
                         (long)instruction.instructionId,
                         (long)self.moduleId,
                         self.device.tId,
@@ -449,5 +422,10 @@
         }
     }
 }
-
+#pragma mark - UIAlertView delegate method
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (buttonIndex == 1) {
+        [self studyInstructionToServer];
+    }
+}
 @end

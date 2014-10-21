@@ -20,9 +20,10 @@
 @end
 
 @implementation MyEAcManualControlViewController
-@synthesize accountData, device,runMode1,runMode2,runMode3,runMode4,runMode5,windLevel,windLevel0,windLevel1,windLevel2,windLevel3,runImage,runLabel,lockLabel,temperatureLabel,homeHumidityLabel,homeTemperatureLabel,tipsLabel,acControlView;
+@synthesize device,runMode1,runMode2,runMode3,runMode4,runMode5,windLevel,windLevel0,windLevel1,windLevel2,windLevel3,runImage,runLabel,lockLabel,temperatureLabel,homeHumidityLabel,homeTemperatureLabel,tipsLabel,acControlView;
 
 #pragma mark - life circle methods
+
 -(void)viewDidDisappear:(BOOL)animated{
     [timerToRefreshTemperatureAndHumidity invalidate];
 }
@@ -30,6 +31,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"手动控制";
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
     [btn setFrame:CGRectMake(0, 0, 50, 30)];
     [btn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
@@ -38,7 +40,7 @@
     }
     [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
-
+    
     isBtnLocked = NO;
     [self setRunModeImageWithRunMode:self.device.status.runMode];
     [self setWindLevelImageWithWindLevel:self.device.status.windLevel];
@@ -59,18 +61,26 @@
     acControlView.layer.shadowOpacity = 0.5;
     acControlView.layer.cornerRadius = 5;
     
-    if (!IS_IOS6) {
-        for (UIButton *btn in self.view.subviews) {
-            if ([btn isKindOfClass:[UIButton class]]) {
-                [btn.layer setMasksToBounds:YES];
-                [btn.layer setCornerRadius:5];
-                [btn.layer setBorderWidth:1];
-                [btn.layer setBorderColor:btn.tintColor.CGColor];
-            }
+    for (UIButton *btn in self.view.subviews) {
+        if ([btn isKindOfClass:[UIButton class]]) {
+            UIImage *image = [UIImage imageNamed:@"control-enable-normal"];
+            UIImage *image2 = [UIImage imageNamed:@"control-enable-highlight"];
+            [btn setBackgroundImage:[image stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateNormal];
+            [btn setBackgroundImage:[image2 stretchableImageWithLeftCapWidth:0 topCapHeight:0] forState:UIControlStateHighlighted];
+            [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [btn setTitleColor:[UIColor colorWithRed:69/255 green:200/255 blue:220/255 alpha:1] forState:UIControlStateHighlighted];
+            
+            //                [btn.layer setMasksToBounds:YES];
+            //                [btn.layer setCornerRadius:5];
+            //                [btn.layer setBorderWidth:1];
+            //                [btn.layer setBorderColor:MainColor.CGColor];
         }
     }
     timerToRefreshTemperatureAndHumidity = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(downloadTemperatureHumidityFromServer) userInfo:nil repeats:YES];
     [self downloadTemperatureHumidityFromServer];
+    if (IS_IPAD) {
+        self.navigationItem.rightBarButtonItem = self.refreshBar;
+    }
 }
 
 #pragma mark -
@@ -190,7 +200,7 @@
         [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"超出温度监控最高温度"];
         return;
     }
-
+    
     //获取当前的温度
     NSInteger i = self.device.status.setpoint;
     ++i;
@@ -267,7 +277,10 @@
 }
 #pragma mark - private methods
 - (void)dismissVC{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (self.isPush) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }else
+        [self dismissViewControllerAnimated:YES completion:nil];
 }
 -(void)refreshUI{
     if (self.device.status.runMode != _runmode) {

@@ -8,16 +8,16 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MyEAcBrand : NSObject<NSCopying>
+@interface MyEAcBrand : NSObject<NSCopying,NSCoding>
 
 @property (nonatomic,assign) NSInteger brandId;
-@property (nonatomic,copy) NSString *brandName;
-@property (nonatomic,copy) NSArray *models;
+@property (nonatomic,strong) NSString *brandName;
+@property (nonatomic,strong) NSMutableArray *models;
 
 
 - (MyEAcBrand *)initWithDictionary:(NSDictionary *)dictionary;
 - (MyEAcBrand *)initWithJSONString:(NSString *)jsonString;
 - (NSDictionary *)JSONDictionary;
-
-
+-(BOOL)hasOneModelStudy;
+-(id)firstUsefulModel;
 @end

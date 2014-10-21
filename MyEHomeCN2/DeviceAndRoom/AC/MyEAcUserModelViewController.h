@@ -7,13 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MyEAcUtil.h"
+#import "MyEAcInstruction.h"
 
 @interface MyEAcUserModelViewController : UITableViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate>{
     MBProgressHUD *HUD;
     NSTimer *timerToRefreshTemperatureAndHumidity;
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
+@property (nonatomic, assign) BOOL isPush;
+
 @property (strong, nonatomic) IBOutlet UILabel *tempLabel;
 @property (strong, nonatomic) IBOutlet UILabel *humidityLabel;
 

@@ -5,6 +5,14 @@
 //
 
 #import <Availability.h>
+#import "MYEAppDelegate.h"
+#import "MyEDataLoader.h"
+#import "MBProgressHUD.h"
+#import "SBJson.h"
+#import "MyEUtil.h"
+#import "MyEUniversal.h"
+#import "MyEDevice.h"
+#import "MyEAccountData.h"
 
 #ifndef __IPHONE_5_0
 #warning "This project uses features only available in iOS SDK 5.0 and later."
@@ -21,83 +29,37 @@
 # define NSLog(...) NSLog(__VA_ARGS__)
 #endif
 
-#import "MyEAppDelegate.h"
-#import "MyEDataLoader.h"
-#import "MBProgressHUD.h"
-#import "SBJson.h"
-#import "MyEUtil.h"
-#import "MyEUniversal.h"
-#import "ZBarSDK.h"
-#import "WTReTextField.h"
-#import "MZFormSheetController.h"
-#import "APService.h"
-#import "NSString+MD5.h"
-#import "DXAlertView.h"
-#import "IQActionSheetPickerView.h"
-#import "KAProgressLabel.h"
-#import "MZTimerLabel.h"
-#import "MultiSelectSegmentedControl.h"
-
-#import "MyEQRScanViewController.h"
-/*-------------------------DATA MODELS-------------------------------*/
-#import "MyESettings.h"
-#import "MyEAccountData.h"
-#import "MyEDevice.h"
-#import "MyEDeviceType.h"
-#import "MyEDeviceStatus.h"
-#import "MyERoom.h"
-#import "MyEIrKey.h"
-#import "MyEIrKeySet.h"
-#import "MyETerminal.h"
-/*-------------------------AUTO CONTROL DATA MODELS-------------------------------*/
-#import "MyEAutoControlPeriod.h"
-#import "MyEAutoControlProcess.h"
-#import "MyEAutoControlProcessList.h"
-
-/*-------------------------AC DATA MODELS-------------------------------*/
-#import "MyEAcComfort.h"
-#import "MyEAcTempMonitor.h"
-#import "MyEAcInstruction.h"
-#import "MyEAcInstructionSet.h"
-#import "MyEAcUtil.h"
-#import "MyEAcBrand.h"
-#import "MyEAcModel.h"
-#import "MyEAcBrandsAndModels.h"
-#import "MyEAcStudyInstruction.h"
-#import "MyEAcStudyInstructionList.h"
-/*-------------------------MyEScence DATA MODELS-------------------------------*/
-#import "MyEControlKey.h"
-#import "MyEDeviceControl.h"
-#import "MyEScene.h"
-#import "MyESceneList.h"
-#import "MyESceneDeviceInstruction.h"
-#import "MyESceneInstructionRecived.h"
-#import "MyESceneDevice.h"
-
-/*-----------------------------provinceAndCity--------------------------------*/
-#import "MyEProvinceAndCity.h"
-
-/*-------------------------------switch data model-------------------*/
-#import "MyESwitchInfo.h"
-#import "MyESwitchManualControl.h"
-#import "MyESwitchAutoControl.h"
-#import "MyESwitchElec.h"
 
 #define IOS_NEWER_OR_EQUAL_TO_7 ( [[[UIDevice currentDevice] systemVersion ] floatValue ] >= 7.0 )
+#define IS_IPAD [[UIDevice currentDevice].model isEqualToString:@"iPad"]
+#define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height-568)?NO:YES)
+#define IS_IOS6 (([[UIDevice currentDevice].systemVersion intValue]-6)?NO:YES)
 
 #define screenHigh [UIScreen mainScreen].bounds.size.height
 #define screenwidth [UIScreen mainScreen].bounds.size.width
 
-#define IS_IPHONE5 (([[UIScreen mainScreen] bounds].size.height-568)?NO:YES)
-#define IS_IOS6 (([[UIDevice currentDevice].systemVersion intValue]-6)?NO:YES)
-#define MainColor [UIColor colorWithRed:0.27 green:0.78 blue:0.86 alpha:1]
+#define MainColor [UIColor colorWithRed:0.0 green:122.0/255.0 blue:1.0 alpha:1]
+#define NavBarColor [UIColor colorWithRed:69.0/255.0 green:200.0/255.0 blue:220/255.0 alpha:1]
+#define TableViewGroupBGColor [UIColor colorWithRed:248.0/255.0 green:248.0/255.0 blue:248.0/255.0 alpha:1]
+
 #define MainDelegate ((MYEAppDelegate *)[[UIApplication sharedApplication] delegate])
+
+/*---------------------------内容存储相关-----------------------------------*/
+#define FILE_FOR_AC_BRANDS @"acBrands"
+#define USERDEFAULT_FOR_AC_BRANDS_DATE @"acBrandsDownloadDate"
+#define FILE_FOR_WEATHER_INFO @"weatherInfo"
+#define USERDEFAULT_FOR_WEATHER_DATE @"weatherDate"
+#define USERDEFAULT_FOR_WEATHER_CITY @"currentCity"
+
+/*-------------------------URL DEFINE-------------------------------*/
 
 #define GetRequst(API) [@"http://www.myenergydomain.com.cn" stringByAppendingFormat:@"%@",API]
 //#define GetRequst(API) [@"http://192.168.0.185:80" stringByAppendingFormat:@"%@",API]
 
 //#define GetRequst(API) [@"http://192.168.0.80:8080" stringByAppendingFormat:@"%@",API]
+
 /*-------------------------LOGIN-------------------------------*/
+
 #define URL_FOR_LOGIN  @"/phone/user_login.jhtml"
 
 /*-------------------------SETTINGS-------------------------------*/
@@ -221,8 +183,10 @@
 #define URL_FOR_RFDEVICE_INSTRUCTION_VALIDATE @"/phone/rf_instruction_study_validate.jhtml"
 #define URL_FOR_RFDEVICE_SEND_INSTRUCTION @"/phone/rf_control.jhtml"
 
+/*--------------------------Hotel-----------------------------------*/
 
-
-
+#define URL_FOR_HOTEL_INFO @"/phone/ent_setting_view.jhtml"
+#define URL_FOR_HOTEL_SAVE @"/phone/ent_setting_save.jhtml"
+#define URL_FOR_HOTEL_ROOM_LIST @"/phone/ent_room_view.jhtml"
 
 

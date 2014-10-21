@@ -18,7 +18,6 @@
     NSTimer *timer;
     int valueChange; //用于表示音量和节目一共改变的值
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic) BOOL isControlMode;
 

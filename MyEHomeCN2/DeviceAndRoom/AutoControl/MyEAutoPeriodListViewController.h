@@ -8,11 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "MyEAutoPeriodViewController.h"
-@class MyEAccountData;
-@class MyEDevice;
+#import "MyEDevice.h"
 
 @interface MyEAutoPeriodListViewController : UITableViewController <MyEAcPeriodViewControllerDelegate>
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic, weak) NSMutableArray *periodList;
 @end

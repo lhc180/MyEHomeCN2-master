@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MyEAcStudyInstruction.h"
 
 @interface MyEAcStudyInstructionList : NSObject<NSCopying>
 

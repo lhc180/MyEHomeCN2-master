@@ -13,7 +13,7 @@
 @end
 
 @implementation MyEPasswordResetViewController
-@synthesize currentPasswordTextField,npaswdTextField0,npaswdTextField1,accountData;
+@synthesize currentPasswordTextField,npaswdTextField0,npaswdTextField1;
 
 #pragma mark
 #pragma mark - View lifecycle
@@ -32,6 +32,11 @@
                                              selector:@selector(UITextFieldTextDidChange:)
                                                  name:UITextFieldTextDidChangeNotification
                                                object:nil];
+    if (IS_IOS6) {
+        UIView *view = [[UIView alloc] init];
+        view.backgroundColor = TableViewGroupBGColor;
+        self.tableView.backgroundView = view;
+    }
 }
 -(void)viewWillDisappear:(BOOL)animated{
     [super viewWillDisappear:YES];
@@ -98,7 +103,7 @@
         HUD.dimBackground = YES;//容易产生灰条
     } else
         [HUD show:YES];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&oldPassword=%@&newPassword=%@",GetRequst(URL_FOR_SETTINGS_CHANGE_PASSWORD), accountData.userId, currentPassword, newPassword];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&oldPassword=%@&newPassword=%@",GetRequst(URL_FOR_SETTINGS_CHANGE_PASSWORD), MainDelegate.accountData.userId, currentPassword, newPassword];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:@"" delegate:self loaderName:@"SettingsPasswordUploader" userDataDictionary:nil];
     NSLog(@"SettingsUploader is %@",loader.name);
 }

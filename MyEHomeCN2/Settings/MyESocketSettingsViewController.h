@@ -8,15 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyESocketSettingsViewController : UITableViewController<MyEDataLoaderDelegate,UITextFieldDelegate>
+@interface MyESocketSettingsViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>
 
-@property (nonatomic,weak) MyEAccountData *accoutData;
 @property(nonatomic,weak) MyETerminal *terminal;
 
 @property (strong, nonatomic) IBOutlet UILabel *deviceType;
 @property (strong, nonatomic) IBOutlet UILabel *deviceId;
 @property (strong, nonatomic) IBOutlet UIImageView *signalImage;
-@property (weak, nonatomic) IBOutlet UITextField *nameTextField;
-@property (weak, nonatomic) IBOutlet UIButton *saveBtn;
+@property (weak, nonatomic) IBOutlet UILabel *deviceNameLbl;
 
 @end

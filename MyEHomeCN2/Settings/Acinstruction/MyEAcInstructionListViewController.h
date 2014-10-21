@@ -8,33 +8,33 @@
 
 #import <UIKit/UIKit.h>
 #import "MyEAcInstructionListCell.h"
-@class MyEAcStudyInstructionList;
-
+#import "MyEDevice.h"
+#import "MyEAcStudyInstructionList.h"
+#import "MyEAcBrandsAndModels.h"
 @protocol MyEAcInstructionListViewControllerDelegate <NSObject>
 
 -(void)refreshData:(BOOL)yes;
 
 @end
 
-@interface MyEAcInstructionListViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,MBProgressHUDDelegate,MyEDataLoaderDelegate>{
+@interface MyEAcInstructionListViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
     NSIndexPath *deleteInstructionIndex;
 }
 
 @property (nonatomic, weak) id <MyEAcInstructionListViewControllerDelegate> delegate;
-@property (strong, nonatomic) MyEAccountData *accountData;
 @property (strong, nonatomic) MyEDevice *device;
 @property (retain, nonatomic) MyEAcStudyInstructionList *list;
 
+@property (nonatomic, weak) MyEAcModel *model;
+
 @property (nonatomic) NSInteger moduleId; //下载指令的时候只需要这个值
 @property (nonatomic) NSInteger brandId;
+
 @property (nonatomic) BOOL jumpFromEditBtn;
 @property (nonatomic,strong) NSString *labelText;
 @property (strong, nonatomic) IBOutlet UILabel *brandAndModuleLabel;
-@property (strong, nonatomic) IBOutlet UITableView *tableview;
 
 @property (strong, nonatomic) NSMutableArray *tableviewArray;
-
-- (IBAction)addNewInstruction:(UIBarButtonItem *)sender;
 
 @end

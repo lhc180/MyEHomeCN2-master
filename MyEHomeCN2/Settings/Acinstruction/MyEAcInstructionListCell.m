@@ -79,16 +79,10 @@
     temperatureLabel.text = [NSString stringWithFormat:@"%li℃",(long)t];
 }
 -(void)setStatus:(NSInteger)s{
-    switch (s) {
-        case 0:
-            studyLabel.text = @"未学习";
-            break;
-        case 1:
-            studyLabel.text = @"已学习";
-            break;
-        default:
-            studyLabel.text = @"已下载";
-            break;
+    if (s == 1 || s == 2) {
+        studyLabel.text = @"已学习";
+    } else {
+        studyLabel.text = @"未学习";
     }
 }
 @end

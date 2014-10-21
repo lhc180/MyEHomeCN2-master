@@ -23,7 +23,7 @@
 @end
 
 @implementation MyEIrStudyEditKeyModalViewController
-@synthesize key = _key, device = _device, accountData = _accountData;
+@synthesize key = _key, device = _device;
 
 #pragma mark - life circle methods
 - (void)viewDidLoad
@@ -115,7 +115,7 @@
     
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&keyName=%@&tId=%@&irType=%ld&instructionType=%ld",
                         GetRequst(URL_FOR_IR_DEVICE_STUDY_KEY),
-                        self.accountData.userId,
+                        MainDelegate.accountData.userId,
                         (long)self.key.keyId,
                         (long)self.device.deviceId,
                         self.keyNameTextfield.text,
@@ -156,7 +156,7 @@
     }
     NSString * urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&keyName=%@&tId=%@&type=2&action=2",
                         GetRequst(URL_FOR_IR_DEVICE_ADD_EDIT_KEY_SAVE),
-                        self.accountData.userId,
+                        MainDelegate.accountData.userId,
                         (long)self.key.keyId,
                         (long)self.device.deviceId,
                         self.key.keyName,
@@ -271,7 +271,7 @@
             [self.device.irKeySet removeKeyById:self.key.keyId];
             [self mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
             }];
-            self.accountData.needDownloadInstructionsForScene = YES;
+            MainDelegate.accountData.needDownloadInstructionsForScene = YES;
         }
     }
     if([name isEqualToString:IR_DEVICE_STUDY_KEY_LOADER_NMAE]) {
@@ -300,7 +300,7 @@
             // 把校验按钮enable
             self.validateKeyBtn.enabled = YES;
             //            [self.validateKeyBtn setTitleColor:[UIColor colorWithRed:.196 green:0.3098 blue:0.52 alpha:1.0] forState:UIControlStateNormal];
-            self.accountData.needDownloadInstructionsForScene = YES;
+            MainDelegate.accountData.needDownloadInstructionsForScene = YES;
         } else{
             if(studyQueryTimes >= 6){
                 [_timer invalidate];

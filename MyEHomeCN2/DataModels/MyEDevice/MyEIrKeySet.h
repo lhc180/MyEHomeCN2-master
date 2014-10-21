@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class MyEIrKey;
+#import "MyEIrKey.h"
 
 @interface MyEIrKeySet : NSObject <NSCopying>
 @property (nonatomic, retain) NSMutableArray *mainArray;

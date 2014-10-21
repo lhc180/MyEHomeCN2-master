@@ -49,9 +49,9 @@
     self.controlBtn.selected = self.device.status.protectionStatus == 0?YES:NO;
 //    self.alarmBtn.enabled = self.device.status.alertStatus == 0?NO:YES;
     if (_controlBtn.selected) {
-        _tipLbl.text = @"点击按钮,启动探测";
+        _tipLbl.text = @"正在布防...";
     }else
-        _tipLbl.text = @"点击按钮,关闭探测";
+        _tipLbl.text = @"已经撤防";
     [self addAnimationToButtonLayer];
 }
 -(void)animationInit{

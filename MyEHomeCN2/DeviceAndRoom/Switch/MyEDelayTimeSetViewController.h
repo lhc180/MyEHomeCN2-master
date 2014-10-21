@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MyESwitchManualControl.h"
+#import "MZFormSheetController.h"
 
 @interface MyEDelayTimeSetViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;

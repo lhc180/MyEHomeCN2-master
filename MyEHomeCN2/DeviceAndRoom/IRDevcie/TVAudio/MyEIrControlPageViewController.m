@@ -32,25 +32,22 @@
     self.slideSwitchView.shadowImage = [UIImage imageNamed:@"red_line_btn.png"];//这里可以认为是九宫格的样式
     self.irUserKeyViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"IrUserKeyVC"];
     self.irUserKeyViewController.device = self.device;
-    self.irUserKeyViewController.accountData = self.accountData;
 
     if (self.device.type == 2) {
         self.navigationItem.title = @"电视控制";
         self.tvDefaultViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"TvDefaultVC"];
         self.tvDefaultViewController.device = self.device;
-        self.tvDefaultViewController.accountData = self.accountData;
     }else{
         self.navigationItem.title = @"音响控制";
         self.audioDefaultViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"AudioDefaultVC"];
         self.audioDefaultViewController.device = self.device;
-        self.audioDefaultViewController.accountData = self.accountData;
     }
     
     [self.slideSwitchView buildUI];
 }
 
 - (IBAction)changMode:(UIBarButtonItem *)sender {
-    if ([sender.title isEqualToString:@"学习模式"]) {
+    if ([sender.title isEqualToString:@"学习"]) {
         sender.title = @"退出学习";
         if (self.device.type == 2) {
             self.tvDefaultViewController.isControlMode = NO;
@@ -62,7 +59,7 @@
         self.irUserKeyViewController.isControlMode = NO;
         self.irUserKeyViewController.view.backgroundColor = [UIColor colorWithRed:0.84 green:0.93 blue:0.95 alpha:1];
     }else{
-        sender.title = @"学习模式";
+        sender.title = @"学习";
         if (self.device.type == 2) {
             self.tvDefaultViewController.isControlMode = YES;
             self.tvDefaultViewController.view.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];

@@ -78,7 +78,6 @@
         UINavigationController *navController = (UINavigationController *)presentedFSViewController;
         navController.topViewController.title = @"按键学习";
         MyEIrStudyEditKeyModalViewController *modalVc = (MyEIrStudyEditKeyModalViewController *)navController.topViewController;
-        modalVc.accountData = self.accountData;
         modalVc.device = self.device;
         modalVc.key = key;
         modalVc.keyNameTextfield.enabled = NO;
@@ -140,10 +139,11 @@
         }else if (i == -3){
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
         }else{
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"该设备的指令没有下载成功!" leftButtonTitle:@"取消" rightButtonTitle:@"重试"];
-            alert.rightBlock = ^{
-                [self downloadInstructionsFromServer];
-            };
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"设备指令下载失败" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+//            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"该设备的指令没有下载成功!" leftButtonTitle:@"取消" rightButtonTitle:@"重试"];
+//            alert.rightBlock = ^{
+//                [self downloadInstructionsFromServer];
+//            };
             [alert show];
         }
     }

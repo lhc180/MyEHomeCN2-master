@@ -7,17 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MYESocket.h"
 
-@interface MyESocketManualControlViewController : UIViewController
-<MyEDataLoaderDelegate,MBProgressHUDDelegate>{
+@interface MyESocketManualControlViewController : UIViewController <MyEDataLoaderDelegate>{
     MBProgressHUD *HUD;
-    NSInteger _stopTs;
-    NSTimer *_timer;
+    NSTimer *_timer,*_timerToDownloadInfo;
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
+@property (nonatomic, strong) MYESocket *socket;
+
+@property (weak, nonatomic) IBOutlet UILabel *currentPowerTipLbl;
+
 @property (weak, nonatomic) IBOutlet UILabel *currentPowerLabel;
-@property (weak, nonatomic) IBOutlet UISwitch *powerSwitch;
 @property (weak, nonatomic) IBOutlet UILabel *timerInfoLabel;
+@property (weak, nonatomic) IBOutlet UIButton *powerBtn;
 
 @end

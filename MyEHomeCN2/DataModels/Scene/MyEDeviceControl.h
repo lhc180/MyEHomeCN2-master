@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-@class MyEControlKey;
+#import "MyEControlKey.h"
 
 @interface MyEDeviceControl : NSObject <NSCopying>
 

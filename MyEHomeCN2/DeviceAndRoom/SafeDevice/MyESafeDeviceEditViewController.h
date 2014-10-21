@@ -7,10 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MYEPickerView.h"
 
-@interface MyESafeDeviceEditViewController : UIViewController<MyEDataLoaderDelegate,IQActionSheetPickerView>
+@interface MyESafeDeviceEditViewController : UIViewController<MyEDataLoaderDelegate,MYEPickerViewDelegate>
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic, weak) MyEAccountData *accountData;
+
 @property (weak, nonatomic) IBOutlet UITextField *nameTxt;
 @property (weak, nonatomic) IBOutlet UIButton *roomBtn;
 @property (weak, nonatomic) IBOutlet UILabel *idLbl;

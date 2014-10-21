@@ -9,6 +9,7 @@
 #import "MyELoginViewController.h"
 
 #import "MyEMainTabBarController.h"
+#import "MyEQRScanViewController.h"
 
 #import "MyEDevicesViewController.h"
 #import "MyEScenesViewController.h"
@@ -18,11 +19,15 @@
 
 #import "MyESettingsMediatorViewController.h"
 
+#define FRAME (view) view.frame
+@interface MyELoginViewController()<MyEQRScanViewControllerDelegate>
+
+@end
+
 @implementation MyELoginViewController
 
 @synthesize usernameInput = _usernameInput;
 @synthesize passwordInput = _passwordInput;
-@synthesize accountData = _accountData;
 
 - (void)didReceiveMemoryWarning
 {
@@ -33,8 +38,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    self.topView.frame = CGRectMake(25, -6, 270, 99);
-    self.centerView.frame = CGRectMake(25, 208, 270, 235);
+    CGRect topFrame = self.topView.frame;
+    CGRect centerFrame = self.centerView.frame;
+    topFrame.origin.y -= IS_IPAD?100:50;
+    centerFrame.origin.y += IS_IPAD?100:50;
+    self.topView.frame = topFrame;
+    self.centerView.frame = centerFrame;
+//    self.topView.frame = CGRectMake(25, -6, 270, 99);
+//    self.centerView.frame = CGRectMake(25, 208, 270, 235);
+    
     [self setViewAnimate];
     [self setViewDate];
     //之所以会有这一行，是因为xcode5自带的images。xcassets对于iPhone5支持不是很好，所以要特别注明这一句代码
@@ -56,6 +68,26 @@
         self.showBtn.hidden = YES;
     }else
         [self reloadUsersTableViewContents];
+    self.topView.layer.cornerRadius = 4;
+    self.centerView.layer.cornerRadius = 4;
+    self.bottomView.layer.cornerRadius = 3;
+    self.topView.layer.masksToBounds = YES;
+    self.centerView.layer.masksToBounds = YES;
+    self.bottomView.layer.masksToBounds = YES;
+    
+    [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidBeginEditingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *noti){
+        self.showBtn.hidden = YES;
+    }];
+    [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidEndEditingNotification object:nil queue:[NSOperationQueue mainQueue] usingBlock:^(NSNotification *noti){
+        if ([[self getUsersFromPlist] count] <= 1) {  //只有当登录的用户至少为两个时，才允许用户切换账户
+            self.showBtn.hidden = YES;
+        }else
+            self.showBtn.hidden = NO;
+    }];
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 // 下面使用9宫格可缩放图片作为按钮背景
@@ -129,8 +161,8 @@
     [UIView animateWithDuration:1 animations:^{
         CGRect topFrame = self.topView.frame;
         CGRect centerFrame = self.centerView.frame;
-        topFrame.origin.y += 50;
-        centerFrame.origin.y -=50;
+        topFrame.origin.y += IS_IPAD?100:50;
+        centerFrame.origin.y -= IS_IPAD?100:50;
         self.topView.frame = topFrame;
         self.centerView.frame = centerFrame;
         self.topView.alpha = 1;
@@ -174,32 +206,19 @@
     }
     UILabel *dateLabel = (UILabel *)[self.topView viewWithTag:903];
     dateLabel.text = [NSString stringWithFormat:@"%li月%li日 %@",(long)[comps month],(long)[comps day],week];
-    _lastHour = [comps hour];
-    NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    if ([def objectForKey:@"hour"]) {    //hour使用的是24小时制
-        if ([[def objectForKey:@"hour"] intValue] - [comps hour] > 1 ||
-            [comps hour] - [[def objectForKey:@"hour"] intValue] > 1) {  //只要有一个是大于1的就刷新
-            [def setObject:@([comps hour]) forKey:@"hour"];  //并把当前的时间信息存储
-            [self getCurrentLocation];
-        }else{
-            NSDictionary *dic = [def objectForKey:@"weather"];
-            [self setTopViewWeatherWithDictionary:dic];
-        }
-    }else{
-        [self getCurrentLocation];
-    }
+    [self getCurrentLocation];
 }
 -(void)setTopViewWeatherWithDictionary:(NSDictionary *)weather{
     self.activityView.hidden = YES;
     UIView *mainView = (UIView *)[self.view viewWithTag:1000];
     UIImageView *dayImg = (UIImageView *)[mainView viewWithTag:800];
     //    UIImageView *nightImg = (UIImageView *)[mainView viewWithTag:801];
-    UILabel *cityLabel = (UILabel *)[mainView viewWithTag:900];
+//    UILabel *cityLabel = (UILabel *)[mainView viewWithTag:900];
     UILabel *weatherLabel = (UILabel *)[mainView viewWithTag:901];
     UILabel *tmpLabel = (UILabel *)[mainView viewWithTag:902];
     dayImg.image = [UIImage imageNamed:[weather[@"img1"] substringToIndex:2]];
     //    nightImg.image = [UIImage imageNamed:[weather[@"img2"] substringToIndex:2]];
-    cityLabel.text = weather[@"city"];
+//    cityLabel.text = weather[@"city"];
     weatherLabel.text = weather[@"weather"];
     if ([weather[@"temp1"] intValue] > [weather[@"temp2"] intValue]) {
         tmpLabel.text = [NSString stringWithFormat:@"%@-%@",weather[@"temp2"],weather[@"temp1"]];
@@ -215,8 +234,8 @@
     UILabel *lbl = (UILabel *)[self.topView viewWithTag:900];
     lbl.text = string;
     NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-    if ([def objectForKey:@"hour"]) {
-        [def removeObjectForKey:@"hour"];
+    if ([def objectForKey:USERDEFAULT_FOR_WEATHER_DATE]) {
+        [def removeObjectForKey:USERDEFAULT_FOR_WEATHER_DATE];
     }
 }
 - (void)keyboardWillShow:(NSNotification *)notification {
@@ -417,6 +436,7 @@
             
         } completion:^(BOOL finished){
             [sender setSelected:NO];
+            _usersTableView.hidden = YES;
         }];
     }else{
         [UIView animateWithDuration:0.3 animations:^{
@@ -431,6 +451,7 @@
             [_usersTableView setFrame:frame];
         } completion:^(BOOL finished){
             [sender setSelected:YES];
+            _usersTableView.hidden = NO;
         }];
     }
 }
@@ -450,7 +471,6 @@
         [MyEUtil showMessageOn:nil withMessage:@"用户名或密码长度不正确，请重新输入"];
         return;
     }
-    
     // 1.判断是否联网：
     if (![MyEDataLoader isConnectedToInternet]) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"没有网络连接,请打开网络后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
@@ -468,27 +488,34 @@
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"LoginDownloader" userDataDictionary:nil];
     NSLog(@"downloader.name is  %@ urlStr =  %@",downloader.name, urlStr);
 }
+
+#pragma mark - IBAction methods
+- (IBAction)scanQR:(id)sender {
+    UIStoryboard *story = [UIStoryboard storyboardWithName:@"settings" bundle:nil];
+    UINavigationController *nav = [story instantiateViewControllerWithIdentifier:@"QRNav"];
+    MyEQRScanViewController *vc = nav.childViewControllers[0];
+    vc.delegate = self;
+    vc.isAddCamera = NO;
+    [self presentViewController:nav animated:YES completion:nil];
+}
+- (IBAction)getIDManual:(UIButton *)sender {
+    sender.selected = !sender.selected;
+    if (sender.selected) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"您现在可以在用户名的输入框中输入MID,为方便您的输入,系统会自动填充'-'" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        [alert show];
+        self.usernameInput.pattern = @"^([0-9a-fA-F]{2}(?:-)){7}[0-9a-fA-F]{2}$";
+        [self.usernameInput becomeFirstResponder];
+    }else
+        self.usernameInput.pattern = nil;
+}
+
 -(void)showMainTab{
     MyEMainTabBarController *tabBarController = [self.storyboard instantiateViewControllerWithIdentifier:@"mainTab"];
-    tabBarController.accountData = self.accountData;
     
     UINavigationController *nc = [[tabBarController childViewControllers] objectAtIndex:0];
     MyEDevicesViewController *devicesViewController = [[nc childViewControllers] objectAtIndex:0];
-    devicesViewController.accountData = self.accountData;
     devicesViewController.preivousPanelType = 0;
     
-    //这里以后要放置camera的东西
-    nc = tabBarController.childViewControllers[2];
-    MyERoomsViewController *roomsViewController = [[nc childViewControllers] objectAtIndex:0];
-    roomsViewController.accountData = self.accountData;
-    
-    nc = [[tabBarController childViewControllers] objectAtIndex:3];
-    MyEScenesViewController *scenesViewController = [[nc childViewControllers] objectAtIndex:0];
-    scenesViewController.accountData = self.accountData;
-    
-    nc = [[tabBarController childViewControllers] objectAtIndex:4];
-    MyESettingsViewController *settingsViewController = [[nc childViewControllers] objectAtIndex:0];
-    settingsViewController.accountData = self.accountData;
     [MainDelegate.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
     MainDelegate.window.rootViewController = tabBarController;
 }
@@ -500,37 +527,34 @@
     [HUD hide:YES];
     if([name isEqualToString:@"LoginDownloader"]) {
         MyEAccountData *anAccountData = [[MyEAccountData alloc] initWithJSONString:string];
-        if(anAccountData && anAccountData.loginSuccess) {
-            self.accountData = anAccountData;
-        }
+#warning 这里保存一份
+        MainDelegate.accountData = anAccountData;
         
         //对于多层判断结构，要尽可能将最常见的情况放在前面，这样可以提高判断的速度，优化体验
-        if (self.accountData.loginSuccess == -3) {
+        if (MainDelegate.accountData.loginSuccess == -3) {
             [MyEUtil showMessageOn:self.view withMessage:@"用户已禁用!"];
-        }else if (self.accountData.loginSuccess == 1){
+        }else if (MainDelegate.accountData.loginSuccess == 1){
             //登录成功之后首要任务就是保存设置内容
             [self saveSettings];
-            if ([self.accountData.mId length] == 0) {
+            if ([MainDelegate.accountData.mId length] == 0) {
                 UINavigationController *nav = [[UIStoryboard storyboardWithName:@"settings" bundle:nil] instantiateViewControllerWithIdentifier:@"gatewayNav"];
                 MYESettingsMediatorViewController *vc = nav.childViewControllers[0];
-                vc.accountData = self.accountData;
                 vc.jumpFromSettings = NO;
                 [self presentViewController:nav animated:YES completion:nil];
             }else{
                 [self showMainTab];
             }
-        }else if(self.accountData.loginSuccess == -1){
+        }else if(MainDelegate.accountData.loginSuccess == -1){
             [MyEUtil showMessageOn:self.view withMessage:@"密码输入错误！"];
-        }else if(self.accountData.loginSuccess == -5){
+        }else if(MainDelegate.accountData.loginSuccess == -5){
             [MyEUtil showToastOn:nil withMessage:@"此M-ID对应的账户已经修改了用户名，请使用新用户名和密码登陆" backgroundColor:nil];
-        }else if(self.accountData.loginSuccess == 2){
+        }else if(MainDelegate.accountData.loginSuccess == 2){
             [MyEUtil showMessageOn:self.view withMessage:@"此网关的MID已注册"];
             //登录成功之后首要任务就是保存设置内容
             [self saveSettings];
-            if ([self.accountData.mId length] == 0) {
+            if ([MainDelegate.accountData.mId length] == 0) {
                 UINavigationController *nav = [[UIStoryboard storyboardWithName:@"settings" bundle:nil] instantiateViewControllerWithIdentifier:@"gatewayNav"];
                 MYESettingsMediatorViewController *vc = nav.childViewControllers[0];
-                vc.accountData = self.accountData;
                 vc.jumpFromSettings = NO;
                 [self presentViewController:nav animated:YES completion:nil];
             }else{
@@ -589,22 +613,62 @@
         NSLog(@"%@",[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]);
         [self setTopViewWeatherWithDictionary:weather];
         NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
-        [def setObject:weather forKey:@"weather"];
-        [def setObject:@(_lastHour) forKey:@"hour"];
+        [def setObject:weather forKey:FILE_FOR_WEATHER_INFO];
+        [def setObject:[NSDate date] forKey:USERDEFAULT_FOR_WEATHER_DATE];
         [def synchronize];
     }else
         [self setTopViewStatusWithString:@"天气获取失败!"];
 }
 #pragma mark - location methods
 -(void)getCurrentLocation{
-    _locationManager = [[CLLocationManager alloc] init];
-    _locationManager.delegate = self;
-    _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    _locationManager.distanceFilter = 10.0f;
-    [_locationManager startUpdatingLocation];
+    if ([CLLocationManager locationServicesEnabled]) {
+        _locationManager = [[CLLocationManager alloc] init];
+        _locationManager.delegate = self;
+        if ([[[UIDevice currentDevice] systemVersion ] floatValue ] >= 8.0) {
+            [_locationManager requestAlwaysAuthorization];  //这句话是很有必要的，否则在IOS8下无法正常操作
+        }
+        _locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        _locationManager.distanceFilter = 10.0f;
+        [_locationManager startUpdatingLocation];
+    }else{
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"定位服务不可用,请在[设置]中开启定位服务" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        [alert show];
+    }
+}
+-(NSString *)getIdFromCity:(NSString *)city andState:(NSString *)state{
+    MyEProvinceAndCity *provinceAndCity = [[MyEProvinceAndCity alloc] init];
+    for (MyEProvince *p in provinceAndCity.provinceAndCity) {
+        if ([state hasPrefix:p.provinceName]) {
+            for (MyECity *c in p.cities) {
+                if ([city hasPrefix:c.cityName]) {
+                    return c.cityId;
+                }
+            }
+        }
+        //                    if ([p.provinceName isEqualToString:[state substringToIndex:2]]) {
+        //                        for (MyECity *c in p.cities) {
+        //                            if ([c.cityName isEqualToString:[city substringToIndex:2]]) {
+        //                                cityId = c.cityId;
+        //                                break;
+        //                            }
+        //                        }
+        //                        break;
+        //                    }
+    }
+    return nil;
+}
+-(void)startGetWeatherInfoWithCityId:(NSString *)cityId{
+    if (cityId != nil) {
+        NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[[NSString stringWithFormat:@"http://www.weather.com.cn/data/cityinfo/%@.html",cityId] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
+        NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:request  delegate:self];
+        NSLog(@"%@",theConnection);
+    }else{
+        [self setTopViewStatusWithString:@"无法获取当前城市天气信息"];
+    }
 }
 -(void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations{
     NSLog(@"定位成功");
+    NSLog(@"%@",locations);
     [_locationManager stopUpdatingLocation];
     if (!_hadRunOneTime) {
         _hadRunOneTime = YES;
@@ -618,23 +682,36 @@
                 NSString *country = [self getAddressByDictionary:addressDic andKey:@"Country"];
                 NSString *state = [self getAddressByDictionary:addressDic andKey:@"State"];
                 NSString *city = [self getAddressByDictionary:addressDic andKey:@"City"];
-                NSLog(@"country is %@  state is %@ city is %@",country,state,city);
-                NSString *cityId = nil;
-                MyEProvinceAndCity *provinceAndCity = [[MyEProvinceAndCity alloc] init];
-                for (MyEProvince *p in provinceAndCity.provinceAndCity) {
-                    if ([p.provinceName isEqualToString:[state substringToIndex:2]]) {
-                        for (MyECity *c in p.cities) {
-                            if ([c.cityName isEqualToString:[city substringToIndex:2]]) {
-                                cityId = c.cityId;
-                                break;
+                UIView *mainView = (UIView *)[self.view viewWithTag:1000];
+                UILabel *cityLabel = (UILabel *)[mainView viewWithTag:900];
+                cityLabel.text = city;
+                NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+                NSString *cityStr = [def objectForKey:USERDEFAULT_FOR_WEATHER_CITY];
+                if (cityStr != nil) {
+                    if ([cityStr isEqualToString:city]) {
+                        NSDate *date = [def objectForKey:USERDEFAULT_FOR_WEATHER_DATE];
+                        if (date) {
+                            if ([[NSDate date] timeIntervalSinceDate:date] > 60*60) {
+                                [self startGetWeatherInfoWithCityId:[self getIdFromCity:city andState:state]];
+                            }else{
+                                NSDictionary *dic = [def objectForKey:FILE_FOR_WEATHER_INFO];
+                                if (dic) {
+                                    [self setTopViewWeatherWithDictionary:dic];
+                                }else
+                                    [self startGetWeatherInfoWithCityId:[self getIdFromCity:city andState:state]];
                             }
+                        }else{
+                            [self startGetWeatherInfoWithCityId:[self getIdFromCity:city andState:state]];
                         }
-                        break;
+                    }else{
+                        [def setObject:city forKey:USERDEFAULT_FOR_WEATHER_CITY];
+                        [self startGetWeatherInfoWithCityId:[self getIdFromCity:city andState:state]];
                     }
+                }else{
+                    [def setObject:city forKey:USERDEFAULT_FOR_WEATHER_CITY];
+                    [self startGetWeatherInfoWithCityId:[self getIdFromCity:city andState:state]];
                 }
-                NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:[[NSString stringWithFormat:@"http://www.weather.com.cn/data/cityinfo/%@.html",cityId] stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]];
-                NSURLConnection *theConnection=[[NSURLConnection alloc] initWithRequest:request  delegate:self];
-                NSLog(@"%@",theConnection);
+                NSLog(@"country is %@  state is %@ city is %@",country,state,city);
             }
         }];
     }
@@ -676,6 +753,13 @@
 -(NSString *)getAddressByDictionary:(NSDictionary *)dic andKey:(NSString *)key{
     NSString *string = dic[key];
     return string == nil?@"":string;
+}
+#pragma mark - MyEQRScanViewControllerDelegate methods
+
+-(void)passMID:(NSString *)mid andPIN:(NSString *)pin{
+    self.usernameInput.text = mid;
+    self.passwordInput.text = pin;
+    [self _doLogin];
 }
 
 @end

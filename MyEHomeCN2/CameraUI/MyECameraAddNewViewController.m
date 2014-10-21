@@ -141,6 +141,7 @@
     [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
 }
 - (IBAction)saveEditor:(UIButton *)sender {
+    [self.view endEditing:YES];
     self.camera.username = self.txtUsername.text;
     self.camera.password = self.txtPassword.text;
     self.camera.name = self.txtName.text;

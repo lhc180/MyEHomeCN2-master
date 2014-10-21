@@ -23,15 +23,8 @@
 @end
 
 @implementation MyEAutoControlViewController
-@synthesize processList = _processList, accountData, device;
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+@synthesize processList = _processList, device;
+
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
@@ -88,12 +81,12 @@
     } else
         [HUD show:YES];
     if (self.device.type == 1) {
-        NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld",GetRequst(URL_FOR_AC_DOWNLOAD_AC_AUTO_CONTROL_VIEW), self.accountData.userId,(long)self.device.deviceId];
+        NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld",GetRequst(URL_FOR_AC_DOWNLOAD_AC_AUTO_CONTROL_VIEW), MainDelegate.accountData.userId,(long)self.device.deviceId];
         MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:AUTO_CONTROL_PROCESS_DOWNLOADER_NMAE  userDataDictionary:Nil];
         NSLog(@"%@",downloader.name);
     }
     if (self.device.type == 6) {
-        NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld",GetRequst(URL_FOR_DOWNLOAD_SOCKET_AUTO_CONTROL_VIEW), self.accountData.userId,(long)self.device.deviceId];
+        NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld",GetRequst(URL_FOR_DOWNLOAD_SOCKET_AUTO_CONTROL_VIEW), MainDelegate.accountData.userId,(long)self.device.deviceId];
         MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:AUTO_CONTROL_PROCESS_DOWNLOADER_NMAE  userDataDictionary:Nil];
         NSLog(@"%@",downloader.name);
     }
@@ -117,7 +110,6 @@
                 self.processList = processList;
 //#warning 这里也给出了一个寻找VC的方法
                 MyEAutoProcessListViewController *vc = [self.childViewControllers objectAtIndex:0];
-                vc.accountData = self.accountData;
                 vc.device = self.device;
                 vc.processList = processList;//这里的setter重新加载table数据,这一步骤是重要的，用来现实更新后的数据。
                 [self resetAddNewButtonWithAvailableDays];
@@ -178,7 +170,6 @@
         pvc.delegate = self;
         pvc.isAddNew = YES;
         pvc.device = self.device;
-        pvc.accountData = self.accountData;
     }
 }
 #pragma mark - private methods
@@ -232,7 +223,7 @@
     if (self.device.type == 1) { //空调设备
         NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&deviceId=%ld&enable=%ld",
                             GetRequst(URL_FOR_AC_ENABLE_AC_AUTO_PROCESS_SAVE),
-                            self.accountData.userId,
+                            MainDelegate.accountData.userId,
                             (long)self.device.deviceId,
                             1-(long)self.enableProcessSegmentedControl.selectedSegmentIndex];
         MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:ENABLE_AUTO_PROCESS_UPLOADER_NMAE  userDataDictionary:Nil];
@@ -241,7 +232,7 @@
     if (self.device.type == 6) {  //插座设备
         NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&deviceId=%ld&enable=%ld",
                             GetRequst(URL_FOR_ENABLE_SOCKET_AUTO_PROCESS_SAVE),
-                            self.accountData.userId,
+                            MainDelegate.accountData.userId,
                             (long)self.device.deviceId,
                             1-(long)self.enableProcessSegmentedControl.selectedSegmentIndex];
         MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:ENABLE_AUTO_PROCESS_UPLOADER_NMAE  userDataDictionary:Nil];

@@ -10,57 +10,55 @@
 
 @interface MYEActiveBtn (){
     UIView *_bgView;
+    UIActivityIndicatorView *_actor;
 }
 
 @end
 @implementation MYEActiveBtn
 
-- (id)initWithFrame:(CGRect)frame
+- (id)initWithFrame:(CGRect)frame  //用代码实现的时候用这个
 {
     self = [super initWithFrame:frame];
     if (self) {
         self.userInteractionEnabled = YES;
         _bgView = [[UIView alloc] initWithFrame:self.bounds];
         _bgView.backgroundColor = [UIColor whiteColor];
-       UIActivityIndicatorView *actor = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        actor.tintColor = [UIColor redColor];
-        actor.center = _bgView.center;
-        [actor startAnimating];
-        [_bgView addSubview:actor];
+        _actor = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+        _actor.tintColor = [UIColor redColor];
+        _actor.center = _bgView.center;
+        [_actor startAnimating];
+        [_bgView addSubview:_actor];
+        _bgView.hidden = YES;
     }
     return self;
 }
 -(id)initWithCoder:(NSCoder *)aDecoder{
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.userInteractionEnabled = YES;
-        _bgView = [[UIView alloc] initWithFrame:self.bounds];
-        _bgView.backgroundColor = [UIColor whiteColor];
-        UIActivityIndicatorView *actor = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
-        actor.color = [UIColor orangeColor];
-        [actor startAnimating];
-        [_bgView addSubview:actor];
-        actor.center = _bgView.center;
-
-        NSLog(@"%f %f %f %f",_bgView.frame.origin.x,_bgView.frame.origin.y,_bgView.frame.size.width,_bgView.frame.size.height);
+//        self.userInteractionEnabled = YES;
+//        _bgView = [[UIView alloc] initWithFrame:self.bounds];
+//        _bgView.backgroundColor = [UIColor whiteColor];
+//        _actor = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
+//        _actor.color = [UIColor orangeColor];
+//        [_actor startAnimating];
+//        _actor.center = _bgView.center;
+//        [_bgView addSubview:_actor];
+//        [self addSubview:_bgView];
+//        //        NSLog(@"%f %f %f %f",_bgView.frame.origin.x,_bgView.frame.origin.y,_bgView.frame.size.width,_bgView.frame.size.height);
         [self setImage:[UIImage imageNamed:@"switch-on"] forState:UIControlStateNormal];
     }
     return self;
 }
 -(void)show{
-    if (![self.subviews containsObject:_bgView]) {
-        [self addSubview:_bgView];
-        self.userInteractionEnabled = NO; //这么做主要是为了当act运动时，不再接收用户点击操作
-    }
+    _bgView.hidden = NO;
+    self.userInteractionEnabled = NO; //这么做主要是为了当act运动时，不再接收用户点击操作
 }
 -(void)hide{
-    if ([self.subviews containsObject:_bgView]) {
-        [_bgView removeFromSuperview];
-        self.userInteractionEnabled = YES;
-    }
+    _bgView.hidden = YES;
+    self.userInteractionEnabled = YES;
 }
 -(BOOL)isLoading{
-    return [self.subviews containsObject:_bgView];
+    return !_bgView.hidden;
 }
 -(void)setEnabled:(BOOL)enabled{
     if (!enabled) {
@@ -76,12 +74,12 @@
         [self setImage:[UIImage imageNamed:@"switch-on"] forState:UIControlStateNormal];
 }
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect
+ {
+ // Drawing code
+ }
+ */
 
 @end

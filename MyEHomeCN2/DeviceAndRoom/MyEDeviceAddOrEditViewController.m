@@ -281,7 +281,6 @@
     //这里更改了框架
     UIStoryboard *story = [UIStoryboard storyboardWithName:@"AcInstruction" bundle:nil];
     MyEInstructionManageViewController *vc = [story instantiateViewControllerWithIdentifier:@"instructionVC"];
-    vc.accountData = self.accountData;
     vc.device = self.device;
     [self.navigationController pushViewController:vc animated:YES];
 }

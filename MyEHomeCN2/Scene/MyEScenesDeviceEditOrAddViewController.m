@@ -13,7 +13,7 @@
 @end
 
 @implementation MyEScenesDeviceEditOrAddViewController
-@synthesize accountData,deviceControl,instructionRecived,deviceBtn,deviceArray,
+@synthesize deviceControl,instructionRecived,deviceBtn,deviceArray,
 deviceTypeArray,deviceTypeBtn,modeArray,modeBtn,powerBtn,powerArray,
 windLevelArray,windLevelBtn,temperatureArray,temperatureBtn,powerLabel,
 windLevelLabel,modeLabel,temperatureLabel,jumpFromBarBtn,dictionaryRecived,
@@ -23,15 +23,21 @@ sceneIndex,saveEditorBtn;
 #pragma mark - private methods for UI
 -(void)setLabelAndButtonForSystemDefinedAC{//当为标准库的空调时，要将下面的三对控件显示出来
     [self setLabelAndButtonHidden:NO];
+    powerLabel.hidden = NO;
+    powerBtn.hidden = NO;
+    _tableView.hidden = YES;
 }
 -(void)setLabelAndButtonForOthers{//不是空调时，隐藏下面三对控件
     [self setLabelAndButtonHidden:YES];
+    powerLabel.hidden = NO;
+    powerBtn.hidden = NO;
+    _tableView.hidden = YES;
 }
 -(void)setLabelAndButtonForSwitch{
     powerLabel.hidden = YES;
     powerBtn.hidden = YES;
-    self.tableView.hidden = NO;
     [self setLabelAndButtonHidden:YES];
+    self.tableView.hidden = NO;
 }
 -(void)setLabelAndButtonHidden:(BOOL)yes{
     modeBtn.hidden = yes;
@@ -51,7 +57,7 @@ sceneIndex,saveEditorBtn;
             deviceArray = _acArray[1];
             self.deviceIdArray = _acArray[0];
             
-            MyEDevice *device = [self.accountData findDeviceWithDeviceId:[_acArray[0][i] intValue]];
+            MyEDevice *device = [MainDelegate.accountData findDeviceWithDeviceId:[_acArray[0][i] intValue]];
             if (device.isSystemDefined) {  //系统默认空调
                 powerArray = @[@"开",@"关"];
                 [self setLabelAndButtonForSystemDefinedAC];
@@ -107,7 +113,7 @@ sceneIndex,saveEditorBtn;
             deviceArray = _smartArray[1];
             self.deviceIdArray = _smartArray[0];
             NSLog(@"%@",_smartArray[0]);
-            _device = [self.accountData findDeviceWithDeviceId:[self.deviceIdArray[_selectedDeviceIndex] intValue]];
+            _device = [MainDelegate.accountData findDeviceWithDeviceId:[self.deviceIdArray[_selectedDeviceIndex] intValue]];
             NSLog(@"_device.status.switchStatus is %@",_device.status.switchStatus);
             //            NSMutableArray *array = [NSMutableArray array];
             
@@ -228,14 +234,14 @@ sceneIndex,saveEditorBtn;
     _slalarmArray = [NSMutableArray array];
     _rfArray = [NSMutableArray array];
     _rfOtherArray = [NSMutableArray array];
-    NSMutableArray *dTArray = [NSMutableArray arrayWithArray:self.accountData.deviceTypes];
+    NSMutableArray *dTArray = [NSMutableArray arrayWithArray:MainDelegate.accountData.deviceTypes];
     
-    for (int i=0; i<[self.accountData.deviceTypes count];i++) {   //终于算是找到了问题的根源了
+    for (int i=0; i<[MainDelegate.accountData.deviceTypes count];i++) {   //终于算是找到了问题的根源了
         NSMutableArray *deviceIdArray = [NSMutableArray array]; //里面存放的是一个设备类型的所有设备ID
         NSMutableArray *instructionAll = [NSMutableArray array]; //里面存放的是一个设备ID对应的所有指令
         NSMutableArray *instructionArray = [NSMutableArray array]; //里面存放的是所有可用设备的指令集合
         NSMutableArray *deviceNameArray = [NSMutableArray array];
-        MyEDeviceType *dt = self.accountData.deviceTypes[i];
+        MyEDeviceType *dt = MainDelegate.accountData.deviceTypes[i];
         if ([dt.devices count] == 0) {  //如果里面没有设备，那么就移除这个type
             [dTArray removeObject:dt];
         }else{
@@ -243,7 +249,7 @@ sceneIndex,saveEditorBtn;
             for (int j=0;j<[dt.devices count];j++) {
                 
                 NSInteger deviceId = [dt.devices[j] integerValue];
-                for (MyEDevice *d in self.accountData.devices) {
+                for (MyEDevice *d in MainDelegate.accountData.devices) {
                     if (deviceId == d.deviceId) {
                         if (d.type == 1 ) { // 如果是空调
                             if ([d.brand isEqualToString:@""]) {
@@ -358,7 +364,7 @@ sceneIndex,saveEditorBtn;
     return dTArray;
 }
 -(void)getModeArrayByDeviceId:(NSInteger)dcId{  //针对不同的空调会有不同的运行模式数组，这里要专门写一下这个方法
-    for (MyEDevice *d in self.accountData.devices) {
+    for (MyEDevice *d in MainDelegate.accountData.devices) {
         if (d.deviceId == dcId) {
             if (d.instructionMode == 1) {   //值为1表示【通风模式】存在
                 modeArray = @[@"自动",@"制热",@"制冷",@"除湿",@"通风"];
@@ -415,8 +421,8 @@ sceneIndex,saveEditorBtn;
         NSMutableArray *instructionIds = [NSMutableArray array];
         NSInteger deviceId = [dictionaryRecived[@"id"] intValue];  //这个表示的是设备ID
         
-        MyEDevice *device = [self.accountData findDeviceWithDeviceId:deviceId];  //通过deviceId找到device
-        MyEDeviceType *dt = [self.accountData findDeviceTypeWithId:device.type]; //通过device找到deviceType
+        MyEDevice *device = [MainDelegate.accountData findDeviceWithDeviceId:deviceId];  //通过deviceId找到device
+        MyEDeviceType *dt = [MainDelegate.accountData findDeviceTypeWithId:device.type]; //通过device找到deviceType
         _deviceTypeIndex = dt.dtId;  //这里必须要对_deviceTypeIndex赋值，因为在后面会用到 这里也叫记录一下类型ID
         //更新btn的title
         [deviceTypeBtn setTitle:dt.name forState:UIControlStateNormal];
@@ -588,35 +594,65 @@ sceneIndex,saveEditorBtn;
 }
 #pragma mark - IBAction methods
 - (IBAction)deviceType:(id)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择设备类型" andDelegate:self andTag:1 andArray:self.deviceTypeNameArray andSelectRow:_selectedDeviceTypeIndex andViewController:self];
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:1 title:@"请选择设备类型" dataSource:self.deviceTypeNameArray andSelectRow:_selectedDeviceTypeIndex];
+    picker.delegate = self;
+    picker.needLongView = YES;
+    [picker show];
+
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择设备类型" andDelegate:self andTag:1 andArray:self.deviceTypeNameArray andSelectRow:_selectedDeviceTypeIndex andViewController:self];
 }
 
 - (IBAction)device:(id)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择设备" andDelegate:self andTag:2 andArray:deviceArray andSelectRow:_selectedDeviceIndex andViewController:self];
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:2 title:@"请选择设备" dataSource:deviceArray andSelectRow:_selectedDeviceIndex];
+    picker.delegate = self;
+    picker.needLongView = YES;
+    [picker show];
+
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择设备" andDelegate:self andTag:2 andArray:deviceArray andSelectRow:_selectedDeviceIndex andViewController:self];
 }
 
 - (IBAction)power:(id)sender {
     if ([powerBtn.currentTitle isEqualToString:@"无有效指令"]) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"此设备没有可用的指令，建议将其删除" leftButtonTitle:nil rightButtonTitle:@"知道了！"];
-        alert.rightBlock = ^{
-            [self.navigationController popViewControllerAnimated:YES];
-        };
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此设备没有可用的指令" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+//        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"此设备没有可用的指令，建议将其删除" leftButtonTitle:nil rightButtonTitle:@"知道了！"];
+//        alert.rightBlock = ^{
+//            [self.navigationController popViewControllerAnimated:YES];
+//        };
         [alert show];
         return;
     }
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择控制码" andDelegate:self andTag:3 andArray:powerArray andSelectRow:_selectedPowerIndex andViewController:self];
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:3 title:@"请选择控制码" dataSource:powerArray andSelectRow:_selectedPowerIndex];
+    picker.delegate = self;
+    picker.needLongView = YES;
+    [picker show];
+    
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择控制码" andDelegate:self andTag:3 andArray:powerArray andSelectRow:_selectedPowerIndex andViewController:self];
 }
 
 - (IBAction)windLever:(id)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择风力大小" andDelegate:self andTag:5 andArray:windLevelArray andSelectRow:_selectedWindlevelIndex andViewController:self];
+    
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:5 title:@"请选择风力大小" dataSource:windLevelArray andSelectRow:_selectedWindlevelIndex];
+    picker.delegate = self;
+    [picker show];
+    
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择风力大小" andDelegate:self andTag:5 andArray:windLevelArray andSelectRow:_selectedWindlevelIndex andViewController:self];
 }
 
 - (IBAction)changeMode:(id)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择运行模式" andDelegate:self andTag:4 andArray:modeArray andSelectRow:_selectedRunmodeIndex andViewController:self];
+    
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:4 title:@"请选择运行模式" dataSource:modeArray andSelectRow:_selectedRunmodeIndex];
+    picker.delegate = self;
+    [picker show];
+    
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择运行模式" andDelegate:self andTag:4 andArray:modeArray andSelectRow:_selectedRunmodeIndex andViewController:self];
 }
 
 - (IBAction)temperature:(id)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择温度" andDelegate:self andTag:6 andArray:temperatureArray andSelectRow:_selectedSetpointIndex andViewController:self];
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:6 title:@"请选择温度" dataSource:temperatureArray andSelectRow:_selectedSetpointIndex];
+    picker.delegate = self;
+    [picker show];
+
+    //    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择温度" andDelegate:self andTag:6 andArray:temperatureArray andSelectRow:_selectedSetpointIndex andViewController:self];
 }
 - (IBAction)saveEditor:(UIBarButtonItem *)sender {
     // 现在我们已经记录了 _selectedDeviceTypeIndex, _selectedDeviceIndex,  考虑删除原有的sceneDetailDictionary, 删除原有的controlKeyDictionary来, 在这里重新形成该变量
@@ -631,7 +667,7 @@ sceneIndex,saveEditorBtn;
     } else {
         deviceId = [dictionaryRecived[@"id"] intValue];
     }
-    MyEDevice *device = [self.accountData findDeviceWithDeviceId:deviceId];
+    MyEDevice *device = [MainDelegate.accountData findDeviceWithDeviceId:deviceId];
     
     NSMutableDictionary *sceneDetailDictionary = [NSMutableDictionary dictionary];
     NSMutableDictionary *controlKeyDictionary = [NSMutableDictionary dictionary];
@@ -707,13 +743,14 @@ sceneIndex,saveEditorBtn;
     NSLog(@"%@",sceneDetailDictionary);
 }
 #pragma mark - IQActionSheet delegate methods
--(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didSelectTitles:(NSArray *)titles{
+
+-(void)MYEPickerView:(UIView *)pickerView didSelectTitle:(NSString *)title andRow:(NSInteger)row{
     switch (pickerView.tag) {
         case 1:
-            [deviceTypeBtn setTitle:titles[0] forState:UIControlStateNormal];
-            _selectedDeviceTypeIndex = [self.deviceTypeNameArray indexOfObject:titles[0]];
-            for (MyEDeviceType *dt in self.accountData.deviceTypes) {
-                if ([dt.name isEqualToString:titles[0]]) {
+            [deviceTypeBtn setTitle:title forState:UIControlStateNormal];
+            _selectedDeviceTypeIndex = [self.deviceTypeNameArray indexOfObject:title];
+            for (MyEDeviceType *dt in MainDelegate.accountData.deviceTypes) {
+                if ([dt.name isEqualToString:title]) {
                     _deviceTypeIndex = dt.dtId;
                 }
             }
@@ -722,17 +759,17 @@ sceneIndex,saveEditorBtn;
             [self getDeviceArrayAndPowerArrayByDeviceType:_deviceTypeIndex andIndex:_selectedDeviceIndex];
             break;
         case 2:
-            [deviceBtn setTitle:titles[0] forState:UIControlStateNormal];
-            _selectedDeviceIndex = [deviceArray indexOfObject:titles[0]];
+            [deviceBtn setTitle:title forState:UIControlStateNormal];
+            _selectedDeviceIndex = [deviceArray indexOfObject:title];
             _selectedPowerIndex = 0;
             [self getDeviceArrayAndPowerArrayByDeviceType:_deviceTypeIndex andIndex:_selectedDeviceIndex];
             break;
         case 3:
-            [powerBtn setTitle:titles[0] forState:UIControlStateNormal];
+            [powerBtn setTitle:title forState:UIControlStateNormal];
             self.navigationItem.rightBarButtonItem.enabled = YES;
-            _selectedPowerIndex = [powerArray indexOfObject:titles[0]];
+            _selectedPowerIndex = [powerArray indexOfObject:title];
             if (_deviceTypeIndex < 2) {  //注意看一下这里的判断是否会出现错误
-                if ([titles[0] isEqualToString:@"开"]) {
+                if ([title isEqualToString:@"开"]) {
                     [self setLabelAndButtonForSystemDefinedAC];
                     [modeBtn setTitle:modeArray[_selectedRunmodeIndex] forState:UIControlStateNormal];
                     [windLevelBtn setTitle:windLevelArray[_selectedWindlevelIndex] forState:UIControlStateNormal];
@@ -742,18 +779,18 @@ sceneIndex,saveEditorBtn;
             }
             break;
         case 4:
-            [modeBtn setTitle:titles[0] forState:UIControlStateNormal];
-            _selectedRunmodeIndex = [modeArray indexOfObject:titles[0]];
+            [modeBtn setTitle:title forState:UIControlStateNormal];
+            _selectedRunmodeIndex = [modeArray indexOfObject:title];
             self.navigationItem.rightBarButtonItem.enabled = YES;
             break;
         case 5:
-            [windLevelBtn setTitle:titles[0] forState:UIControlStateNormal];
-            _selectedWindlevelIndex = [windLevelArray indexOfObject:titles[0]];
+            [windLevelBtn setTitle:title forState:UIControlStateNormal];
+            _selectedWindlevelIndex = [windLevelArray indexOfObject:title];
             self.navigationItem.rightBarButtonItem.enabled = YES;
             break;
         default:
-            [temperatureBtn setTitle:titles[0] forState:UIControlStateNormal];
-            _selectedSetpointIndex = [temperatureArray indexOfObject:titles[0]];
+            [temperatureBtn setTitle:title forState:UIControlStateNormal];
+            _selectedSetpointIndex = [temperatureArray indexOfObject:title];
             self.navigationItem.rightBarButtonItem.enabled = YES;
             break;
     }

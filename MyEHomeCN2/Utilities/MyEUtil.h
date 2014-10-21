@@ -150,5 +150,12 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate);
 + (NSString *)timeStringForHhid:(NSInteger)hhid;
 //将传入的字符串改变成数字，从而利于比较
 + (NSInteger)hhidForTimeString:(NSString *)string;
+
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size;
++ (void)makeFlatButton:(UIButton *)btn;
++ (void)saveObject:(NSObject *)object withFileName:(NSString *)name;
++ (id)readObjectWithFileName:(NSString *)name;
++ (NSString *)getMinuteFromSeconds:(NSInteger)seconds;
++(NSString *)getCityNameByCityId:(NSString *)cityId;
 @end
 

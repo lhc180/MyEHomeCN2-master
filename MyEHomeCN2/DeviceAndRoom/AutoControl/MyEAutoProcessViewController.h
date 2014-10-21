@@ -14,12 +14,11 @@
 @class MyEDevice;
 @protocol MyEAcProcessViewControllerDelegate;
 
-@interface MyEAutoProcessViewController : UIViewController <MyEDataLoaderDelegate,MBProgressHUDDelegate,MultiSelectSegmentedControlDelegate, MyEAcPeriodViewControllerDelegate>{
+@interface MyEAutoProcessViewController : UIViewController <MyEDataLoaderDelegate,MBProgressHUDDelegate,MultiSelectSegmentedControlDelegate, MyEAcPeriodViewControllerDelegate,UIAlertViewDelegate>{
     MyEAutoControlProcess *process_copy;// 每次设置process时候，就拷贝一份，以便在每次返回此面板时，用来比较是否进程有变化，以便显示保存按钮，
     MBProgressHUD *HUD;
 }
 @property (strong, nonatomic) id <MyEAcProcessViewControllerDelegate> delegate;
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic, retain) MyEAutoControlProcess *process;
 @property (nonatomic, retain) NSArray *unavailableDays;

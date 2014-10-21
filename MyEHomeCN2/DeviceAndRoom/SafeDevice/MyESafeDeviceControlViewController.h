@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MyEDevice.h"
 
 @interface MyESafeDeviceControlViewController : UIViewController<MyEDataLoaderDelegate>
 @property (nonatomic, weak) MyEDevice *device;

@@ -52,17 +52,9 @@
 
 #pragma mark - UITableView delegate methods
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告" contentText:@"确定删除此开关么?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-    alert.rightBlock = ^{
-        if (HUD == nil) {
-            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        }else
-            [HUD show:YES];
-        _selectIndex = indexPath;
-        MyESettingSubSwitch *subSwitch = self.settings.subSwitchList[indexPath.row];
-        MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SUBSWITCH_DELETE),subSwitch.gid] postData:nil delegate:self loaderName:@"delete" userDataDictionary:nil];
-        NSLog(@"%@",loader.name);
-    };
+    _selectIndex = indexPath;
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"确定删除此开关么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = 100;
     [alert show];
 }
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -91,4 +83,17 @@
     [viewController setValue:subSwitch forKey:@"subSwitch"];
 }
 
+#pragma mark - UIAlertView delegate 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        if (HUD == nil) {
+            HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+        }else
+            [HUD show:YES];
+        MyESettingSubSwitch *subSwitch = self.settings.subSwitchList[_selectIndex.row];
+        MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SUBSWITCH_DELETE),subSwitch.gid] postData:nil delegate:self loaderName:@"delete" userDataDictionary:nil];
+        NSLog(@"%@",loader.name);
+
+    }
+}
 @end

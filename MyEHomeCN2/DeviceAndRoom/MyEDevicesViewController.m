@@ -10,54 +10,51 @@
 
 #import "MyEACManualControlNavController.h"
 #import "MyEAcManualControlViewController.h"
-#import "MyEAcEnergySavingViewController.h"
-#import "MyEAcTempMonitorViewController.h"
+#import "MYEACTemMonitorViewController.h"
+#import "MYEACSaveEnergyTableViewController.h"
+
+#import "MYEACProcessListViewController.h"
+
 
 #import "MyEDeviceAddOrEditViewController.h"
+#import "MYEDeviceEditViewController.h"
 
-#import "MyEAutoControlViewController.h"
 #import "MyEIrControlPageViewController.h"
 
 #import "MyESocketManualControlViewController.h"
 #import "MyESocketTimedControlViewController.h"
-#import "MyESocketEditViewController.h"
 #import "MyESocketElecViewController.h"
 #import "MyESocketAutoControlViewController.h"
 
 #import "MyESafeDeviceControlViewController.h"
-#import "MyESafeDeviceEditViewController.h"
 #import "MyESettingsViewController.h"
 
 #import "MYERFCurtainViewController.h"
+
+#import "MYEACInitStepViewController.h"
 
 #define DEVICE_ADD_EDIT_UPLOADER_NMAE @"DeviceAddEditUploader"
 #define SOCKET_SWITCH_CONTROL_UPLOADER_NMAE @"SocketSwitchChangeUploader"
 #define DEVICE_HOME_LIST_DOWNLOAD_NAME @"deviceAndRoomListDownloader"
 @interface MyEDevicesViewController (){
+    MBProgressHUD *HUD;
+    NSIndexPath *_selectIndexPath;
 }
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editTableBtn;
+@property (strong, nonatomic) IBOutlet UIView *tableHeaderView;
+@property (weak, nonatomic) IBOutlet UIButton *alertBtn;
 
 @end
 
 @implementation MyEDevicesViewController
-@synthesize accountData, preivousPanelType = _preivousPanelType, devices = _devices,jumpFromMediator,deviceAddBtn,needRefresh;
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-        _preivousPanelType = 0;
-    }
-    return self;
-}
+@synthesize preivousPanelType = _preivousPanelType, devices = _devices,jumpFromMediator,deviceAddBtn,needRefresh;
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.tableView.tableFooterView = [[UIView alloc] init];
     if (self.preivousPanelType == 0) {
-        longGesture = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longGesturepress:)];
-        longGesture.minimumPressDuration = 0.7;
-        [self.tableView addGestureRecognizer:longGesture];
+        self.navigationItem.leftBarButtonItem = self.editTableBtn;
     }
     UIRefreshControl *rc = [[UIRefreshControl alloc] init];
     rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
@@ -72,14 +69,14 @@
 //                                                leftButtonTitle:nil
 //                                               rightButtonTitle:@"知道了"];
 //        [alert show];
-    }else if (!accountData.mId ||[accountData.mId isEqualToString:@""]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到未绑定网关,此时设备都将不可操作,请绑定网关后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
-        [alert show];
-    }else if(!accountData.mStatus || accountData.mStatus == 0){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到网关离线，请连接网关后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
-        [alert show];
+    }else if (!MainDelegate.accountData.mId ||[MainDelegate.accountData.mId isEqualToString:@""]) {
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到未绑定网关,此时设备都将不可操作,请绑定网关后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+//        [alert show];
+    }else if(!MainDelegate.accountData.mStatus || MainDelegate.accountData.mStatus == 0){
+//        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到网关离线，请连接网关后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+//        [alert show];
     }else{
-//        if ([accountData.terminals count] == 0) {
+//        if ([MainDelegate.accountData.terminals count] == 0) {
 //            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
 //                                                        contentText:@"检测到未连接智控星,请连接智控星后重试！"
 //                                                    leftButtonTitle:nil
@@ -87,9 +84,19 @@
 //            [alert show];
 //        }
     }
+    
+    UITapGestureRecognizer *longGes = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(handleGesture:)];
+    longGes.numberOfTapsRequired = 3;
+    [self.navigationController.navigationBar addGestureRecognizer:longGes];
+}
+
+-(void)handleGesture:(UILongPressGestureRecognizer *)ges{
+    UIViewController *vc = [[UIStoryboard storyboardWithName:@"Hotel" bundle:nil] instantiateInitialViewController];
+    [self.navigationController pushViewController:vc animated:YES];
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
     //之前的主数据刷新陷入了一个误区，从正常角度讲应该是谁污染谁治理，谁需要最新数据就应该是谁负责刷新。之前的想法是在别的地方下载并更新数据，然后再把数据传递给VC。现在是谁需要下载谁就自己下载，我只负责给一个特征值就可以了
     if (self.needRefresh) {
         self.needRefresh = NO;
@@ -97,24 +104,7 @@
         //如果开始下载的话那么下面的所有都不必继续运行了，从而加快运行速度
         return;
     }
-    //此处特别注意，数据更新要放在viewWillAppear里面
-    self.devices = [NSMutableArray array];
-    if(self.preivousPanelType == 1){
-        NSMutableArray *array = [NSMutableArray array];
-        for (int i=0; i<[self.room.devices count]; i++) {
-            NSInteger deviceId = [self.room.devices[i] intValue];
-            for (int j=0; j<[self.accountData.devices count]; j++) {
-                MyEDevice *device = self.accountData.devices[j];
-                if (deviceId == device.deviceId) {
-                    [array addObject:self.accountData.devices[j]];
-                }
-            }
-        }
-        self.devices = array;
-    }else{
-        self.devices = self.accountData.devices;
-    }
-    [self.tableView reloadData];
+    [self refreshUI];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -122,32 +112,24 @@
     // Dispose of any resources that can be recreated.
 }
 #pragma mark - private methods
-- (void)longGesturepress:(UILongPressGestureRecognizer *)sender {
-    if (sender.state == UIGestureRecognizerStateBegan) {
-        if (self.tableView.editing) {
-            return;
+-(void)refreshUI{
+    if (!self.devices || self.devices == nil) {
+        self.devices = [MainDelegate.accountData allDeviceInRoom:self.preivousPanelType == 1? self.room : nil];
+    }
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if ([MainDelegate.accountData alertHappen]) {
+            self.tableView.tableHeaderView = self.tableHeaderView;
+        }else
+            self.tableView.tableHeaderView = nil;
+    });
+    [self.tableView reloadData];
+    if (_isAddSuccessed) {
+        _isAddSuccessed = NO;
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:self.devices.count - 1 inSection:0];
+        if (![self.tableView.indexPathsForVisibleRows containsObject:indexPath]) {
+            [self.tableView scrollToRowAtIndexPath:indexPath atScrollPosition:UITableViewScrollPositionTop animated:YES];
         }
-        [self.tableView setEditing:!self.tableView.editing animated:YES];
-        tapOnTableView = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnTableView:)];
-        tapOnTableView.numberOfTapsRequired = 1;
-        [self.tableView addGestureRecognizer:tapOnTableView];
     }
-}
-// 对于双击和单击事件，不需要对状态进行判断，主要是他这个状态维持的时间很短
--(void)tapOnTableView:(UITapGestureRecognizer *)sender{
-    if (!self.tableView.editing) {
-        return;
-    }
-    [self.tableView setEditing:!self.tableView.editing animated:YES];
-    [self.tableView removeGestureRecognizer:tapOnTableView];
-    [self reorderDeviceToServer];
-}
--(void)doThisWhenNeedAlert{
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告"
-                                                contentText:@"您没有连接智控星,此时不能够添加或者编辑红外设备"
-                                            leftButtonTitle:nil
-                                           rightButtonTitle:@"知道了"];
-    [alert show];
 }
 -(void)setPowerOnOrOffLabelWithIndexPath:(NSIndexPath *)index AndDevice:(MyEDevice *)dv{
     UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:index];
@@ -234,14 +216,9 @@
     //    static NSString *CellIdentifier = @"deviceCell";
     UITableViewCell *cell;
     MyEDevice *device = self.devices[indexPath.row];
-    NSString *roomName = nil;
-    for (int i=0; i<[accountData.rooms count]; i++) {
-        MyERoom *room = accountData.rooms[i];
-        if (device.roomId == room.roomId) {
-            roomName = room.name;
-        }
-    }
-    if (device.type == 1) {
+    if (tableView.editing) {
+        cell = [tableView dequeueReusableCellWithIdentifier:@"orderCell" forIndexPath:indexPath];
+    }else if (device.type == 1) {
         cell = [tableView dequeueReusableCellWithIdentifier:@"ac" forIndexPath:indexPath];
         UILabel *tempLabel = (UILabel *)[cell.contentView viewWithTag:100];
         UILabel *humidityLabel = (UILabel *)[cell.contentView viewWithTag:101];
@@ -263,23 +240,12 @@
     }
     [self doThisWhenNeedChangeBtnImage:device andBtn:deviceBtn];
     
-    NSString *imageFilename;
-    if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11) {
-        if (device.status.alertStatus == 1) {
-            imageFilename = @"safeAlert";
-        }else
-            imageFilename = @"";
-    }else if (device.type == 12 || device.type == 13){
-        imageFilename = @"";
-    }else if (device.isOrphan) {
-        imageFilename= @"noconnection";
-    }else
-        imageFilename= [NSString stringWithFormat:@"signal%ld", (long)device.status.connection];
-    
-    [signalImage setImage:[UIImage imageNamed:imageFilename]];
+    [signalImage setImage:[UIImage imageNamed:[device connectionImage]]];
     
     deviceNameLabel.text = device.name;
-    roomLabel.text = roomName;
+    
+    MyERoom *room = [MainDelegate.accountData findDeviceRoomWithDevice:device];
+    roomLabel.text = room.name;
     return cell;
 }
 
@@ -288,18 +254,12 @@
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        deleteDeviceIndex = indexPath;
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告"
-                                                    contentText:@"此操作将清空该设备的所有数据，您确定继续么？"
-                                                leftButtonTitle:@"取消"
-                                               rightButtonTitle:@"确定"];
+        _selectIndexPath = indexPath;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"此操作将清空该设备的所有数据，您确定继续么？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        alert.tag = 100;
         [alert show];
-        alert.rightBlock = ^{
-            [self deleteDeviceFromServerforRowAtIndexPath:indexPath];
-        };
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }
 }
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -308,6 +268,7 @@
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath {
     
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    _selectIndexPath = indexPath;
     MyEDevice *device = [self.devices objectAtIndex:indexPath.row];
     if (device.type == 8 || device.type == 9 || device.type == 10 || device.type == 11) {
         UIStoryboard *story = [UIStoryboard storyboardWithName:@"Safe" bundle:nil];
@@ -319,7 +280,6 @@
     if (device.type == 12) {
         MYERFCurtainViewController *vc = [[UIStoryboard storyboardWithName:@"IrDevice" bundle:nil] instantiateViewControllerWithIdentifier:@"rfCurtain"];
         vc.device = device;
-        vc.accountData = self.accountData;
         [self.navigationController pushViewController:vc animated:YES];
         return;
     }
@@ -329,7 +289,6 @@
         
         viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
         viewController.device = device;
-        viewController.accountData = self.accountData;
         viewController.needDownloadKeyset = YES;
         viewController.title = device.name;
         
@@ -341,25 +300,19 @@
         return;
     }
     if(![device isConnected]){
-        [MyEUtil showMessageOn:self.view withMessage:@"该设备没有连接,请检查"];
+        [MyEUtil showMessageOn:self.view withMessage:@"该设备不在线,请检查"];
         return;
     }
     
     if(device.type == 1 ){
         if(![device isInitialized]){
-            self.device = device;
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                        contentText:@"检测到空调未初始化，需要下载指令库，现在需要下载么？"
-                                                    leftButtonTitle:@"取消"
-                                                   rightButtonTitle:@"确定"];
-            [alert show];
-            alert.rightBlock = ^() {
-                UIStoryboard *story = [UIStoryboard storyboardWithName:@"AcInstruction" bundle:nil];
-                MyEInstructionManageViewController *vc = [story instantiateViewControllerWithIdentifier:@"instructionVC"];
-                vc.accountData = self.accountData;
-                vc.device = self.device;
-                [self.navigationController pushViewController:vc animated:YES];
-            };
+            MYEACInitStepViewController *vc = [[UIStoryboard storyboardWithName:@"ACInit" bundle:nil] instantiateViewControllerWithIdentifier:@"select"];
+            vc.device = device;
+            vc.step = 1;
+            [self.navigationController pushViewController:vc animated:YES];
+//            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到该空调还没有下载指令库,现在下载么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"开始下载", nil];
+//            alert.tag = 101;
+//            [alert show];
             return;
         }
     }
@@ -389,33 +342,30 @@
             nav2.tabBarItem.enabled = NO;
         }
         //        MyEAcManualControlViewController *acManualControlViewController = [[nav0 childViewControllers] objectAtIndex:0];
-        MyEAutoControlViewController *acAutoControlViewController = [[nav1 childViewControllers] objectAtIndex:0];
-        MyEAcEnergySavingViewController *acComfortViewController = [[nav2 childViewControllers] objectAtIndex:0];
-        MyEAcTempMonitorViewController *tempVC = [[nav3 childViewControllers] objectAtIndex:0];
         
-        tabBarController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
+        MYEACProcessListViewController *acAutoControlViewController = [[nav1 childViewControllers] objectAtIndex:0];
+        MYEACSaveEnergyTableViewController *acComfortViewController = [[nav2 childViewControllers] objectAtIndex:0];
+        MYEACTemMonitorViewController *tempVC = [[nav3 childViewControllers] objectAtIndex:0];
+        
+//        tabBarController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
         //        acManualControlViewController.device = device;
-        //        acManualControlViewController.accountData = self.accountData;
+        //        acManualControlViewController.MainDelegate.accountData = self.MainDelegate.accountData;
         nav0.device = device;
-        nav0.accountData = self.accountData;
         
         acAutoControlViewController.device = device;
-        acAutoControlViewController.accountData = self.accountData;
         
         acComfortViewController.device = device;
-        acComfortViewController.accountData = self.accountData;
         
         tempVC.device = device;
-        tempVC.accountData = self.accountData;
         
-        [self presentViewController:tabBarController animated:YES completion:nil];
+        [self presentViewController:tabBarController animated:NO completion:nil];
     }
     if(device.type == 2 || device.type == 4){// TV或者AUDIO
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
         MyEIrControlPageViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"irControlPage"];
         viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
         viewController.device = device;
-        viewController.accountData = self.accountData;
+        viewController.accountData = MainDelegate.accountData;
         [self.navigationController pushViewController:viewController animated:YES];
     }
     if(device.type == 5 ||device.type == 3){//Other
@@ -424,7 +374,6 @@
         
         viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
         viewController.device = device;
-        viewController.accountData = self.accountData;
         viewController.needDownloadKeyset = YES;
         if (device.type == 3) {
             viewController.title = @"窗帘控制";
@@ -447,17 +396,12 @@
         MyESocketElecViewController *vc = nav3.childViewControllers[0];
         tabBarController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
         socketManualControlViewController.device = device;
-        socketManualControlViewController.accountData = self.accountData;
-        
-        
         socketTimedControlViewController.device = device;
-        socketTimedControlViewController.accountData = self.accountData;
-        
         socketAutoControlViewController.device = device;
-        //        socketAutoControlViewController.accountData = self.accountData;
+        //        socketAutoControlViewController.MainDelegate.accountData = self.MainDelegate.accountData;
         
         vc.device = device;
-        [self presentViewController:tabBarController animated:YES completion:nil];
+        [self presentViewController:tabBarController animated:NO completion:nil];
     }
     if (device.type == 7) {
         UIStoryboard *story = [UIStoryboard storyboardWithName:@"Switch" bundle:nil];
@@ -474,34 +418,34 @@
         
         MyESwitchElecInfoViewController *vc3 = nav3.childViewControllers[0];
         vc3.device = device;
-        [self presentViewController:tab animated:YES completion:nil];
+        [self presentViewController:tab animated:NO completion:nil];
     }
 }
 // Tap on row accessory
-- (void) tableView: (UITableView *) tableView accessoryButtonTappedForRowWithIndexPath: (NSIndexPath *) indexPath
-{
-    MyEDevice *device = [self.devices objectAtIndex:indexPath.row];
-    if(device.type !=6 ){
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
-        MyEDeviceAddOrEditViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"AddOrEDitIrDeviceVC"];
-        viewController.device = device;
-        viewController.room = self.room;
-        viewController.accountData = self.accountData;
-        viewController.preivousPanelType = self.preivousPanelType;
-        viewController.actionType = 1;
-        viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
-        [self.navigationController pushViewController:viewController animated:YES];
-    } else{
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Socket" bundle:nil];
-        MyESocketEditViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"EditSocketVC"];
-        
-        viewController.device = device;
-        viewController.accountData = self.accountData;
-        viewController.preivousPanelType = self.preivousPanelType;
-        viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
-        [self.navigationController pushViewController:viewController animated:YES];
-    }
-}
+//- (void) tableView: (UITableView *) tableView accessoryButtonTappedForRowWithIndexPath: (NSIndexPath *) indexPath
+//{
+//    MyEDevice *device = [self.devices objectAtIndex:indexPath.row];
+//    if(device.type !=6 ){
+//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
+//        MyEDeviceAddOrEditViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"AddOrEDitIrDeviceVC"];
+//        viewController.device = device;
+//        viewController.room = self.room;
+//        viewController.accountData = MainDelegate.accountData;
+//        viewController.preivousPanelType = self.preivousPanelType;
+//        viewController.actionType = 1;
+//        viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
+//        [self.navigationController pushViewController:viewController animated:YES];
+//    } else{
+//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Socket" bundle:nil];
+//        MyESocketEditViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"EditSocketVC"];
+//        
+//        viewController.device = device;
+//        viewController.accountData = MainDelegate.accountData;
+//        viewController.preivousPanelType = self.preivousPanelType;
+//        viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
+//        [self.navigationController pushViewController:viewController animated:YES];
+//    }
+//}
 -(void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.row < [self.devices count]) {
         MyEDevice *device = self.devices[indexPath.row];
@@ -512,13 +456,23 @@
     }
 }
 - (BOOL)tableView:(UITableView *)tableView shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath{
-    return NO;
+    if (self.tableView.editing) {
+        return NO;
+    }
+    return YES;
 }
 -(BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath{
     return YES;
 }
 -(UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return UITableViewCellEditingStyleNone;
+    if (self.tableView.editing) {
+        return UITableViewCellEditingStyleNone;
+    }
+    MyEDevice *device = self.devices[indexPath.row];
+    if (device.type == 6 || device.type == 7) {
+        return UITableViewCellEditingStyleNone;
+    }
+    return UITableViewCellEditingStyleDelete;
 }
 
 // Override to support rearranging the table view.
@@ -527,54 +481,12 @@
     [self.devices removeObject:device];
     [self.devices insertObject:device atIndex:toIndexPath.row];
 }
-#pragma mark - Navigation methods
--(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender
-{
-    if([identifier isEqualToString:@"DevicesToDeviceAC"] ||
-       [identifier isEqualToString:@"DevicesToDeviceTV"] ||
-       [identifier isEqualToString:@"DevicesToDeviceAudio"] ||
-       [identifier isEqualToString:@"DevicesToDeviceCurtain"] ||
-       [identifier isEqualToString:@"DevicesToDeivceOther"] ||
-       [identifier isEqualToString:@"DevicesToDeviceSocket"])
-    {
-        NSInteger index = [self.tableView indexPathForCell:sender].row; // use this one to get the index of the accessory taped
-        MyEDevice *device = [self.accountData.devices objectAtIndex:index];
-        if (device.isOrphan){
-            [MyEUtil showMessageOn:self.navigationController.view withMessage:@"此设备是孤儿设备，请指定智控星"];
-            return NO;
-        }
-        if (!device.isConnected){
-            [MyEUtil showMessageOn:self.navigationController.view withMessage:@"此设备没有连接，请检查"];
-            return NO;
-        }
-    }
-    return YES;
-}
-// In a story board-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([[segue identifier] isEqualToString:@"DevicesToDeviceAC"]) {
-        NSIndexPath *selectedIndexPath = [self.tableView indexPathForSelectedRow];
-        UITabBarController *tabBarController= [segue destinationViewController];
-        
-        MyEAcManualControlViewController *acManualControlViewController = [[tabBarController childViewControllers] objectAtIndex:0];
-        MyEAutoControlViewController *acAutoControlViewController = [[tabBarController childViewControllers] objectAtIndex:1];
-        
-        tabBarController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
-        MyEDevice *device = [self.accountData.devices objectAtIndex:selectedIndexPath.row];
-        acManualControlViewController.device = device;
-        acManualControlViewController.accountData = self.accountData;
-        
-        acAutoControlViewController.device = device;
-        acAutoControlViewController.accountData = self.accountData;
-        
-    }
-}
+
 #pragma mark - IBAction methods
 - (IBAction)addDeviceAction:(id)sender {
     //如果terminal数组为零，此时不能添加
 //    NSMutableArray *array = [NSMutableArray array];
-//    for (MyETerminal *t in self.accountData.terminals) {
+//    for (MyETerminal *t in self.MainDelegate.accountData.terminals) {
 //        if ([[t.tId substringToIndex:2] isEqualToString:@"01"]) {
 //            [array addObject:t];
 //        }
@@ -583,16 +495,22 @@
 //        [self doThisWhenNeedAlert];
 //        return;
 //    }
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
-    MyEDeviceAddOrEditViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"AddOrEDitIrDeviceVC"];
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
+//    MyEDeviceAddOrEditViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"AddOrEDitIrDeviceVC"];
+//    MyEDevice *device = [[MyEDevice alloc] init];
+//    viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
+//    viewController.device = device;
+//    viewController.room = _room;
+//    viewController.MainDelegate.accountData = self.MainDelegate.accountData;
+//    
+//    viewController.preivousPanelType = self.preivousPanelType;
+//    viewController.actionType = 0;
+//    [self.navigationController pushViewController:viewController animated:YES];
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"deviceEdit" bundle:nil];
+    MYEDeviceEditViewController *viewController = [storyboard instantiateViewControllerWithIdentifier:@"addOrEdit"];
     MyEDevice *device = [[MyEDevice alloc] init];
-    viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
     viewController.device = device;
-    viewController.room = _room;
-    viewController.accountData = self.accountData;
-    
-    viewController.preivousPanelType = self.preivousPanelType;
-    viewController.actionType = 0;
+    viewController.isAdd = YES;
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
@@ -604,7 +522,7 @@
     MyEDevice *device = [self.devices objectAtIndex:indexPath.row];
 //    if (device.type != 7 && device.type != 6) {
 //        NSMutableArray *array = [NSMutableArray array];
-//        for (MyETerminal *t in self.accountData.terminals) {
+//        for (MyETerminal *t in self.MainDelegate.accountData.terminals) {
 //            if ([[t.tId substringToIndex:2] isEqualToString:@"01"]) {
 //                [array addObject:t];
 //            }
@@ -614,45 +532,59 @@
 //            return;
 //        }
 //    }
-    if (device.type == 1) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
-        MyEDeviceAddOrEditViewController *vc = (MyEDeviceAddOrEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ACAddOrEDitIrDeviceVC"];
-        vc.device = device;
-        vc.room = self.room;
-        vc.accountData = self.accountData;
-        vc.preivousPanelType = self.preivousPanelType;
-        vc.actionType = 1;
-        [self.navigationController pushViewController:vc animated:YES];
-    }else if(device.type == 6){
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Socket" bundle:nil];
-        MyESocketEditViewController *viewController = (MyESocketEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"EditSocketVC"];
-        viewController.device = device;
-        viewController.accountData = self.accountData;
-        viewController.preivousPanelType = self.preivousPanelType;
-        viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
-        [self.navigationController pushViewController:viewController animated:YES];
+    NSString *string = nil;
+    if (device.type == 6) {
+        string = @"socket";
     }else if (device.type == 7){
-        UIStoryboard *story = [UIStoryboard storyboardWithName:@"Switch" bundle:nil];
-        MyESwitchEditViewController *vc = [story instantiateViewControllerWithIdentifier:@"switchEdit"];
-        vc.accountData = self.accountData;
-        vc.device = device;
-        [self.navigationController pushViewController:vc animated:YES];
-    }else if (device.type >= 8 && device.type <= 13){
-        UIStoryboard *story = [UIStoryboard storyboardWithName:@"Safe" bundle:nil];
-        MyESafeDeviceEditViewController *vc = [story instantiateViewControllerWithIdentifier:@"safeDeviceEdit"];
-        vc.device = device;
-        vc.accountData = self.accountData;
-        [self.navigationController pushViewController:vc animated:YES];
-    }else{
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
-        MyEDeviceAddOrEditViewController *viewController = (MyEDeviceAddOrEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AddOrEDitIrDeviceVC"];
-        viewController.device = device;
-        viewController.room = self.room;
-        viewController.accountData = self.accountData;
-        viewController.preivousPanelType = self.preivousPanelType;
-        viewController.actionType = 1;
-        [self.navigationController pushViewController:viewController animated:YES];
-    }
+        string = @"switch";
+    }else if (device.type == 1){
+        string = @"ac";
+    }else
+        string = @"other";
+    
+    MYEDeviceEditViewController *vc = [[UIStoryboard storyboardWithName:@"deviceEdit" bundle:nil] instantiateViewControllerWithIdentifier:string];
+    vc.device = device;
+    [self.navigationController pushViewController:vc animated:YES];
+    
+//    if (device.type == 1) {
+//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
+//        MyEDeviceAddOrEditViewController *vc = (MyEDeviceAddOrEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ACAddOrEDitIrDeviceVC"];
+//        vc.device = device;
+//        vc.room = self.room;
+//        vc.MainDelegate.accountData = self.MainDelegate.accountData;
+//        vc.preivousPanelType = self.preivousPanelType;
+//        vc.actionType = 1;
+//        [self.navigationController pushViewController:vc animated:YES];
+//    }else if(device.type == 6){
+//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Socket" bundle:nil];
+//        MyESocketEditViewController *viewController = (MyESocketEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"EditSocketVC"];
+//        viewController.device = device;
+//        viewController.MainDelegate.accountData = self.MainDelegate.accountData;
+//        viewController.preivousPanelType = self.preivousPanelType;
+//        viewController.hidesBottomBarWhenPushed = YES; // 隐藏 hide  bottom tabbar
+//        [self.navigationController pushViewController:viewController animated:YES];
+//    }else if (device.type == 7){
+//        UIStoryboard *story = [UIStoryboard storyboardWithName:@"Switch" bundle:nil];
+//        MyESwitchEditViewController *vc = [story instantiateViewControllerWithIdentifier:@"switchEdit"];
+//        vc.MainDelegate.accountData = self.MainDelegate.accountData;
+//        vc.device = device;
+//        [self.navigationController pushViewController:vc animated:YES];
+//    }else if (device.type >= 8 && device.type <= 13){
+//        UIStoryboard *story = [UIStoryboard storyboardWithName:@"Safe" bundle:nil];
+//        MyESafeDeviceEditViewController *vc = [story instantiateViewControllerWithIdentifier:@"safeDeviceEdit"];
+//        vc.device = device;
+//        vc.MainDelegate.accountData = self.MainDelegate.accountData;
+//        [self.navigationController pushViewController:vc animated:YES];
+//    }else{
+//        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
+//        MyEDeviceAddOrEditViewController *viewController = (MyEDeviceAddOrEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"AddOrEDitIrDeviceVC"];
+//        viewController.device = device;
+//        viewController.room = self.room;
+//        viewController.MainDelegate.accountData = self.MainDelegate.accountData;
+//        viewController.preivousPanelType = self.preivousPanelType;
+//        viewController.actionType = 1;
+//        [self.navigationController pushViewController:viewController animated:YES];
+//    }
 }
 - (IBAction)powerOffOrOn:(UIButton *)sender forEvent:(UIEvent *)event {
     //至此，一共有两种方法获取点击的cell所在的行，一个是下面注释掉的这两行，另外一个就是现在使用的这一行
@@ -698,7 +630,7 @@
             NSString *urlStr = [NSString stringWithFormat:
                                 @"%@?gid=%@&id=%ld&powerSwitch=%d",
                                 GetRequst(URL_FOR_SOCKET_SWITCH_CONTROL),
-                                self.accountData.userId,
+                                MainDelegate.accountData.userId,
                                 (long)device.deviceId,
                                 1-device.status.powerSwitch];
             NSLog(@"urlStr = %@", urlStr);
@@ -713,6 +645,16 @@
         }
     }
 }
+
+- (IBAction)editTableView:(UIBarButtonItem *)sender {
+    [self.tableView setEditing:!self.tableView.editing animated:YES];
+    sender.title = self.tableView.editing?@"完成":@"排序";
+    if (!self.tableView.editing) {
+        [self reorderDeviceToServer];
+    }
+    [self.tableView reloadData];
+}
+
 - (IBAction)switchSocketAction:(id)sender forEvent:(UIEvent *)event {
     UIView *button = (UIView *)sender;
     UITouch *touch = [[event touchesForView:button] anyObject];
@@ -723,7 +665,6 @@
     if(device.status.connection >0){
         if(HUD == nil) {
             HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-            HUD.delegate = self;
         } else
             [HUD show:YES];
         
@@ -734,7 +675,7 @@
         NSString *urlStr = [NSString stringWithFormat:
                             @"%@?gid=%@&id=%ld&powerSwitch=%d",
                             GetRequst(URL_FOR_SOCKET_SWITCH_CONTROL),
-                            self.accountData.userId,
+                            MainDelegate.accountData.userId,
                             (long)device.deviceId,
                             1-device.status.powerSwitch];
         NSLog(@"urlStr = %@", urlStr);
@@ -764,14 +705,14 @@
     SBJsonWriter *writer = [[SBJsonWriter alloc] init];
     NSString *str = [writer stringWithObject:dic];
     NSLog(@"%@",str);
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&data=%@",GetRequst(URL_FOR_DEVICE_REORDER_DEVICE), self.accountData.userId,str];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&data=%@",GetRequst(URL_FOR_DEVICE_REORDER_DEVICE), MainDelegate.accountData.userId,str];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"reorderDevice"  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 -(void)controlDeviceToPowerOnOrOff:(MyEDevice *)device withDictionary:(NSDictionary *)dic{
     NSIndexPath *index = dic[@"index"];
     NSLog(@"send index is  %li",(long)index.row);
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&switch_=%i&deviceId=%li",GetRequst(URL_FOR_DEVICE_CONTROL_BY_CLICK_BUTTON), self.accountData.userId, 1-device.status.powerSwitch,(long)device.deviceId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&switch_=%i&deviceId=%li",GetRequst(URL_FOR_DEVICE_CONTROL_BY_CLICK_BUTTON), MainDelegate.accountData.userId, 1-device.status.powerSwitch,(long)device.deviceId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"powerOnOrOff"  userDataDictionary:dic];
     NSLog(@"%@",downloader.name);
 }
@@ -779,51 +720,39 @@
     if (self.refreshControl.isRefreshing) {
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
     }
-//    UINavigationController *nav = self.tabBarController.childViewControllers[4];
-//    MyESettingsViewController *vc = nav.childViewControllers[0];
-//    vc.isFresh = YES;
-    HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
 
-    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&ver=2",GetRequst(URL_FOR_DEVICE_ROOM_LIST),accountData.userId];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&ver=2",GetRequst(URL_FOR_DEVICE_ROOM_LIST),MainDelegate.accountData.userId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_HOME_LIST_DOWNLOAD_NAME  userDataDictionary:nil];
     NSLog(@"deviceAndRoomList is %@",uploader.name);
 }
 
-- (void) deleteDeviceFromServerforRowAtIndexPath:(NSIndexPath *)indexPath{
+- (void) deleteDeviceFromServer{
     if(HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        HUD.delegate = self;
     } else
         [HUD show:YES];
     
-    MyEDevice *device = [self.devices objectAtIndex:indexPath.row];
-    
-    NSDictionary *dict = [NSDictionary dictionaryWithObjectsAndKeys:
-                          indexPath, @"indexPath",
-                          nil ];
-    NSString *urlStr;
-    MyEDataLoader *uploader;
-    switch (device.type){
-        case 1: // AC
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&action=2",GetRequst(URL_FOR_AC_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId];
-            uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_ADD_EDIT_UPLOADER_NMAE  userDataDictionary:dict];
-            break;
-        case 6: // Socket
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&maxElectricCurrent=%ld&action=2",GetRequst(URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId, (long)device.status.maxElectricCurrent];
-            uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_ADD_EDIT_UPLOADER_NMAE  userDataDictionary:dict];
-            break;
-        default:// other IR device
-            urlStr= [NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&type=%ld&action=2",GetRequst(URL_FOR_DEVICE_IR_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId,(long)device.type];
-            uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_ADD_EDIT_UPLOADER_NMAE  userDataDictionary:dict];
-            break;
+    MyEDevice *device = [self.devices objectAtIndex:_selectIndexPath.row];
+    if (device.type < 6) {   //普通红外设备
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%ld&name=%@&tId=%@&roomId=%ld&type=%ld&action=2",GetRequst(URL_FOR_DEVICE_IR_ADD_EDIT_SAVE), (long)device.deviceId, device.name, device.tId, (long)device.roomId,(long)device.type] postData:nil delegate:self loaderName:@"deleteDevice" userDataDictionary:nil];
+    }else if (device.type > 7){   //安防设备
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&tId=%@&name=%@&type=%i&action=2&roomId=%i",GetRequst(device.type > 11?URL_FOR_RFDEVICE_EDIT:URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),device.deviceId,device.tId,device.name,device.type,device.roomId] postData:nil delegate:self loaderName:@"deleteDevice" userDataDictionary:nil];
     }
-    NSLog(@"%@",uploader.name);
 }
 
 #pragma mark - URL delegate methods
 - (void) didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
+    NSLog(@"receive string is %@",string);
+    if ([name isEqualToString:@"deleteDevice"]) {
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        MyEDevice *device = self.devices[_selectIndexPath.row];
+        if (i == 1) {
+            [MainDelegate.accountData addOrDeleteDevice:device isAdd:NO];
+        }else
+            [MyEUtil showMessageOn:nil withMessage:@"删除设备失败"];
+        [self refreshUI];
+    }
     if ([name isEqualToString:@"reorderDevice"]) {
-        NSLog(@"reorderDevice string is %@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
         }else if ([MyEUtil getResultFromAjaxString:string] != 1){
@@ -833,7 +762,6 @@
         }
     }
     if ([name isEqualToString:@"powerOnOrOff"]) {
-        NSLog(@"powerOnOrOff string is %@",string);
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_selectIndexPath];
         UIButton *btn = (UIButton *)[cell.contentView viewWithTag:1];
         UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:202];
@@ -857,7 +785,6 @@
         }
     }
     if([name isEqualToString:DEVICE_ADD_EDIT_UPLOADER_NMAE]) {
-        NSLog(@"ajax json = %@", string);
         if ([MyEUtil getResultFromAjaxString:string] == -3){
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
         } else if ([MyEUtil getResultFromAjaxString:string] != 1) {
@@ -872,41 +799,22 @@
     if([name isEqualToString:DEVICE_HOME_LIST_DOWNLOAD_NAME]) {
         [self.refreshControl endRefreshing];
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
-        NSLog(@"string is %@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -3){
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
         } else if ([MyEUtil getResultFromAjaxString:string] != 1) {
             [MyEUtil showErrorOn:self.navigationController.view withMessage:@"获取设备房间列表失败，请稍后重试！"];
         } else{
             MyEAccountData *account = [[MyEAccountData alloc] initWithJSONString:string];
-            accountData.devices = account.devices;
-            accountData.rooms = account.rooms;
-            accountData.deviceTypes = account.deviceTypes;
-            accountData.terminals = account.terminals;
-            //这里要同步场景中的数据,否则不会主动更新的
-            UINavigationController *nav = [self.tabBarController childViewControllers][3];
-            MyEScenesViewController *vc = [nav childViewControllers][0];
-            vc.accountData.devices = account.devices;
-            vc.accountData.rooms = account.rooms;
-            vc.accountData.deviceTypes = account.deviceTypes;
-            
-            if (_preivousPanelType == 0) { //直接进入device界面
-                self.devices = accountData.devices;
-            }else{  //从房间列表进入devices界面
-                NSMutableArray *array = [NSMutableArray array];
-                for (int j=0; j<[self.accountData.devices count]; j++) {
-                    MyEDevice *device = self.accountData.devices[j];
-                    if (self.room.roomId == device.roomId) {
-                        [array addObject:self.accountData.devices[j]];
-                    }
-                }
-                self.devices = array;
-            }
-            [self.tableView reloadData];
+//            MainDelegate.accountData.devices = account.devices;
+//            MainDelegate.accountData.rooms = account.rooms;
+//            MainDelegate.accountData.deviceTypes = account.deviceTypes;
+//            MainDelegate.accountData.terminals = account.terminals;
+            MainDelegate.accountData = [MainDelegate.accountData newAccoutData:account];
+            self.devices = [MainDelegate.accountData allDeviceInRoom:self.preivousPanelType == 1? self.room : nil];
+            [self refreshUI];
         }
     }
     if([name isEqualToString:SOCKET_SWITCH_CONTROL_UPLOADER_NMAE]) {
-        NSLog(@"socket control string is %@",string);
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_selectIndexPath];
         UIButton *btn = (UIButton *)[cell.contentView viewWithTag:1];
         UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:202];
@@ -928,7 +836,6 @@
         }
     }
     if ([name isEqualToString:@"switchControl"]) {
-        NSLog(@"switch Control is %@",string);
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_selectIndexPath];
         UIButton *btn = (UIButton *)[cell.contentView viewWithTag:1];
         UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:202];
@@ -956,7 +863,6 @@
         }
     }
     if ([name isEqualToString:@"safeDeviceControl"]) {
-        NSLog(@"safeDeviceControl string is %@",string);
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:_selectIndexPath];
         UIButton *btn = (UIButton *)[cell.contentView viewWithTag:1];
         UIActivityIndicatorView *act = (UIActivityIndicatorView *)[cell.contentView viewWithTag:202];
@@ -1009,15 +915,16 @@
 }
 #pragma mark - alertView delegate methods
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        [self deleteDeviceFromServer];
+    }
     if (alertView.tag == 101 && buttonIndex == 1) {
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"IrDevice" bundle:nil];
-        MyEDeviceAddOrEditViewController *vc = (MyEDeviceAddOrEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ACAddOrEDitIrDeviceVC"];
-        vc.device = self.device;
-        vc.room = self.room;
-        vc.accountData = self.accountData;
-        vc.preivousPanelType = self.preivousPanelType;
-        vc.actionType = 1;
-        [self.navigationController pushViewController:vc animated:YES];
+//        MyEDevice *device = self.devices[_selectIndexPath.row];
+//        UIStoryboard *story = [UIStoryboard storyboardWithName:@"AcInstruction" bundle:nil];
+//        MYEACInstructionManageViewController *vc = [story instantiateViewControllerWithIdentifier:@"manager"];
+//        vc.device = device;
+//        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 @end

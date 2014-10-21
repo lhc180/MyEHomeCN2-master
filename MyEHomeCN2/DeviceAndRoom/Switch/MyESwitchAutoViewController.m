@@ -106,12 +106,9 @@
 }
 #pragma mark - UITableView delegate methods
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"确定删除该进程?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-    alert.rightBlock = ^{
-        _selectIndex = indexPath;
-        MyESwitchSchedule *schedule = self.control.SSList[indexPath.row];
-        [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&action=3",GetRequst(URL_FOR_SWITCH_SCHEDULE_SAVE),self.device.deviceId,schedule.scheduleId] andName:@"scheduleDelete"];
-    };
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"确定删除该进程?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = 110;
+    _selectIndex = indexPath;
     [alert show];
 }
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -218,6 +215,10 @@
             [self uploadInfoToServer];
         }else
             [self.tableView reloadData];
+    }
+    if (alertView.tag == 110) {
+        MyESwitchSchedule *schedule = self.control.SSList[_selectIndex.row];
+        [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?deviceId=%i&scheduleId=%i&action=3",GetRequst(URL_FOR_SWITCH_SCHEDULE_SAVE),self.device.deviceId,schedule.scheduleId] andName:@"scheduleDelete"];
     }
 }
 @end

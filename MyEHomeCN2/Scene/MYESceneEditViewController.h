@@ -8,16 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "MyEScenesDeviceEditOrAddViewController.h"
-
+#import "MyEScene.h"
+#import "MyESceneInstructionRecived.h"
 @interface MYESceneEditViewController : UITableViewController<MyEDataLoaderDelegate,MyEScenesDeviceEditOrAddViewControllerDelegate>
 
 @property(nonatomic, strong) MyEScene *scene;
-@property(nonatomic, weak) MyEAccountData *accountData;
 @property(nonatomic, weak) MyESceneInstructionRecived *instructionRecived;
 
 @property (nonatomic, assign) BOOL isAdd;
 @property (weak, nonatomic) IBOutlet UITextField *nameTxt;
 @property (weak, nonatomic) IBOutlet UIButton *editBtn;
+@property (weak, nonatomic) IBOutlet UIButton *addDeviceBtn;
 @property (weak, nonatomic) IBOutlet UIButton *orderBtn;
 
 @end

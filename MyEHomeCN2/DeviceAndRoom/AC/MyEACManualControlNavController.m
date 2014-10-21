@@ -21,16 +21,14 @@
     [super viewDidLoad];
     if (!self.device.isSystemDefined) {
         MyEAcUserModelViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"customControl"];
-        vc.accountData = self.accountData;
         vc.device = self.device;
-        [self setViewControllers:@[vc] animated:YES];
+        [self setViewControllers:@[vc] animated:NO];
 //        [self addChildViewController:vc];
 //        [self.view addSubview:vc.view];
     }else{
-        MyEAcManualControlViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"standerdControl"];
-        vc.accountData = self.accountData;
+        MyEAcManualControlViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:IS_IPAD?@"standerdControlForIPad": @"standerdControl"];
         vc.device = self.device;
-        [self setViewControllers:@[vc] animated:YES];
+        [self setViewControllers:@[vc] animated:NO];
 //        [self addChildViewController:vc];
 //        [self.view addSubview:vc.view];
     }

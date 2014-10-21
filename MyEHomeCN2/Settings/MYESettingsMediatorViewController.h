@@ -8,10 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "MyEQRScanViewController.h"
+#import "WTReTextField.h"
 
-@interface MYESettingsMediatorViewController : UITableViewController<MyEDataLoaderDelegate,MyEQRScanViewControllerDelegate>
+@interface MYESettingsMediatorViewController : UITableViewController<MyEDataLoaderDelegate,MyEQRScanViewControllerDelegate,UIAlertViewDelegate>
 
-@property (weak, nonatomic) MyEAccountData *accountData;
 
 //@property (nonatomic) NSInteger changeValue;// 1.表示用户已经删除了网关，需要重新绑定
 

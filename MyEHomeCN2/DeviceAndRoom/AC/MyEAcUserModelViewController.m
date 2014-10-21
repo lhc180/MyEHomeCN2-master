@@ -15,15 +15,8 @@
 @end
 
 @implementation MyEAcUserModelViewController
-@synthesize accountData, device;
-- (id)initWithStyle:(UITableViewStyle)style
-{
-    self = [super initWithStyle:style];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
+@synthesize device;
+
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
@@ -47,11 +40,15 @@
     timerToRefreshTemperatureAndHumidity = [NSTimer scheduledTimerWithTimeInterval:600 target:self selector:@selector(downloadTemperatureHumidityFromServer) userInfo:nil repeats:YES];
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
     [timerToRefreshTemperatureAndHumidity invalidate];
 }
 #pragma mark - private methods
 - (void)dismissVC{
-    [self dismissViewControllerAnimated:YES completion:nil];
+    if (self.isPush) {
+        [self.navigationController popToRootViewControllerAnimated:YES];
+    }else
+        [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (IBAction)refreshTemperatureAndHumidity:(UIBarButtonItem *)sender {
     [self downloadTemperatureHumidityFromServer];

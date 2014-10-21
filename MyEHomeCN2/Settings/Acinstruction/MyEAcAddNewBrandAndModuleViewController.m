@@ -13,37 +13,21 @@
 @end
 
 @implementation MyEAcAddNewBrandAndModuleViewController
-@synthesize jumpFromAddBtn,titleLabel;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-#pragma mark - life circle methods 
+#pragma mark - life circle methods
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    _brandNew = [[MyEAcBrand alloc] init];
+    _modelNew = [[MyEAcModel alloc] init];
     [self defineTapGestureRecognizer];
     self.brandName.delegate = self;
     self.moduleName.delegate = self;
     
-    if ([self.brandName.text length]==0||[self.moduleName.text length] == 0) {
-        self.saveBtn.enabled = NO;
-    }
-    if (!IS_IOS6) {
-        for (UIButton *btn in self.view.subviews) {
-            if ([btn isKindOfClass:[UIButton class]]) {
-                btn.layer.masksToBounds = YES;
-                btn.layer.cornerRadius = 5;
-                btn.layer.borderColor = btn.tintColor.CGColor;
-                btn.layer.borderWidth = 1;
-            }
+    for (UIButton *btn in self.view.subviews) {
+        if ([btn isKindOfClass:[UIButton class]]) {
+            [MyEUtil makeFlatButton:btn];
         }
     }
 }
@@ -67,15 +51,17 @@
 
 #pragma mark - IBAction methods
 - (IBAction)save:(UIButton *)sender {
-// 这里需要对输入的名称进行判断，当然，只是对用户新增的内容进行判断
-    for (NSString *s in self.modelNameArray) {
-        if ([self.moduleName.text isEqualToString:s]) {
-            for (NSString *s in self.brandNameArray) {
-                if ([self.brandName.text isEqualToString:s]) {
-                    [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"型号已存在！"];
-                    return;
-                }
-            }
+    [self.view endEditing:YES];
+    _brandNew.brandName = self.brandName.text;
+    _modelNew.modelName = self.moduleName.text;
+    if ([_brandNew.brandName length]==0||[_modelNew.modelName length] == 0) {
+        [MyEUtil showMessageOn:nil withMessage:@"输入错误"];
+        return;
+    }
+    for (MyEAcModel *m in _brandNew.models) {
+        if ([m.modelName isEqualToString:_modelNew.modelName]) {
+            [MyEUtil showInstructionStatusWithYes:NO andView:self.navigationController.navigationBar andMessage:@"型号已存在！"];
+            return;
         }
     }
     self.cancelBtnPressed = NO;
@@ -96,17 +82,17 @@
     
     NSString *urlStr;
     MyEDataLoader *uploader;
-    urlStr= [NSString stringWithFormat:@"%@?gId=%@&action=1&brandId=%li&moduleId=%li&tId=%@&brandName=%@&moduleName=%@",
+    urlStr= [NSString stringWithFormat:@"%@?gId=%@&action=1&brandId=%i&moduleId=%i&tId=%@&brandName=%@&moduleName=%@",
              GetRequst(URL_FOR_AC_BRAND_MODEL_EDIT),
-             self.accountData.userId,
-             (long)self.brandId,
-             (long)self.moduleId,
+             MainDelegate.accountData.userId,
+             _brandNew.brandId,
+             _modelNew.modelId,
              self.device.tId,
-             self.brandName.text,
-             self.moduleName.text];
+             _brandNew.brandName,
+             _modelNew.modelName];
     uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"editBrandAndModule"  userDataDictionary:nil];
     NSLog(@"%@",uploader.name);
-
+    
 }
 - (void)addNewBrandAndModuleToServer
 {
@@ -120,15 +106,15 @@
     MyEDataLoader *uploader;
     urlStr= [NSString stringWithFormat:@"%@?gId=%@&action=0&brandId=0&moduleId=0&tId=%@&brandName=%@&moduleName=%@",
              GetRequst(URL_FOR_AC_BRAND_MODEL_EDIT),
-             self.accountData.userId,
+             MainDelegate.accountData.userId,
              self.device.tId,
-             self.brandName.text,
-             self.moduleName.text];
+             _brandNew.brandName,
+             _modelNew.modelName];
     uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"addNewBrandAndModule"  userDataDictionary:nil];
     NSLog(@"%@",uploader.name);
 }
 
-#pragma mark - URL delegate methods 
+#pragma mark - URL delegate methods
 
 - (void) didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];
@@ -139,10 +125,22 @@
         } else{
             SBJsonParser *parser = [[SBJsonParser alloc] init];
             NSDictionary *dic = [parser objectWithString:string];
-            self.newBrandId = [dic[@"brandId"] intValue];
-            self.newModuleId = [dic[@"moduleId"] intValue];
-            [self mz_dismissFormSheetControllerAnimated:YES completionHandler:^(MZFormSheetController *formSheetController) {
-            }];
+            _brandNew.brandId = [dic[@"brandId"] intValue];
+            _modelNew.modelId = [dic[@"moduleId"] intValue];
+            BOOL hasOne = NO;
+            for (MyEAcBrand *b in self.brandsAndModules.userAcBrands) {
+                if (b.brandId == _brandNew.brandId) {
+                    hasOne = YES;
+                    [b.models addObject:_modelNew];
+                    break;
+                }
+            }
+            if (!hasOne) {
+                [_brandNew.models addObject:_modelNew];
+                [self.brandsAndModules.userAcBrands addObject:_brandNew];
+            }
+            [MyEUtil saveObject:self.brandsAndModules withFileName:FILE_FOR_AC_BRANDS];
+            [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
         }
     }
     if([name isEqualToString:@"editBrandAndModule"]) {
@@ -154,7 +152,7 @@
             }];
         }
     }
-
+    
 }
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     NSLog(@"In delegate Connection failed! Error - %@ %@",
@@ -163,7 +161,7 @@
     [MyEUtil showMessageOn:nil withMessage:@"通讯错误，请稍候再试"];
     [HUD hide:YES];
 }
-#pragma mark - textField delegate methods 
+#pragma mark - textField delegate methods
 - (void)textFieldDidBeginEditing:(UITextField *)textField{
     if ([self.brandName.text length]!=0||[self.moduleName.text length]!=0) {
         self.saveBtn.enabled = YES;

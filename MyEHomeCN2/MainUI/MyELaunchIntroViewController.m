@@ -94,7 +94,7 @@
 }
 #pragma mark - IBAction methods
 - (IBAction)showLoginVC:(UIButton *)sender {
-    MyELoginViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"LoginViewController"];
+    MyELoginViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:IS_IPAD?@"loginForIPad":@"LoginViewController"];
     [MainDelegate.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
     MainDelegate.window.rootViewController = vc;
 }

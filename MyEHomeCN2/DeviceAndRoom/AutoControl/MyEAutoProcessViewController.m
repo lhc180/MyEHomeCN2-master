@@ -27,7 +27,7 @@
 @implementation MyEAutoProcessViewController
 @synthesize process = _process,
     unavailableDays = _unavailableDays,
-    isAddNew = _isAddNew, accountData, device,saveProcessBtn;
+    isAddNew = _isAddNew, device,saveProcessBtn;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -43,7 +43,6 @@
     [super viewDidLoad];
     //进来之后找到VC，直接进行传值
     MyEAutoPeriodListViewController *vc = [self.childViewControllers objectAtIndex:0];
-    vc.accountData = self.accountData;
     vc.device = self.device;
     vc.periodList = self.process.periods;
     [vc.tableView reloadData];
@@ -155,7 +154,6 @@
         period.stid = [self.process firstAvailablePeriodStid];
         period.etid = period.stid + 1;
         pvc.period = period;
-        pvc.accountData = self.accountData;
         pvc.device = self.device;
         pvc.isAddNew = YES;
     }
@@ -214,14 +212,8 @@
             hasError = YES;
         }
         if(hasError){
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                        contentText:msg
-                                                    leftButtonTitle:@"修改进程"
-                                                   rightButtonTitle:@"返回上级"];
-            [alert show];
-            alert.rightBlock = ^() {
-                [self.navigationController popViewControllerAnimated:YES];
-            };
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:msg delegate:self cancelButtonTitle:@"修改进程" otherButtonTitles:@"返回上级", nil];
+            alert.tag = 100;
         } else
             [self uploadProcessToServerAndReturn];
     }
@@ -249,7 +241,7 @@
     if (self.device.type == 1) {
         NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&action=%ld&data=%@",
                             GetRequst(URL_FOR_AC_UPLOAD_AC_AUTO_PROCESS_SAVE),
-                            self.accountData.userId,
+                            MainDelegate.accountData.userId,
                             (long)self.process.pId,
                             (long)self.device.deviceId,
                             (long)action,
@@ -265,7 +257,7 @@
     if (self.device.type == 6) {
         NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%ld&deviceId=%ld&action=%ld&data=%@",
                             GetRequst(URL_FOR_UPLOAD_SOCKET_AUTO_PROCESS_SAVE),
-                            self.accountData.userId,
+                            MainDelegate.accountData.userId,
                             (long)self.process.pId,
                             (long)self.device.deviceId,
                             (long)action,
@@ -325,5 +317,12 @@
     
     [MyEUtil showSuccessOn:self.navigationController.view withMessage:msg];
     [HUD hide:YES];
+}
+
+#pragma mark - UIAlertView delegate methods
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        [self.navigationController popViewControllerAnimated:YES];
+    }
 }
 @end

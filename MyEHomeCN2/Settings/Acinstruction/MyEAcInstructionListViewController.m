@@ -12,37 +12,35 @@
 
 
 @interface MyEAcInstructionListViewController ()
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *addBtn;
 
 @end
 
 @implementation MyEAcInstructionListViewController
-static NSString *string = @"cell";
 
-@synthesize tableview,brandAndModuleLabel,tableviewArray,labelText;
+@synthesize brandAndModuleLabel,tableviewArray,labelText;
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 #pragma mark - life circle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.title = @"指令列表";
+    self.navigationItem.rightBarButtonItem = self.addBtn;
     self.brandAndModuleLabel.text = self.labelText;
-    tableview.tableFooterView = [[UIView alloc] init];
-    tableview.tableFooterView.backgroundColor = [UIColor clearColor];
+    self.tableView.tableFooterView = [[UIView alloc] init];
+    self.tableView.tableFooterView.backgroundColor = [UIColor clearColor];
     //这个是最新的定制cell的方式
-    [tableview registerNib:[UINib nibWithNibName:@"instructionListCell" bundle:nil] forCellReuseIdentifier:string];
-    
     [self downloadAcInstructionList];
 }
 -(void)viewWillAppear:(BOOL)animated{
-    [self.tableview reloadData];
+    [super viewWillAppear:YES];
+    MyEAcStudyInstruction *instruction0 = self.list.instructionList[0];
+    MyEAcStudyInstruction *instruction1 = self.list.instructionList[1];
+    if (instruction0.status > 0 && instruction1.status > 0) {
+        self.model.study = 1;
+    }
+    [self.tableView reloadData];
 }
 - (void)didReceiveMemoryWarning
 {
@@ -53,7 +51,6 @@ static NSString *string = @"cell";
 -(void)deleteInstructionFromServerWithIndexPath:(NSIndexPath *)index{
     if(HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        HUD.delegate = self;
     } else
         [HUD show:YES];
     MyEAcStudyInstruction *instruction = self.list.instructionList[index.row - 1];
@@ -66,11 +63,10 @@ static NSString *string = @"cell";
 -(void)downloadAcInstructionList{
     if(HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        HUD.delegate = self;
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&moduleId=%li",GetRequst(URL_FOR_USER_AC_INSTRUCTION_SET_VIEW),self.device.tId,(long)self.moduleId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?tId=%@&moduleId=%li",GetRequst(URL_FOR_USER_AC_INSTRUCTION_SET_VIEW),self.device.tId,(long)self.model.modelId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"downloadAcInstructionList" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
@@ -89,7 +85,7 @@ static NSString *string = @"cell";
         }else{
             MyEAcStudyInstructionList *list = [[MyEAcStudyInstructionList alloc] initWithJSONString:string];
             self.list = list;
-            [tableview reloadData];
+            [self.tableView reloadData];
         }
     }
     if ([name isEqualToString:@"deleteInstruction"]) {
@@ -103,8 +99,8 @@ static NSString *string = @"cell";
             [MyEUtil showMessageOn:self.navigationController.view withMessage:@"删除指令时发生错误"];
         }else{
             [self.list.instructionList removeObjectAtIndex:deleteInstructionIndex.row-1];
-            [self.tableview deleteRowsAtIndexPaths:@[deleteInstructionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
-            [self.tableview reloadData];
+            [self.tableView deleteRowsAtIndexPaths:@[deleteInstructionIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView reloadData];
         }
     }
 }
@@ -115,7 +111,7 @@ static NSString *string = @"cell";
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
 
-    MyEAcInstructionListCell *cell = [tableView dequeueReusableCellWithIdentifier:string];
+    MyEAcInstructionListCell *cell = [self.tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     if (indexPath.row == 0) {
         cell.orderLabel.text = @"序号";
         cell.powerLabel.text = @"开关";
@@ -170,49 +166,37 @@ static NSString *string = @"cell";
     }
 }
 
--(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    [self performSegueWithIdentifier:@"instructionEdit" sender:indexPath];
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-}
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     deleteInstructionIndex = indexPath;
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                contentText:@"此操作将删除这条指令，您确定么？"
-                                            leftButtonTitle:@"取消"
-                                           rightButtonTitle:@"确定"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"您正在删除这条指令,确定要删除么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"删除", nil];
+    alert.tag = 100;
     [alert show];
-    alert.rightBlock = ^() {
-        [self deleteInstructionFromServerWithIndexPath:indexPath];
-    };
 }
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
     return @"删除";
 }
 #pragma mark - navigation methods
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
-    if ([segue.identifier isEqualToString:@"instructionEdit"]) {
-        NSIndexPath *index = sender;
-        MyEAcStudyInstruction *instruction = self.list.instructionList[index.row - 1];
+    if ([segue.identifier isEqualToString:@"edit"]) {
+        MyEAcStudyInstruction *instruction = self.list.instructionList[[self.tableView indexPathForCell:sender].row - 1];
         MyEAcInstructionStudyViewController *vc = segue.destinationViewController;
         vc.instruction = instruction;
         vc.device = self.device;
         vc.brandId = self.brandId;
         vc.moduleId = self.moduleId;
-        vc.accountData = self.accountData;
         vc.jumpFromBarBtn = NO;
         vc.list = self.list;
-        vc.index = index;
+        vc.index = [self.tableView indexPathForCell:sender];
     }
-    if ([segue.identifier isEqualToString:@"add"]) {
-        MyEAcInstructionStudyViewController *vc = segue.destinationViewController;
-        vc.accountData = self.accountData;
-        vc.jumpFromBarBtn = YES;
-        vc.device = self.device;
-        vc.moduleId = self.moduleId;
-        vc.list = self.list;
-        int i = 100;
-        [NSValue valueWithBytes:&i objCType:@encode(int)];
-    }
+//    if ([segue.identifier isEqualToString:@"add"]) {
+//        MyEAcInstructionStudyViewController *vc = segue.destinationViewController;
+//        vc.jumpFromBarBtn = YES;
+//        vc.device = self.device;
+//        vc.moduleId = self.moduleId;
+//        vc.list = self.list;
+////        int i = 100;
+////        [NSValue valueWithBytes:&i objCType:@encode(int)];
+//    }
 }
 
 #pragma mark - IBAction methods
@@ -225,14 +209,21 @@ static NSString *string = @"cell";
     MyEAcStudyInstruction *instruction1 = self.list.instructionList[0];
     MyEAcStudyInstruction *instruction2 = self.list.instructionList[1];
     if (instruction1.status == 0 || instruction2.status == 0) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告"
-                                                    contentText:@"当前列表的指令未学习，只有当目前两条指令学习之后才可以新增指令"
-                                                leftButtonTitle:nil
-                                               rightButtonTitle:@"知道了"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"当前列表的指令未学习,只有指令学习成功之后才可以添加新的指令" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
     }else{
-        [self performSegueWithIdentifier:@"add" sender:self];
+        MyEAcInstructionStudyViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@""];
+        vc.jumpFromBarBtn = YES;
+        vc.device = self.device;
+        vc.moduleId = self.moduleId;
+        vc.list = self.list;
+        [self.navigationController pushViewController:vc animated:YES];
     }
 }
 
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        [self deleteInstructionFromServerWithIndexPath:deleteInstructionIndex];
+    }
+}
 @end

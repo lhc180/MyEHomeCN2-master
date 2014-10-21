@@ -7,6 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WTReTextField.h"
+#import "MyEQRScanViewController.h"
 
 @interface MyESigeUpViewController : UIViewController<MyEQRScanViewControllerDelegate,MyEDataLoaderDelegate,UITextFieldDelegate>{
     MBProgressHUD *HUD;
@@ -15,7 +17,6 @@
 }
 
 @property (strong, nonatomic) IBOutlet UIImageView *loginImage;
-@property (strong, nonatomic) MyEAccountData *accountData;
 
 - (IBAction)signUp:(id)sender;
 

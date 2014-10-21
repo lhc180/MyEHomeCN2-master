@@ -89,6 +89,7 @@
 
 - (void)handleTimer:(NSTimer *)timer{
     [self stopSearch];
+    [HUD hide:YES];
     NSLog(@"%@",_wlanSearchDevices);
     _wlanUsefullDevices = [_wlanSearchDevices mutableCopy];
     BOOL hasNew = NO;
@@ -118,7 +119,6 @@
 //            _camera = _wlanSearchDevices[0];
         }
     }
-    [HUD hide:YES];
     if (hasNew) {
         if (_wlanUsefullDevices.count == 1) {
             self.camera.UID = _wlanUsefullDevices[0];

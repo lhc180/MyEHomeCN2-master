@@ -8,16 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyEAcEnergySavingViewController : UIViewController
-<MyEDataLoaderDelegate,MBProgressHUDDelegate,
-UIPickerViewDataSource,UIPickerViewDelegate,UINavigationBarDelegate>{
+#import "MYETimePicker.h"
+#import "MyEDevice.h"
+#import "MyEAcComfort.h"
+
+@interface MyEAcEnergySavingViewController : UIViewController<MyEDataLoaderDelegate,MYETimePickerDelegate>{
     MBProgressHUD *HUD;
-    NSInteger buttonTag;
-    NSMutableArray *_timeArray;
-    BOOL _saveToExit;
     MyEAcComfort *_comfort_copy;// 每次设置comfort_copy时候，就拷贝一份，以便在每次返回此面板时，用来比较是否进程有变化，以便显示保存按钮，
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic, retain) MyEAcComfort *comfort;
 
@@ -27,8 +25,5 @@ UIPickerViewDataSource,UIPickerViewDelegate,UINavigationBarDelegate>{
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *saveBtn;
 @property (weak, nonatomic) IBOutlet UIView *overView;
-
-@property (strong, nonatomic) UIView *pickerViewContainer;
-@property (strong, nonatomic) UIPickerView *picker;
 
 @end

@@ -9,16 +9,17 @@
 #import "MyEUtil.h"
 #import "SBJson.h"
 #import "MBProgressHUD.h"
+#import "MyEProvinceAndCity.h"
 
 CGContextRef MyECreateBitmapContext (int pixelsWide,
                                      int pixelsHigh)
 {
     CGContextRef context = NULL;
     CGColorSpaceRef colorSpace;
-//    int bitmapByteCount;
+    //    int bitmapByteCount;
     int bitmapBytesPerRow;
     bitmapBytesPerRow = (pixelsWide * 4); // 1
-//    bitmapByteCount = (bitmapBytesPerRow * pixelsHigh);
+    //    bitmapByteCount = (bitmapBytesPerRow * pixelsHigh);
     colorSpace = CGColorSpaceCreateDeviceRGB(); // 2
     
     context = CGBitmapContextCreate (NULL, // In Mac OS X 10.6 and iOS 4, you pass NULL as bitmap data, Quartz automatically allocates space for the bitmap.
@@ -105,18 +106,18 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
 }
 
 
-// 根据HEX值创建UIColor, hex值必须是8位16进制整数，最后两位是alpha 
+// 根据HEX值创建UIColor, hex值必须是8位16进制整数，最后两位是alpha
 + (UIColor *) colorWithHexInteger8:(NSInteger)hexInteger {
-    return [UIColor colorWithRed:((hexInteger>>24)&0xFF)/255.0 
-                           green:((hexInteger>>16)&0xFF)/255.0 
-                            blue:((hexInteger>>8)&0xFF)/255.0 
+    return [UIColor colorWithRed:((hexInteger>>24)&0xFF)/255.0
+                           green:((hexInteger>>16)&0xFF)/255.0
+                            blue:((hexInteger>>8)&0xFF)/255.0
                            alpha:((hexInteger)&0xFF)/255.0];
 }
-// 根据HEX值创建UIColor, hex值必须是6位16进制整数，不包括alpha 
+// 根据HEX值创建UIColor, hex值必须是6位16进制整数，不包括alpha
 + (UIColor *) colorWithHexInteger6:(NSInteger)hexInteger {
-    return [UIColor colorWithRed:((hexInteger>>16)&0xFF)/255.0 
-                           green:((hexInteger>>8)&0xFF)/255.0 
-                            blue:((hexInteger)&0xFF)/255.0 
+    return [UIColor colorWithRed:((hexInteger>>16)&0xFF)/255.0
+                           green:((hexInteger>>8)&0xFF)/255.0
+                            blue:((hexInteger)&0xFF)/255.0
                            alpha:1];
 }
 
@@ -189,7 +190,7 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
 
 // 创建16个样本颜色的UIColor对象构成的数组，这些样本颜色是不变的，用于Schedule的mode的颜色
 + (NSArray *) sampleColorArrayForScheduleMode {
-    return [NSArray arrayWithObjects: 
+    return [NSArray arrayWithObjects:
             [MyEUtil colorWithHexInteger6:MODE_COLOR0],
             [MyEUtil colorWithHexInteger6:MODE_COLOR1],
             [MyEUtil colorWithHexInteger6:MODE_COLOR2],
@@ -212,37 +213,37 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
 // 根据颜色取得其在Scheudle模块中mode所使用颜色的样本颜色数组的序号，返回-1表示没找到
 + (NSInteger) colorIndexInSampleColorArrayForColor:(UIColor *)color {
     int hex = [MyEUtil hexIntegerWithUIColor:color];
-    if (hex == MODE_COLOR0) 
+    if (hex == MODE_COLOR0)
         return 0;
-    if (hex == MODE_COLOR1) 
+    if (hex == MODE_COLOR1)
         return 1;
-    if (hex == MODE_COLOR2) 
+    if (hex == MODE_COLOR2)
         return 2;
-    if (hex == MODE_COLOR3) 
+    if (hex == MODE_COLOR3)
         return 3;
-    if (hex == MODE_COLOR4) 
+    if (hex == MODE_COLOR4)
         return 4;
-    if (hex == MODE_COLOR5) 
+    if (hex == MODE_COLOR5)
         return 5;
-    if (hex == MODE_COLOR6) 
+    if (hex == MODE_COLOR6)
         return 6;
-    if (hex == MODE_COLOR7) 
+    if (hex == MODE_COLOR7)
         return 7;
-    if (hex == MODE_COLOR8) 
+    if (hex == MODE_COLOR8)
         return 8;
-    if (hex == MODE_COLOR9) 
+    if (hex == MODE_COLOR9)
         return 9;
-    if (hex == MODE_COLOR10) 
+    if (hex == MODE_COLOR10)
         return 10;
-    if (hex == MODE_COLOR11) 
+    if (hex == MODE_COLOR11)
         return 11;
-    if (hex == MODE_COLOR12) 
+    if (hex == MODE_COLOR12)
         return 12;
-    if (hex == MODE_COLOR13) 
+    if (hex == MODE_COLOR13)
         return 13;
-    if (hex == MODE_COLOR14) 
+    if (hex == MODE_COLOR14)
         return 14;
-    if (hex == MODE_COLOR15) 
+    if (hex == MODE_COLOR15)
         return 15;
     return -1;
 }
@@ -260,7 +261,7 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
 //+ (void)showToastOn:(UIView *)view withMessage:(NSString *)message;
 //{
 //    MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
-//    
+//
 //    // Configure for text only and offset down
 //    hud.mode = MBProgressHUDModeText;
 //    hud.labelText = message;
@@ -270,34 +271,34 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
 //    hud.yOffset = 150.f;
 //    hud.removeFromSuperViewOnHide = YES;
 //    hud.userInteractionEnabled = NO;
-//    
+//
 //    [hud hide:YES afterDelay:1.2];
 //}
 + (void)showToastOn:(UIView *)view withMessage:(NSString *)message{
     MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:view animated:YES];
     //初始化label
-	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,300,50)];
-	//设置自动行数与字符换行
-	[label setNumberOfLines:0];
-	label.lineBreakMode = NSLineBreakByWordWrapping;
-	UIFont *font = [UIFont fontWithName:@"Arial" size:12];
-	label.text = message;
-	//设置一个行高上限
-	CGSize size = CGSizeMake(320,2000);
-	//计算实际frame大小，并将label的frame变成实际大小
-	CGSize labelsize = [message sizeWithFont:font constrainedToSize:size lineBreakMode:NSLineBreakByWordWrapping];
-	CGRect newFrame = label.frame;
-	newFrame.size.height = labelsize.height;
-	label.frame = newFrame;
-	[label sizeToFit];
-	label.backgroundColor = [UIColor clearColor];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,300,50)];
+    //设置自动行数与字符换行
+    [label setNumberOfLines:0];
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    UIFont *font = [UIFont fontWithName:@"Arial" size:12];
+    label.text = message;
+    //设置一个行高上限
+    CGSize size = CGSizeMake(320,2000);
+    //计算实际frame大小，并将label的frame变成实际大小
+    CGSize labelsize = [message sizeWithFont:font constrainedToSize:size lineBreakMode:NSLineBreakByWordWrapping];
+    CGRect newFrame = label.frame;
+    newFrame.size.height = labelsize.height;
+    label.frame = newFrame;
+    [label sizeToFit];
+    label.backgroundColor = [UIColor clearColor];
     label.textColor = [UIColor whiteColor];
-	label.textAlignment = NSTextAlignmentCenter;
-	HUD.customView = label;
+    label.textAlignment = NSTextAlignmentCenter;
+    HUD.customView = label;
     //	HUD.color = [UIColor whiteColor];
-	HUD.mode = MBProgressHUDModeCustomView;
+    HUD.mode = MBProgressHUDModeCustomView;
     //	HUD.delegate = self;
-	
+    
     HUD.removeFromSuperViewOnHide = YES;
     HUD.userInteractionEnabled = NO;
     
@@ -309,9 +310,9 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
     MYEAppDelegate *app = (MYEAppDelegate *)[UIApplication sharedApplication].delegate;
     MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:app.window animated:YES];
     
-//    // Configure for text only and offset down
-//    hud.mode = MBProgressHUDModeText;
-//    hud.labelText = message;
+    //    // Configure for text only and offset down
+    //    hud.mode = MBProgressHUDModeText;
+    //    hud.labelText = message;
     if (bgColor) {
         HUD.color = bgColor;
     }
@@ -319,30 +320,30 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
     HUD.margin = 10.f;
     HUD.yOffset = 150.f;
     //初始化label
-	UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,300,50)];
-	//设置自动行数与字符换行
-	[label setNumberOfLines:0];
-	label.lineBreakMode = NSLineBreakByWordWrapping;
-	// 测试字串
-	UIFont *font = [UIFont fontWithName:@"Arial" size:12];
-	label.text = message;
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(0,0,300,50)];
+    //设置自动行数与字符换行
+    [label setNumberOfLines:0];
+    label.lineBreakMode = NSLineBreakByWordWrapping;
+    // 测试字串
+    UIFont *font = [UIFont fontWithName:@"Arial" size:12];
+    label.text = message;
     label.textColor = [UIColor whiteColor];
-	//设置一个行高上限
-	CGSize size = CGSizeMake(320,2000);
-	//计算实际frame大小，并将label的frame变成实际大小
-	CGSize labelsize = [message sizeWithFont:font constrainedToSize:size lineBreakMode:NSLineBreakByWordWrapping];
-	CGRect newFrame = label.frame;
-	newFrame.size.height = labelsize.height;
-	label.frame = newFrame;
-	[label sizeToFit];
-	label.backgroundColor = [UIColor clearColor];
-//	label.textColor = [UIColor redColor];
-	label.textAlignment = NSTextAlignmentCenter;
-	HUD.customView = label;
-//	HUD.color = [UIColor whiteColor];
-	HUD.mode = MBProgressHUDModeCustomView;
-//	HUD.delegate = self;
-	
+    //设置一个行高上限
+    CGSize size = CGSizeMake(320,2000);
+    //计算实际frame大小，并将label的frame变成实际大小
+    CGSize labelsize = [message sizeWithFont:font constrainedToSize:size lineBreakMode:NSLineBreakByWordWrapping];
+    CGRect newFrame = label.frame;
+    newFrame.size.height = labelsize.height;
+    label.frame = newFrame;
+    [label sizeToFit];
+    label.backgroundColor = [UIColor clearColor];
+    //	label.textColor = [UIColor redColor];
+    label.textAlignment = NSTextAlignmentCenter;
+    HUD.customView = label;
+    //	HUD.color = [UIColor whiteColor];
+    HUD.mode = MBProgressHUDModeCustomView;
+    //	HUD.delegate = self;
+    
     HUD.removeFromSuperViewOnHide = YES;
     HUD.userInteractionEnabled = NO;
     
@@ -352,28 +353,28 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
 +(void)showTextOnlyToastOn:(UIView *)view withMessage:(NSString *)message backgroundColor:(UIColor *)bgcolor{
     //如果要做的更好些的话，这里应该加入一个定时器，当用户一直点击btn时，HUD会一直显示，当用户不再点击时，HUD在2s之后消失
     //我真是太聪明了，这里对于HUD进行了重复性判断，如果此时已经有了HUD，那么就不再创建HUD。这里也算是解决了很久以来的一个心愿
-//    BOOL hasHUD = NO;
+    //    BOOL hasHUD = NO;
     MYEAppDelegate *app = (MYEAppDelegate *)[UIApplication sharedApplication].delegate;
-//    for (UIView *v in app.window.subviews) {
-//        if ([v isKindOfClass:[MBProgressHUD class]]) {
-//            hasHUD = YES;
-//        }
-//    }
-//    if (!hasHUD) {
-        MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:app.window animated:YES];
-        HUD.mode = MBProgressHUDModeText;
-        HUD.labelText = message;
-        HUD.margin = 8.f;
-        HUD.yOffset = 150.f;
-        HUD.color = bgcolor;
-        HUD.cornerRadius = 2;
-        HUD.labelFont = [UIFont systemFontOfSize:14];
-        HUD.removeFromSuperViewOnHide = YES;
-        HUD.userInteractionEnabled = NO;
-//        NSLog(@"%@",app.window.subviews);
-        [HUD hide:YES afterDelay:2];
-//        NSLog(@"%@",app.window.subviews);
-//    }
+    //    for (UIView *v in app.window.subviews) {
+    //        if ([v isKindOfClass:[MBProgressHUD class]]) {
+    //            hasHUD = YES;
+    //        }
+    //    }
+    //    if (!hasHUD) {
+    MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:app.window animated:YES];
+    HUD.mode = MBProgressHUDModeText;
+    HUD.labelText = message;
+    HUD.margin = 8.f;
+    HUD.yOffset = 150.f;
+    HUD.color = bgcolor;
+    HUD.cornerRadius = 2;
+    HUD.labelFont = [UIFont systemFontOfSize:14];
+    HUD.removeFromSuperViewOnHide = YES;
+    HUD.userInteractionEnabled = NO;
+    //        NSLog(@"%@",app.window.subviews);
+    [HUD hide:YES afterDelay:2];
+    //        NSLog(@"%@",app.window.subviews);
+    //    }
 }
 #pragma methods for Toast
 + (void)showErrorOn:(UIView *)view withMessage:(NSString *)message
@@ -388,15 +389,15 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
     MBProgressHUD *HUD = [MBProgressHUD showHUDAddedTo:view animated:YES];
     HUD.mode = MBProgressHUDModeText;
     HUD.labelText = message;
-	HUD.margin = 10.f;
-//	HUD.yOffset = 40.f;
+    HUD.margin = 10.f;
+    //	HUD.yOffset = 40.f;
     if (yes) {
         HUD.color = [UIColor greenColor];
     }else{
         HUD.color = [UIColor redColor];
     }
     HUD.cornerRadius = 2;
-	HUD.removeFromSuperViewOnHide = YES;
+    HUD.removeFromSuperViewOnHide = YES;
     HUD.userInteractionEnabled = NO;
     [HUD hide:YES afterDelay:2];
 }
@@ -415,10 +416,10 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
         image = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"imgNO"]];
     HUD.customView = image;
     HUD.labelText = message;
-	//HUD.margin = 30.f;
+    //HUD.margin = 30.f;
     HUD.square = YES;
     HUD.cornerRadius = 5;
-	HUD.removeFromSuperViewOnHide = YES;
+    HUD.removeFromSuperViewOnHide = YES;
     if (!tag) {
         [HUD hide:YES afterDelay:2];
     }
@@ -426,7 +427,10 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
 #pragma other methods
 + (NSString *)timeStringForHhid:(NSInteger)hhid
 {
-    return [NSString stringWithFormat:@"%ld:%@", (long)(hhid/2), (hhid%2 == 0?@"00":@"30") ];
+    if (hhid < 20) {
+        return [NSString stringWithFormat:@"0%ld:%@", (long)(hhid/2),(hhid%2 == 0?@"00":@"30")];
+    }
+    return [NSString stringWithFormat:@"%ld:%@", (long)(hhid/2),(hhid%2 == 0?@"00":@"30")];
 }
 + (NSInteger)hhidForTimeString:(NSString *)string{
     NSInteger i;
@@ -436,6 +440,72 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
         i = [[string substringToIndex:2] intValue]*2 + [[string substringFromIndex:3] intValue]/30;
     }
     return i;
+}
+
++ (UIImage *)imageWithColor:(UIColor *)color size:(CGSize)size
+{
+    CGRect rect = CGRectMake(0, 0, size.width, size.height);
+    UIGraphicsBeginImageContext(rect.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    
+    CGContextSetFillColorWithColor(context, [color CGColor]);
+    CGContextFillRect(context, rect);
+    
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return image;
+}
++ (void)makeFlatButton:(UIButton *)btn{
+    btn.layer.masksToBounds = YES;
+    btn.layer.cornerRadius = 5;
+    btn.layer.borderColor = MainColor.CGColor;
+    btn.layer.borderWidth = 1;
+    [btn setBackgroundImage:[MyEUtil imageWithColor:MainColor size:btn.frame.size] forState:UIControlStateHighlighted || UIControlStateSelected];
+    [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateHighlighted || UIControlStateSelected];
+    [btn setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
+}
++ (void)saveObject:(NSObject *)object withFileName:(NSString *)name{
+    if (object == nil) {
+        return;
+    }
+    //获取文件路径
+    NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
+    NSString *path=[docPath stringByAppendingPathComponent:name];
+    NSLog(@"path=%@",path);
+    //将自定义的对象保存到文件中
+    [NSKeyedArchiver archiveRootObject:object toFile:path];
+}
++ (id)readObjectWithFileName:(NSString *)name{
+    //获取文件路径
+    NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
+    NSString *path=[docPath stringByAppendingPathComponent:name];
+    NSLog(@"path=%@",path);
+    //将自定义的对象保存到文件中
+    return [NSKeyedUnarchiver unarchiveObjectWithFile:path];
+}
++(NSString *)getMinuteFromSeconds:(NSInteger)seconds{
+    int second = seconds % 60;
+    int minute = (seconds / 60) % 60;
+    int hour = seconds / 3600;
+    return [NSString stringWithFormat:@"%02d:%02d:%02d",hour, minute, second];
+}
++(NSString *)getCityNameByCityId:(NSString *)cityId{
+    MyEProvinceAndCity *allCities = [[MyEProvinceAndCity alloc] init];   //这里的逻辑刚开始写错了，还好现在及时更正过来了
+//    NSLog(@"%@",[cityId substringToIndex:5]);
+    NSString *provinceName = nil,*cityName = nil;
+    for (MyEProvince *p in allCities.provinceAndCity) {
+        if ([p.provinceId isEqualToString:[cityId substringToIndex:5]]) {
+            provinceName = p.provinceName;
+            for (MyECity *c in p.cities) {
+                if ([c.cityId isEqualToString:cityId]) {
+                    cityName = c.cityName;
+                    break;
+                }
+            }
+            break;   //加入break加快循环的结束
+        }
+    }
+    return [NSString stringWithFormat:@"%@ %@",provinceName,cityName];
 }
 @end
 

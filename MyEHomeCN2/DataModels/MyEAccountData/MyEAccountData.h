@@ -10,19 +10,31 @@
 //
 
 #import <Foundation/Foundation.h>
-@class MyEHouseData;
-@class MyETerminal;
-@class MyERoom;
-@class MyEDevice;
-@class MyEDeviceType;
+#import "MyEDeviceStatus.h"
+#import "MyETerminal.h"
+#import "MyERoom.h"
+#import "MyEDevice.h"
+#import "MyEDeviceType.h"
 
-@interface MyEAccountData : NSObject <NSCopying> 
-@property (nonatomic, copy) NSString *userName;
-@property (nonatomic, copy) NSString *userId;
-@property (nonatomic) BOOL rememberMe;
-@property (nonatomic) NSInteger loginSuccess;
+//@class MyEHouseData;
+//@class MyETerminal;
+//@class MyERoom;
+//@class MyEDevice;
+//@class MyEDeviceType;
+
+
+@interface MyEAccountData : NSObject <NSCopying>
+
+@property (nonatomic,strong) NSString *provinceId, *cityId;  //因为有两处修改城市信息，此时在此处设置此变量，主要用于记录这些信息
+
 @property (nonatomic, copy) NSString *mId;
 @property (nonatomic) NSInteger mStatus;
+
+@property (nonatomic, copy) NSString *userName;
+@property (nonatomic, copy) NSString *userId;
+
+@property (nonatomic) BOOL rememberMe;
+@property (nonatomic) NSInteger loginSuccess;
 
 // by YY
 // 标志是不是要为场景下载最新的设备指令集合, 由于我们在指令学习之后, 空调修改品牌/下载控制码之后, 都需要设置次变量为YES, 表示需要重新下载.
@@ -43,12 +55,28 @@
 
 
 - (NSInteger)findIndexOfFirstTerminalWithTid:(NSString *)tId;
-- (MyETerminal *)findFirstTerminalWithTid:(NSString *)tId;
 - (NSInteger)findIndexOfFirstRoomWithRoomId:(NSInteger)roomId;
+
+- (MyETerminal *)findFirstTerminalWithTid:(NSString *)tId;
 - (MyERoom *)findFirstRoomWithRoomId:(NSInteger)roomId;
 - (MyEDevice *)findDeviceWithDeviceId:(NSInteger)deviceId;
 - (MyEDeviceType *)findDeviceTypeWithId:(NSInteger)deviceTypeId;
+
 // 给定一个设备id, 找到所有还没有绑定空调的智控星, 如果给定的设备id小于等于0, 就表示为一个不存在的\准备新增的空调寻找有效的智控星列表, 否则返回的智控星列表, 要包含此设备本来就绑定的智控星
 - (NSArray *)findValidTerminalsForACDeviceId:(NSInteger)deviceId;
 
+- (MyETerminal *)findDeviceTerminalWithDevice:(MyEDevice *)device;
+- (MyERoom *)findDeviceRoomWithDevice:(MyEDevice *)device;
+- (MyEDeviceType *)findDeviceDeviceTypeWithDevice:(MyEDevice *)device;
+- (NSArray *)validTerminalsForAC;   //检测本地数据，看看是否所有的TID都绑定了空调,如果都已绑定,那么此时就需要将空调这个设备类型移除
+- (void)addOrDeleteDevice:(MyEDevice *)device isAdd:(BOOL)add;
+- (void)addOrDeleteRoom:(MyERoom *)room isAdd:(BOOL)isAdd;
+- (void)editDevice:(MyEDevice *)oldDevice withNewDevice:(MyEDevice *)newDevice;
+- (void)editRoom:(MyERoom *)oldRoom withNewRoom:(MyERoom *)newRoom;
+
+-(NSArray *)validDeviceTypeToAddWithAC:(BOOL)hasAc;
+-(NSMutableArray *)allDeviceInRoom:(MyERoom *)room;
+-(MyEAccountData *)newAccoutData:(MyEAccountData *)AccountData;
+
+-(BOOL)alertHappen;
 @end

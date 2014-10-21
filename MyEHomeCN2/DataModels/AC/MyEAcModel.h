@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@interface MyEAcModel : NSObject<NSCopying>
+@interface MyEAcModel : NSObject<NSCopying,NSCoding>
 
 @property(nonatomic, assign) NSInteger modelId;
 @property(nonatomic, copy) NSString *modelName;

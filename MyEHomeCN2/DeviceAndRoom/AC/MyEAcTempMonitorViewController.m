@@ -15,7 +15,7 @@
 @end
 
 @implementation MyEAcTempMonitorViewController
-@synthesize accountData, device, acTempMonitor = _acTempMonitor;
+@synthesize device, acTempMonitor = _acTempMonitor;
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -265,38 +265,47 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 - (IBAction)lowTemBtnPress:(UIButton *)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择最低温度"
-                                    andDelegate:self
-                                         andTag:1
-                                       andArray:lowTempArray
-                                   andSelectRow:[lowTempArray indexOfObject:sender.currentTitle]
-                              andViewController:self];
+    
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:1 title:@"请选择最低温度" dataSource:lowTempArray andSelectRow:[lowTempArray containsObject:sender.currentTitle]?[lowTempArray indexOfObject:sender.currentTitle]:0];
+    picker.delegate = self;
+    [picker show];
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择最低温度"
+//                                    andDelegate:self
+//                                         andTag:1
+//                                       andArray:lowTempArray
+//                                   andSelectRow:[lowTempArray indexOfObject:sender.currentTitle]
+//                              andViewController:self];
 }
 - (IBAction)highTemBtnPress:(UIButton *)sender {
-    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择最高温度"
-                                    andDelegate:self
-                                         andTag:2
-                                       andArray:highTempArray
-                                   andSelectRow:[highTempArray indexOfObject:sender.currentTitle]
-                              andViewController:self];
+    MYEPickerView *picker = [[MYEPickerView alloc] initWithView:self.view andTag:2 title:@"请选择最高温度" dataSource:highTempArray andSelectRow:[highTempArray containsObject:sender.currentTitle]?[highTempArray indexOfObject:sender.currentTitle]:0];
+    picker.delegate = self;
+    [picker show];
+
+//    [MyEUniversal doThisWhenNeedPickerWithTitle:@"请选择最高温度"
+//                                    andDelegate:self
+//                                         andTag:2
+//                                       andArray:highTempArray
+//                                   andSelectRow:[highTempArray indexOfObject:sender.currentTitle]
+//                              andViewController:self];
 }
 
 
 #pragma mark -
 #pragma mark UIPickerViewDelegate Protocol and UIPickerViewDataSource Method
--(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didSelectTitles:(NSArray *)titles{
+-(void)MYEPickerView:(UIView *)pickerView didSelectTitles:(NSString *)title andRow:(NSInteger)row{
     if (pickerView.tag == 1) {
-        [self.lowTemBtn setTitle:titles[0] forState:UIControlStateNormal];
-        if ([titles[0] length] < 3) {
-            self.acTempMonitor.minTemp = [[titles[0] substringToIndex:2] intValue];
+        [self.lowTemBtn setTitle:title forState:UIControlStateNormal];
+        if ([title length] < 3) {
+            self.acTempMonitor.minTemp = [[title substringToIndex:2] intValue];
         }else
-            self.acTempMonitor.minTemp = [[titles[0] substringToIndex:3] intValue];
+            self.acTempMonitor.minTemp = [[title substringToIndex:3] intValue];
     }else{
-        [self.highTemBtn setTitle:titles[0]forState:UIControlStateNormal];
-        self.acTempMonitor.maxTemp = [[titles[0] substringToIndex:3] intValue];
+        [self.highTemBtn setTitle:title forState:UIControlStateNormal];
+        self.acTempMonitor.maxTemp = [[title substringToIndex:3] intValue];
     }
     [self decideIfComfortChanged];
 }
+
 - (BOOL)navigationBar:(UINavigationBar *)navigationBar shouldPopItem:(UINavigationItem *)item{
     if (self.navigationItem.rightBarButtonItem.enabled) {
         [MyEUniversal doThisWhenNeedTellUserToSaveWhenExitWithLeftBtnAction:^{

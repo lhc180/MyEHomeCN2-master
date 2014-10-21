@@ -20,7 +20,7 @@
 @end
 
 @implementation MyEScenesViewController
-@synthesize accountData = _accountData, sceneList = _sceneList,instructionRecived,scenesArray;
+@synthesize sceneList = _sceneList,instructionRecived,scenesArray;
 
 #pragma mark - life circle methods
 - (void)viewDidLoad
@@ -56,7 +56,7 @@
         self.tableView.tableHeaderView = nil;
     //从这里可以看出，其实所使用的原理都是相同的，但采用的方法却不相同
     //这里默认只刷新一次 // by YY
-    if (self.accountData.needDownloadInstructionsForScene) {
+    if (MainDelegate.accountData.needDownloadInstructionsForScene) {
         if(HUD == nil) {
             HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
         } else
@@ -65,7 +65,7 @@
         [self downloadInstructionFromServer];
         [self downloadSceneDataFromServer];
         _countOfFinishedDownloads = 0;
-        self.accountData.needDownloadInstructionsForScene = NO;
+        MainDelegate.accountData.needDownloadInstructionsForScene = NO;
     }
 }
 - (void)didReceiveMemoryWarning
@@ -74,7 +74,7 @@
 }
 #pragma mark - private methods
 -(BOOL)checkeIfHasSafeDevice{
-    for (MyEDeviceType *dt in self.accountData.deviceTypes) {
+    for (MyEDeviceType *dt in MainDelegate.accountData.deviceTypes) {
         if (dt.dtId>7 && dt.dtId < 12) {
             if (dt.devices.count) {
                 return YES;
@@ -103,12 +103,12 @@
 }
 -(BOOL)checkIfCanAddScene{
     //读的是写好的值，修改的是新建的值
-    NSMutableArray *dTArray = [NSMutableArray arrayWithArray:self.accountData.deviceTypes];
+    NSMutableArray *dTArray = [NSMutableArray arrayWithArray:MainDelegate.accountData.deviceTypes];
     
-    for (int i=0; i<[self.accountData.deviceTypes count];i++) {   //终于算是找到了问题的根源了
+    for (int i=0; i<[MainDelegate.accountData.deviceTypes count];i++) {   //终于算是找到了问题的根源了
         NSMutableArray *dArray = nil; //里面存放的是一个设备类型的所有设备ID
         NSMutableArray *isArray = nil; //里面存放的是一个设备ID对应的所有指令
-        MyEDeviceType *dt = self.accountData.deviceTypes[i];
+        MyEDeviceType *dt = MainDelegate.accountData.deviceTypes[i];
         if ([dt.devices count] == 0) {  //如果里面没有设备，那么就移除这个type
             [dTArray removeObject:dt];
         }else{
@@ -116,7 +116,7 @@
             for (int j=0;j<[dt.devices count];j++) {
                 
                 NSInteger deviceId = [dt.devices[j] integerValue];
-                for (MyEDevice *d in self.accountData.devices) {
+                for (MyEDevice *d in MainDelegate.accountData.devices) {
                     if (deviceId == d.deviceId) {
                         
                         if (d.type == 1 ) { // 如果是空调
@@ -198,20 +198,20 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (self.instructionRecived == nil) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                    contentText:@"场景中设备指令下载失败,此时不能查看场景详情,现在下载么?"
-                                                leftButtonTitle:@"取消"
-                                               rightButtonTitle:@"确定"];
-        alert.rightBlock = ^{
-            [self downloadInstructionFromServer];
-        };
-        [alert show];
+#warning 这里需要做个例外
+//        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
+//                                                    contentText:@"场景中设备指令下载失败,此时不能查看场景详情,现在下载么?"
+//                                                leftButtonTitle:@"取消"
+//                                               rightButtonTitle:@"确定"];
+//        alert.rightBlock = ^{
+//            [self downloadInstructionFromServer];
+//        };
+//        [alert show];
     } else {
         UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"scene" bundle:nil];
         MYESceneEditViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"detail"];
         MyEScene *scene = [scenesArray objectAtIndex:indexPath.row];
         vc.scene = scene;
-        vc.accountData = self.accountData;
         vc.instructionRecived = self.instructionRecived;
         vc.isAdd = NO;
         [self.navigationController pushViewController:vc animated:YES];
@@ -220,15 +220,9 @@
 }
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     deleteSceneIndex = indexPath;
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告"
-                                                contentText:@"此操作将清空该场景的数据，您确定继续么？"
-                                            leftButtonTitle:@"取消"
-                                           rightButtonTitle:@"确定"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"" message:@"此操作将清空该场景的数据，您确定继续么？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = 110;
     [alert show];
-    alert.rightBlock = ^() {
-        [self deleteSceneFromServerWithIndexPath:indexPath];
-    };
-
 }
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
     return @"删除";
@@ -236,20 +230,20 @@
 #pragma mark - URL Loading System methods
 -(void) deleteSceneFromServerWithIndexPath:(NSIndexPath *)index{
     MyEScene *scene = self.scenesArray[index.row];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=2&name=%@&id=%li&byOrder=%li&deviceControls=%@",GetRequst(URL_FOR_SCENES_EDIT),self.accountData.userId,scene.name,(long)scene.sceneId,(long)scene.byOrder,[scene JSONStringWithDictionary:scene]];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&action=2&name=%@&id=%li&byOrder=%li&deviceControls=%@",GetRequst(URL_FOR_SCENES_EDIT),MainDelegate.accountData.userId,scene.name,(long)scene.sceneId,(long)scene.byOrder,[scene JSONStringWithDictionary:scene]];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"deleteSceneUploader" userDataDictionary:nil];
     NSLog(@"deleteSceneUploader is %@",loader.name);
 }
 - (void) downloadInstructionFromServer{
     [self.refreshControl beginRefreshing];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&ver=2",GetRequst(URL_FOR_SCENES_DOWNLOAD_ALL_DEVICE_INSTRUCTION), self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&ver=2",GetRequst(URL_FOR_SCENES_DOWNLOAD_ALL_DEVICE_INSTRUCTION), MainDelegate.accountData.userId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"downloadInstrction"  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
 - (void) downloadSceneDataFromServer
 {
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SCENES_VIEW), self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SCENES_VIEW), MainDelegate.accountData.userId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:SCENES_DOWNLOADER_NMAE_SCENES  userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
@@ -282,14 +276,15 @@
             self.instructionRecived = sceneInstruction;
             self.navigationItem.rightBarButtonItem.enabled = [self checkIfCanAddScene];
         } else {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                        contentText:@"场景中设备指令下载失败，是否重试?"
-                                                    leftButtonTitle:@"否"
-                                                   rightButtonTitle:@"是"];
-            alert.rightBlock = ^{
-                [self downloadInstructionFromServer];
-            };
-            [alert show];
+#warning 这里要做个例外
+//            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
+//                                                        contentText:@"场景中设备指令下载失败，是否重试?"
+//                                                    leftButtonTitle:@"否"
+//                                                   rightButtonTitle:@"是"];
+//            alert.rightBlock = ^{
+//                [self downloadInstructionFromServer];
+//            };
+//            [alert show];
         }
         [self.tableView reloadData];
     }
@@ -325,7 +320,7 @@
         NSLog(@"recieve string is %@",string);
         NSInteger i = [MyEUtil getResultFromAjaxString:string];
         if (i == 1) {
-            for (MyEDevice *d in self.accountData.devices) {
+            for (MyEDevice *d in MainDelegate.accountData.devices) {
                 if (d.type >=8 && d.type <= 11) {
                     if (_btnTag == 101) {
                         d.status.protectionStatus = 1;
@@ -379,7 +374,6 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"scene" bundle:nil];
     MYESceneEditViewController *addSceneVC = (MYESceneEditViewController *)[storyboard instantiateViewControllerWithIdentifier:@"detail"];
     addSceneVC.instructionRecived = self.instructionRecived;
-    addSceneVC.accountData = self.accountData;
     addSceneVC.isAdd = YES;
     [self.navigationController pushViewController:addSceneVC animated:YES];
 //    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入场景名称"
@@ -406,7 +400,7 @@
     } else
         [HUD show:YES];
     NSDictionary *dic = @{@"name": scene.name};
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%li",GetRequst(URL_FOR_SCENES_APPLY),self.accountData.userId,(long)scene.sceneId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@&id=%li",GetRequst(URL_FOR_SCENES_APPLY),MainDelegate.accountData.userId,(long)scene.sceneId];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"applySceneUploader" userDataDictionary:dic];
     NSLog(@"applySceneUploader is %@",loader.name);
 
@@ -440,6 +434,8 @@
         }
     }else if(alertView.tag == 101){
         [self addScene:nil];
+    }else if (alertView.tag == 110 && buttonIndex == 1){
+        [self deleteSceneFromServerWithIndexPath:deleteSceneIndex];
     }else{
         [alertView dismissWithClickedButtonIndex:0 animated:YES];
     }

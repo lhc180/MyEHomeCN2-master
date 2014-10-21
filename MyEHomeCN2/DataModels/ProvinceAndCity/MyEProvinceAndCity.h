@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+@class MyEProvince;
+@class MyECity;
 
 @interface MyEProvinceAndCity : NSObject
 

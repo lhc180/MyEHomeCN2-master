@@ -16,9 +16,10 @@
     BOOL powerOn; //表示开关
     NSTimer *timerToRefreshTemperatureAndHumidity;
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
+@property (nonatomic, assign) BOOL isPush;
 @property (nonatomic, weak) NSDictionary *statusDic;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *refreshBar;
 
 @property (strong, nonatomic) IBOutlet UIImageView *runMode1;
 @property (strong, nonatomic) IBOutlet UIImageView *runMode2;

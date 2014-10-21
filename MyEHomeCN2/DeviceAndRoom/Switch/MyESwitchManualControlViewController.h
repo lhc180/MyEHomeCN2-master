@@ -10,7 +10,10 @@
 #import "MyEDelayTimeSetViewController.h"
 #import "MyESwitchAutoViewController.h"
 #import "MYESwitchCell.h"
-@interface MyESwitchManualControlViewController : UICollectionViewController<MyEDataLoaderDelegate>{
+#import "MyESwitchManualControl.h"
+
+
+@interface MyESwitchManualControlViewController : UITableViewController<MyEDataLoaderDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
     NSIndexPath *_selectedIndex;
     NSTimer *_timer;

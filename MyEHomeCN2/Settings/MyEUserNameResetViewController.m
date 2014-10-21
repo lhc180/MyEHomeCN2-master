@@ -23,13 +23,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    userNameTextFiled.text = self.accountData.userName;
+    userNameTextFiled.text = MainDelegate.accountData.userName;
     self.navigationItem.rightBarButtonItem.enabled = NO;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [userNameTextFiled becomeFirstResponder];
-    });
+//    dispatch_async(dispatch_get_main_queue(), ^{
+//        [userNameTextFiled becomeFirstResponder];
+//    });
     [[NSNotificationCenter defaultCenter] addObserverForName:UITextFieldTextDidChangeNotification object:nil queue:nil usingBlock:^(NSNotification *noti){
-        if (![userNameTextFiled.text isEqualToString:self.accountData.userName]) {
+        if (![userNameTextFiled.text isEqualToString:MainDelegate.accountData.userName]) {
 //            if ([userNameTextFiled.text length] > 16) {
 //                [self.view endEditing:YES];
 //                [MyEUtil showMessageOn:nil withMessage:@"用户名长度太长"];
@@ -61,7 +61,7 @@
 }
 #pragma mark - URL private methods
 -(void)resetUserNameToServer{
-    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&name=%@",GetRequst(URL_FOR_SETTINGS_CHANGE_USERNAME),self.accountData.userId,userNameTextFiled.text];
+    NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&name=%@",GetRequst(URL_FOR_SETTINGS_CHANGE_USERNAME),MainDelegate.accountData.userId,userNameTextFiled.text];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"userNameReset"  userDataDictionary:nil];
     NSLog(@"userNameReset is %@",uploader.name);
 }
@@ -71,7 +71,7 @@
         NSLog(@"userNameReset JSON String from server is \n%@",string);
         switch ([MyEUtil getResultFromAjaxString:string]) {
             case 1:{
-                self.accountData.userName = userNameTextFiled.text;
+                MainDelegate.accountData.userName = userNameTextFiled.text;
                 [MyEUtil showThingsSuccessOn:self.view WithMessage:@"修改成功" andTag:YES];
                 [self performSelector:@selector(doThisWhenNeedPopUp) withObject:nil afterDelay:1.5];
             }

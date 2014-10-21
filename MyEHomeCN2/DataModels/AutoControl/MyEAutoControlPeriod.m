@@ -15,7 +15,8 @@
 
 - (MyEAutoControlPeriod *)init {
     if (self = [super init]) {
-        _pId = (NSInteger)[[NSDate date]timeIntervalSince1970];
+//        _pId = (NSInteger)[[NSDate date]timeIntervalSince1970];
+        _pId = 0;
         _stid = 0;
         _etid = 1;
         _runMode = 1;

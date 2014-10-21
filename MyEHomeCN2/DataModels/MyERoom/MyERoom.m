@@ -17,7 +17,7 @@
     if (self = [super init]) {
         _roomId = 0;
         _name = @"";
-        _devices = [[NSMutableArray alloc] init];
+        _devices = [NSMutableArray array];
         return self;
     }
     return nil;

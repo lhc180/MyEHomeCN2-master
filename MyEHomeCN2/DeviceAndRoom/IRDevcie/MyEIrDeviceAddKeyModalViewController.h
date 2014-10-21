@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MZFormSheetController.h"
 
 @protocol MyEIrDeviceAddKeyModalViewControllerDelegate;
 
@@ -15,7 +16,6 @@
     MBProgressHUD *HUD;
 }
 @property (strong, nonatomic) id <MyEIrDeviceAddKeyModalViewControllerDelegate> delegate;
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (weak, nonatomic) IBOutlet UITextField *keyNameTextfield;
 

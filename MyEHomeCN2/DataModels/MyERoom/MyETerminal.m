@@ -13,6 +13,16 @@
 @synthesize tId = _tId, name = _name,irType,roomId,conSignal,powerSaveMode,enableDataCollect;
 #pragma mark
 #pragma mark JSON methods
+-(id)init{
+    if (self = [super init]) {
+        _tId = @"";
+        _name = @"";
+        irType = 0;
+        roomId = 0;
+        return self;
+    }
+    return nil;
+}
 - (MyETerminal *)initWithDictionary:(NSDictionary *)dictionary {
     if (self = [super init]) {
         self.tId = [dictionary objectForKey:@"tId"];

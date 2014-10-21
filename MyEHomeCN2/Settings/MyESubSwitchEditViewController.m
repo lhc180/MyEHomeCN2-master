@@ -29,6 +29,11 @@
     [self.tableView reloadData];
     self.navigationItem.title = self.subSwitch.name;
     [self downloadInfoFromServer];
+    if (IS_IOS6) {
+        UIView *view = [[UIView alloc] init];
+        view.backgroundColor = TableViewGroupBGColor;
+        self.tableView.backgroundView = view;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -54,7 +59,10 @@
         if (![_mainSwitchList count]) {
             return;
         }
-        [MyEUniversal doThisWhenNeedPickerWithTitle:@"选择主开关" andDelegate:self andTag:1 andArray:_mainSwitchList andSelectRow:[_mainSwitchList containsObject:self.lblMainTid.text]?[_mainSwitchList indexOfObject:self.lblMainTid.text]:0 andViewController:self];
+        MYEPickerView *picke = [[MYEPickerView alloc] initWithView:self.view andTag:1 title:@"选择主开关" dataSource:_mainSwitchList andSelectRow:[_mainSwitchList containsObject:self.lblMainTid.text]?[_mainSwitchList indexOfObject:self.lblMainTid.text]:0];
+        picke.delegate = self;
+        [picke show];
+//        [MyEUniversal doThisWhenNeedPickerWithTitle:@"选择主开关" andDelegate:self andTag:1 andArray:_mainSwitchList andSelectRow:[_mainSwitchList containsObject:self.lblMainTid.text]?[_mainSwitchList indexOfObject:self.lblMainTid.text]:0 andViewController:self];
     }
 }
 
@@ -111,7 +119,8 @@
     [MyEUtil showMessageOn:nil withMessage:@"与服务器连接失败"];
 }
 #pragma mark - IQActionSheet delegate methods
--(void)actionSheetPickerView:(IQActionSheetPickerView *)pickerView didSelectTitles:(NSArray *)titles{
-    self.lblMainTid.text = titles[0];
+
+-(void)MYEPickerView:(UIView *)pickerView didSelectTitle:(NSString *)title andRow:(NSInteger)row{
+    self.lblMainTid.text = title;
 }
 @end

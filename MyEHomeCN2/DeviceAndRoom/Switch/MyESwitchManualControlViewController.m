@@ -11,8 +11,6 @@
 @implementation MyESwitchManualControlViewController
 
 -(void)viewDidLoad{
-    //    [(UICollectionView *)self.view.subviews[0] setDelaysContentTouches:NO];
-    self.collectionView.delaysContentTouches = NO;
     [self downloadInfo];
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
     [btn setFrame:CGRectMake(0, 0, 50, 30)];
@@ -22,7 +20,9 @@
     }
     [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
     self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];
+    
     _timer = [NSTimer scheduledTimerWithTimeInterval:60 target:self selector:@selector(downloadInfo) userInfo:nil repeats:YES];
+    self.tableView.tableFooterView = [[UIView alloc] init];
 }
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
@@ -32,6 +32,7 @@
     }
 }
 -(void)viewWillDisappear:(BOOL)animated{
+    [super viewWillDisappear:YES];
     if (_timer.isValid) {
         [_timer invalidate];
     }
@@ -87,16 +88,13 @@
 //        remainTimeLabel.text = [NSString stringWithFormat:@"剩余:%i分钟",(int)status.timerValue/60];
 //    }
 //}
-#pragma mark - collectionViewDataSource
--(NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section{
-    return [self.control.SCList count];  //这里就是按照有多少通道就新建多少item，没有将数据写死，有助于以后的修改
+#pragma mark - UITableView dataSource
+-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return self.control.SCList.count;
 }
--(UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath{
-    MYESwitchCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:@"cell" forIndexPath:indexPath];
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    MYESwitchCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     MyESwitchChannelStatus *status = self.control.SCList[indexPath.row];
-    if (cell.switchBtn.isLoading) {
-        [cell.switchBtn hide];
-    }
     cell.disable = status.disable;
     cell.lightOn = status.switchStatus;
     cell.timeOn = status.delayStatus;
@@ -104,28 +102,28 @@
     cell.timeDelay = [NSString stringWithFormat:@"剩余:%li分钟",(long)status.remainMinute];
     return cell;
 }
+
 #pragma mark - IBActionMethods
 - (IBAction)switchControl:(MYEActiveBtn *)sender{
-    [sender show];
     MYESwitchCell *cell = (MYESwitchCell *)sender.superview.superview;
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];   //这里有两个方法来指定当前的collectionView
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];   //这里有两个方法来指定当前的collectionView
     //    NSIndexPath *indexPath = [(UICollectionView *)self.view.subviews[0] indexPathForCell:cell];
     MyESwitchChannelStatus *status = self.control.SCList[indexPath.row];
     _selectedIndex = indexPath;
+    if (HUD == nil) {
+        [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }else
+        [HUD show:YES];
     [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&switchStatus=%li&action=2",GetRequst(URL_FOR_SWITCH_CONTROL),(long)status.channelId,1-(long)status.switchStatus] postData:nil delegate:self loaderName:@"controlSwitch" userDataDictionary:@{@"status": status}];
 }
 - (IBAction)timeControl:(UIButton *)sender {
     MYESwitchCell *cell = (MYESwitchCell *)sender.superview.superview;
-    NSIndexPath *indexPath = [self.collectionView indexPathForCell:cell];
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     _selectedIndex = indexPath;
-    MyESwitchChannelStatus *status = self.control.SCList[indexPath.row];
-    
+    MyESwitchChannelStatus *status = self.control.SCList[_selectedIndex.row];
     if (!sender.selected) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"确认关闭该通道的延时设置么?" leftButtonTitle:@"取消" rightButtonTitle:@"确定"];
-        alert.rightBlock = ^{
-            status.delayStatus = 0;
-            [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?allChannel=%@",GetRequst(URL_FOR_SWITCH_TIME_DELAY_SAVE),[[MyESwitchChannelStatus alloc] jsonStringWithStatus:status]] andName:@"powerOffDelayTime" andDictionary:nil];
-        };
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"确定关闭该通道的延时设置么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        alert.tag = 100;
         [alert show];
         return;
     }
@@ -193,11 +191,20 @@
             [MyEUtil showMessageOn:nil withMessage:@"与服务器通讯失败"];
         }
     }
-    [self.collectionView reloadData];  //任何情况下都要reloadData
+    [self.tableView reloadData];  //任何情况下都要reloadData
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     [HUD hide:YES];
     [MyEUtil showMessageOn:nil withMessage:@"与服务器通讯失败"];
-    [self.collectionView reloadData];
+    [self.tableView reloadData];
+}
+
+#pragma mark - UIAlertView delegate methods
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        MyESwitchChannelStatus *status = self.control.SCList[_selectedIndex.row];
+        status.delayStatus = 0;
+        [self doThisWhenNeedDownLoadOrUploadInfoWithURLString:[NSString stringWithFormat:@"%@?allChannel=%@",GetRequst(URL_FOR_SWITCH_TIME_DELAY_SAVE),[[MyESwitchChannelStatus alloc] jsonStringWithStatus:status]] andName:@"powerOffDelayTime" andDictionary:nil];
+    }
 }
 @end

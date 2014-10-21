@@ -18,15 +18,16 @@ instructionMode, acInstructionSet, irKeySet;
 - (MyEDevice *)init {
     if (self = [super init]) {
         deviceId = 0;
-        name = @"";
+        name = @"新设备";
+        tId = @"未绑定智控星";
         brandId = 0;
         modelId = 0;
         brand = @"";
         model = @"";
-        roomId = 0;
+        roomId = 0;   //0为未指定房间,这个对于新增设备时尤为有用
         type = 1;
         status = [[MyEDeviceStatus alloc] init];
-        isSystemDefined = 0;
+        isSystemDefined = YES;
         acInstructionSet = Nil;
         irKeySet = Nil;
         instructionMode = 1;
@@ -86,10 +87,29 @@ instructionMode, acInstructionSet, irKeySet;
 -(id)copyWithZone:(NSZone *)zone {
     return [[MyEDevice alloc] initWithDictionary:[self JSONDictionary]];
 }
-
+-(NSString *)description{
+    return [NSString stringWithFormat:@"%@ 房间: %i 类型: %i TID: %@",self.name,self.roomId,self.type,self.tId];
+}
+-(MyEDevice *)newDevice:(MyEDevice *)device{
+    MyEDevice *d = [[MyEDevice alloc] init];
+    d.name = [device.name copy];
+    d.tId = [device.tId copy];
+    d.deviceId = device.deviceId;
+    d.brand = [device.brand copy];
+    d.brandId = device.brandId;
+    d.model = [device.model copy];
+    d.modelId = device.modelId;
+    d.isSystemDefined = device.isSystemDefined;
+    d.instructionMode = device.instructionMode;
+    d.roomId = device.roomId;
+    d.type = device.type;
+    d.status = device.status;
+    d.acInstructionSet = device.acInstructionSet;
+    d.irKeySet = device.irKeySet;
+    return d;
+}
 #pragma mark 属性方法
 - (BOOL)isInitialized{
-    NSLog(@"%@   %@",self.brand,self.model);
     return ![self.brand isEqualToString:@""] && ![self.model isEqualToString:@""];
 //    return self.modelId > 0;
 }
@@ -104,5 +124,27 @@ instructionMode, acInstructionSet, irKeySet;
         return YES;
     }else
         return self.status.connection > 0;
+}
+-(NSString *)connectionImage{
+    NSString *imageFilename;
+    if (self.type == 8 || self.type == 9 || self.type == 10 || self.type == 11) {
+        if (self.status.alertStatus == 1) {
+            imageFilename = @"safeAlert";
+        }else
+            imageFilename = @"";
+    }else if (self.type == 12 || self.type == 13){
+        imageFilename = @"";
+    }else if (self.isOrphan) {
+        imageFilename= @"noconnection";
+    }else
+        imageFilename= [NSString stringWithFormat:@"signal%ld", (long)self.status.connection];
+    return imageFilename;
+}
+- (NSArray *)maxElecArray{    //插座设置中的最大电流
+    NSMutableArray *_maxElecArray = [NSMutableArray array];
+    for (int i = 1; i < 13; i++) {
+        [_maxElecArray addObject:[NSString stringWithFormat:@"%i A",i]];
+    }
+    return _maxElecArray;
 }
 @end

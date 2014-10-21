@@ -92,7 +92,7 @@
     MyEDataLoader *uploader;
     urlStr= [NSString stringWithFormat:@"%@?gid=%@&id=0&deviceId=%ld&keyName=%@&tId=%@&type=2&action=0",
              GetRequst(URL_FOR_IR_DEVICE_ADD_EDIT_KEY_SAVE),
-             self.accountData.userId,
+             MainDelegate.accountData.userId,
              (long)self.device.deviceId,
              self.keyNameTextfield.text,
              self.device.tId];

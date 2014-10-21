@@ -8,7 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@interface MyESubSwitchEditViewController : UITableViewController<MyEDataLoaderDelegate,IQActionSheetPickerView>
+#import "MYEPickerView.h"
+#import "MyESettings.h"
+@interface MyESubSwitchEditViewController : UITableViewController<MyEDataLoaderDelegate,MYEPickerViewDelegate>
 @property(nonatomic, strong) MyESettingSubSwitch *subSwitch;
 
 @property (weak, nonatomic) IBOutlet UILabel *lblName;

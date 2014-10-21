@@ -7,7 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
-
+#import "MYEPickerView.h"
+#import "MyESceneDevice.h"
+#import "MyEDeviceControl.h"
+#import "MyESceneInstructionRecived.h"
+#import "MyESceneDeviceInstruction.h"
+#import "MyEAcUtil.h"
 @protocol MyEScenesDeviceEditOrAddViewControllerDelegate <NSObject>
 
 -(void)passValue:(NSDictionary *)dic;  //新增设备时调用
@@ -15,7 +20,7 @@
 -(void)refreshData:(NSDictionary *)dic byIndexPath:(NSIndexPath *)index;  //修改设备时调用
 
 @end
-@interface MyEScenesDeviceEditOrAddViewController : UIViewController<IQActionSheetPickerView,UITableViewDataSource,UITableViewDelegate>{
+@interface MyEScenesDeviceEditOrAddViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,MYEPickerViewDelegate>{
     NSInteger _selectedDeviceTypeIndex;//记录当前选择的设备类型在deviceTypeArray里面的序号
     NSInteger _selectedDeviceIndex;//记录当前选择的设备在deviceArray/deviceIdArray里面的序号
     NSInteger _selectedPowerIndex;//记录当前选择的power的序号
@@ -37,7 +42,6 @@
     MyEDevice *_device;
 
 }
-@property (weak, nonatomic) MyEAccountData *accountData;
 @property (strong, nonatomic) MyEDeviceControl *deviceControl;
 @property (weak, nonatomic) MyESceneInstructionRecived *instructionRecived;
 

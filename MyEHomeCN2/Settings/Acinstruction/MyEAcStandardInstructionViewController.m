@@ -119,20 +119,20 @@
 }
 
 -(void)findModelArrayWithIndex:(NSInteger)index{
-    NSMutableArray *modules = [NSMutableArray array];
-    NSMutableArray *moduleIds = [NSMutableArray array];
-    MyEAcBrand *brand = self.brandsAndModels.sysAcBrands[index];
-    for (int i=0; i<[self.brandsAndModels.sysAcModels count]; i++) {
-        MyEAcModel *module = self.brandsAndModels.sysAcModels[i];
-        for (int j=0; j<[brand.models count]; j++) {
-            if (module.modelId == [brand.models[j] intValue]) {
-                [modules addObject:module.modelName];
-                [moduleIds addObject:[NSNumber numberWithInteger:module.modelId]];
-            }
-        }
-    }
-    self.modelNameArray = modules;
-    self.modelIdArray = moduleIds;
+//    NSMutableArray *modules = [NSMutableArray array];
+//    NSMutableArray *moduleIds = [NSMutableArray array];
+//    MyEAcBrand *brand = self.brandsAndModels.sysAcBrands[index];
+//    for (int i=0; i<[self.brandsAndModels.sysAcModels count]; i++) {
+//        MyEAcModel *module = self.brandsAndModels.sysAcModels[i];
+//        for (int j=0; j<[brand.models count]; j++) {
+//            if (module.modelId == [brand.models[j] intValue]) {
+//                [modules addObject:module.modelName];
+//                [moduleIds addObject:[NSNumber numberWithInteger:module.modelId]];
+//            }
+//        }
+//    }
+//    self.modelNameArray = modules;
+//    self.modelIdArray = moduleIds;
 }
 //之前还以为是这么传值的
 //-(void)viewWillDisappear:(BOOL)animated{
@@ -168,7 +168,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_IR_LIST_AC_MODELS), self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_IR_LIST_AC_MODELS), MainDelegate.accountData.userId];
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"downloadAcBrandsAndModules" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
 }
@@ -340,7 +340,7 @@
 
     if([name isEqualToString:@"downloadAcBrandsAndModules"]) {
         [HUD hide:YES];
-//        NSLog(@"downloadAcBrandsAndModules JSON String from server is \n%@",string);
+        NSLog(@"downloadAcBrandsAndModules JSON String from server is \n%@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
             return;
@@ -483,21 +483,21 @@
 
 -(void)refreshModuleArrayWithRow:(NSInteger)row{
     
-    NSMutableArray *modules = [NSMutableArray array];
-    NSMutableArray *moduleIds = [NSMutableArray array];
-    MyEAcBrand *brand = self.brandsAndModels.sysAcBrands[row];
-    for (int i=0; i<[self.brandsAndModels.sysAcModels count]; i++) {
-        MyEAcModel *module = self.brandsAndModels.sysAcModels[i];
-        for (int j=0; j<[brand.models count]; j++) {
-            if (module.modelId == [brand.models[j] intValue]) {
-                [modules addObject:module.modelName];
-                [moduleIds addObject:[NSNumber numberWithInteger:module.modelId]];
-            }
-        }
-    }
-    self.modelNameArray = modules;
-    self.modelIdArray = moduleIds;
-    [modelBtn setTitle:modelNameArray[0] forState:UIControlStateNormal];
+//    NSMutableArray *modules = [NSMutableArray array];
+//    NSMutableArray *moduleIds = [NSMutableArray array];
+//    MyEAcBrand *brand = self.brandsAndModels.sysAcBrands[row];
+//    for (int i=0; i<[self.brandsAndModels.sysAcModels count]; i++) {
+//        MyEAcModel *module = self.brandsAndModels.sysAcModels[i];
+//        for (int j=0; j<[brand.models count]; j++) {
+//            if (module.modelId == [brand.models[j] intValue]) {
+//                [modules addObject:module.modelName];
+//                [moduleIds addObject:[NSNumber numberWithInteger:module.modelId]];
+//            }
+//        }
+//    }
+//    self.modelNameArray = modules;
+//    self.modelIdArray = moduleIds;
+//    [modelBtn setTitle:modelNameArray[0] forState:UIControlStateNormal];
 }
 
 #pragma mark - IBAction methods

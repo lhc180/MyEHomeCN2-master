@@ -14,12 +14,12 @@
 #import "MyESettingFeedbackViewController.h"
 #import "MyESettingsTerminalsViewController.h"
 #import "MyESettingsMediatorViewController.h"
+#import "MyESettings.h"
 
-@interface MyESettingsViewController : UITableViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate,MyECitySettingViewControllerDelegate,UITextFieldDelegate>{
+@interface MyESettingsViewController : UITableViewController<MyEDataLoaderDelegate,MyECitySettingViewControllerDelegate,UITextFieldDelegate,UIActionSheetDelegate,UIAlertViewDelegate>{
          MBProgressHUD *HUD;
 }
 
-@property(nonatomic, weak) MyEAccountData *accountData;
 @property(nonatomic, retain) MyESettings *settings;
 @property(nonatomic, strong) MyEProvinceAndCity *pAndC;
 

@@ -15,7 +15,7 @@
 
 @implementation MyETerminalSettingViewController
 
-@synthesize terminal,accountData,deviceId,deviceName,deviceType,saveModeSwitch,signal,dataCollectSwitch,saveDeviceNameBtn;
+@synthesize terminal,deviceId,deviceType,saveModeSwitch,signal,dataCollectSwitch;
 
 #pragma mark
 #pragma mark - view lifeCycle
@@ -23,15 +23,19 @@
 {
     [super viewDidLoad];
     
-    deviceName.text = terminal.name;
+    _deviceNameLbl.text = terminal.name;
     deviceId.text = terminal.tId;
-    deviceName.delegate = self;
-
+    
     [self setDeviceType];
     [self setSaveModeSwitch];
     [self setDataCollect];
     [self setSignal];
-    [self defineTapGestureRecognizer];
+    //    [self defineTapGestureRecognizer];
+    if (IS_IOS6) {
+        UIView *view = [[UIView alloc] init];
+        view.backgroundColor = TableViewGroupBGColor;
+        self.tableView.backgroundView = view;
+    }
 }
 #pragma mark
 #pragma mark - private methods
@@ -79,17 +83,17 @@
             signal.image = [UIImage imageNamed:@"signal0"];
             break;
     }
-
+    
 }
--(void)defineTapGestureRecognizer{
-    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
-    tapGesture.cancelsTouchesInView = NO;
-    [self.view addGestureRecognizer:tapGesture];
-}
-
--(void)hideKeyboard{
-    [deviceName endEditing:YES];
-}
+//-(void)defineTapGestureRecognizer{
+//    UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+//    tapGesture.cancelsTouchesInView = NO;
+//    [self.view addGestureRecognizer:tapGesture];
+//}
+//
+//-(void)hideKeyboard{
+//    [deviceName endEditing:YES];
+//}
 
 #pragma mark
 #pragma mark - memoryWarnig methods
@@ -97,14 +101,23 @@
     [super didReceiveMemoryWarning];
 }
 #pragma mark - tableView delegate methods
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if (IS_IOS6) {
-        return 10;
-    }else{
-        return 1;
-    }
-}
+//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+//    if (IS_IOS6) {
+//        return 10;
+//    }else{
+//        return 1;
+//    }
+//}
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section == 0 && indexPath.row == 0) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入终端名称" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        UITextField *txt = [alert textFieldAtIndex:0];
+        txt.textAlignment = NSTextAlignmentCenter;
+        txt.text = terminal.name;
+        alert.tag = 100;
+        [alert show];
+    }
     if (indexPath.section == 2) {
         if (indexPath.row == 0) {
             [saveModeSwitch setOn:!saveModeSwitch.isOn animated:YES];
@@ -127,14 +140,14 @@
 }
 - (void)uploadModelToServerWithEnablePowerSaveMode{
     NSString *urlStr = nil;
-    urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&powerSaveMode=%i&name=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_SAVE),accountData.userId,terminal.tId,saveModeSwitch.isOn?1:0,deviceName.text];
+    urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&powerSaveMode=%i&name=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_SAVE),MainDelegate.accountData.userId,terminal.tId,saveModeSwitch.isOn?1:0,_deviceNameLbl.text];
     MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsEnablePowerSaveModeUploader" userDataDictionary:nil];
     NSLog(@"SettingsEnablePowerSaveModeUploader is %@",loader.name);
 }
 - (void)uploadModelToServerWithDeviceName{
-    if (![deviceName.text isEqualToString:terminal.name]) {
+    if (![_deviceNameLbl.text isEqualToString:terminal.name]) {
         NSString *urlStr = nil;
-        urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&name=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_SAVE),accountData.userId,terminal.tId,deviceName.text];
+        urlStr = [NSString stringWithFormat:@"%@?gid=%@&tId=%@&name=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_SAVE),MainDelegate.accountData.userId,terminal.tId,_deviceNameLbl.text];
         MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"SettingsChangeDeviceNameUploader" userDataDictionary:nil];
         NSLog(@"SettingsChangeDeviceNameUploader is %@",loader.name);
     }else{
@@ -199,26 +212,22 @@
         if ([MyEUtil getResultFromAjaxString:string] != 1) {
             [MyEUtil showErrorOn:nil withMessage:@"终端名称变更失败"];
         }else{
-            [saveDeviceNameBtn setTitle:@"更改名称" forState:UIControlStateNormal];
-            deviceName.userInteractionEnabled = NO;
             //当名称修改成功后要及时修改本地数据，达到数据一致性要求
-            UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
-            MyEDevicesViewController *vc = [nav childViewControllers][0];
-            for (MyETerminal *t in vc.accountData.terminals) {
+            for (MyETerminal *t in MainDelegate.accountData.terminals) {
                 if ([t isKindOfClass:[MyETerminal class]]) {
                     if ([t.tId isEqualToString:self.terminal.tId]) {
-                        t.name = self.deviceName.text;
+                        t.name = _deviceNameLbl.text;
                     }
                 }
             }
-            for (MyETerminal *t in vc.accountData.allTerminals) {
+            for (MyETerminal *t in MainDelegate.accountData.allTerminals) {
                 if ([t isKindOfClass:[MyETerminal class]]) {
                     if ([t.tId isEqualToString:self.terminal.tId]) {
-                        t.name = self.deviceName.text;
+                        t.name = _deviceNameLbl.text;
                     }
                 }
             }
-
+            
             [MyEUtil showMessageOn:self.navigationController.view withMessage:@"终端名称更改成功"];
         }
     }
@@ -236,16 +245,16 @@
 
 #pragma mark
 #pragma mark - IBAction methods
-- (IBAction)saveDeviceName:(UIButton *)sender {
-    if ([saveDeviceNameBtn.currentTitle isEqualToString:@"更改名称"]) {
-        deviceName.userInteractionEnabled = YES;
-        [deviceName becomeFirstResponder];
-        [saveDeviceNameBtn setTitle:@"保存更改" forState:UIControlStateNormal];
-    }else{
-        [deviceName endEditing:YES];
-        [self uploadModelToServerWithDeviceName];
-    }
-}
+//- (IBAction)saveDeviceName:(UIButton *)sender {
+//    if ([saveDeviceNameBtn.currentTitle isEqualToString:@"更改名称"]) {
+//        deviceName.userInteractionEnabled = YES;
+//        [deviceName becomeFirstResponder];
+//        [saveDeviceNameBtn setTitle:@"保存更改" forState:UIControlStateNormal];
+//    }else{
+//        [deviceName endEditing:YES];
+//        [self uploadModelToServerWithDeviceName];
+//    }
+//}
 
 - (IBAction)setSaveMode:(UISwitch *)sender {
     [self uploadModelToServerWithEnablePowerSaveMode];
@@ -254,9 +263,13 @@
 - (IBAction)setDataCollect:(UISwitch *)sender {
     [self uploadModelToServerWithEnableDataCollect];
 }
-#pragma mark - UITextField delegate methods
--(BOOL)textFieldShouldReturn:(UITextField *)textField{
-    [self uploadModelToServerWithDeviceName];
-    return YES;
+#pragma mark - UIAlertView delegate methods
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        UITextField *txt = [alertView textFieldAtIndex:0];
+        _deviceNameLbl.text = txt.text;
+        [self uploadModelToServerWithDeviceName];
+    }
 }
+
 @end

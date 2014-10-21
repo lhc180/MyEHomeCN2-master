@@ -39,7 +39,6 @@
     [passwoedField setValue:[UIColor lightGrayColor] forKeyPath:@"_placeholderLabel.textColor"];
 }
 -(void)viewDidDisappear:(BOOL)animated{
-    [self setAccountData:nil];
     [self setLoginImage:nil];
 }
 - (void)didReceiveMemoryWarning
@@ -121,10 +120,7 @@
 -(void)_doLogin {
     // 1.判断是否联网：
     if (![MyEDataLoader isConnectedToInternet]) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                    contentText:@"没有网络连接，请打开网络后重试"
-                                                leftButtonTitle:nil
-                                               rightButtonTitle:@"确定"];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"没有网络连接,请打开网络后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
         return;
     }
@@ -140,25 +136,11 @@
 }
 -(void)showMainTab{
     MyEMainTabBarController *tabBarController = [self.storyboard instantiateViewControllerWithIdentifier:@"mainTab"];
-    tabBarController.accountData = self.accountData;
     
     UINavigationController *nc = [[tabBarController childViewControllers] objectAtIndex:0];
     MyEDevicesViewController *devicesViewController = [[nc childViewControllers] objectAtIndex:0];
-    devicesViewController.accountData = self.accountData;
     devicesViewController.preivousPanelType = 0;
     
-    //这里以后要放置camera的东西
-    nc = tabBarController.childViewControllers[2];
-    MyERoomsViewController *roomsViewController = [[nc childViewControllers] objectAtIndex:0];
-    roomsViewController.accountData = self.accountData;
-    
-    nc = [[tabBarController childViewControllers] objectAtIndex:3];
-    MyEScenesViewController *scenesViewController = [[nc childViewControllers] objectAtIndex:0];
-    scenesViewController.accountData = self.accountData;
-    
-    nc = [[tabBarController childViewControllers] objectAtIndex:4];
-    MyESettingsViewController *settingsViewController = [[nc childViewControllers] objectAtIndex:0];
-    settingsViewController.accountData = self.accountData;
     [MainDelegate.window.rootViewController dismissViewControllerAnimated:YES completion:nil];
     MainDelegate.window.rootViewController = tabBarController;
 }
@@ -177,25 +159,23 @@
     [HUD hide:YES];
     if([name isEqualToString:@"LoginDownloader"]) {
         MyEAccountData *anAccountData = [[MyEAccountData alloc] initWithJSONString:string];
-        if(anAccountData && anAccountData.loginSuccess) {
-            self.accountData = anAccountData;
-        }
+        MainDelegate.accountData = anAccountData;
         //MARK:新增内容
-        if (self.accountData.mStatus != 1) {
-            DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"检测到网关离线,请给网关通电并连接网络后重试!" leftButtonTitle:nil rightButtonTitle:@"知道了"];
+        if (MainDelegate.accountData.mStatus != 1) {
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"检测到网关离线,请给网关通电并连接网络后重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
             [alert show];
             return;
         }
-        if (self.accountData.loginSuccess == -3) {
+        if (MainDelegate.accountData.loginSuccess == -3) {
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
-        }else if (self.accountData.loginSuccess == 1){
+        }else if (MainDelegate.accountData.loginSuccess == 1){
             [self saveSettings];
             [self showMainTab];
-        }else if(self.accountData.loginSuccess == -1){
+        }else if(MainDelegate.accountData.loginSuccess == -1){
             [MyEUtil showMessageOn:self.view withMessage:@"密码输入错误！"];
-        }else if(self.accountData.loginSuccess == -5){
+        }else if(MainDelegate.accountData.loginSuccess == -5){
             [MyEUtil showToastOn:nil withMessage:@"此M-ID对应的账户已经修改了用户名，请使用新用户名和密码登陆" backgroundColor:nil];
-        }else if(self.accountData.loginSuccess == 2){
+        }else if(MainDelegate.accountData.loginSuccess == 2){
             [MyEUtil showMessageOn:self.view withMessage:@"此网关的MID已注册"];
         }else{
             [MyEUtil showMessageOn:self.view withMessage:@"登录失败，请检查输入是否有误"];
@@ -204,11 +184,7 @@
 }
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     
-    // inform the user
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"错误"
-                                                contentText:@"通信错误，请稍候重试"
-                                            leftButtonTitle:nil
-                                           rightButtonTitle:@"确定"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"错误" message:@"通信错误,请稍候重试" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
     [alert show];
     NSLog(@"In delegate Connection failed! Error - %@ %@",
           [error localizedDescription],
@@ -224,25 +200,11 @@
         //在这里为每个tab view设置houseId和userId, 同时要为每个tab viewController中定义这两个变量，并实现一个统一的签名方法，以保存这个变量。
         
 //        [tabBarController setTitle:self.accountData.userName];
-        tabBarController.accountData = self.accountData;
         
         UINavigationController *nc = [[tabBarController childViewControllers] objectAtIndex:0];
         MyEDevicesViewController *devicesViewController = [[nc childViewControllers] objectAtIndex:0];
-        devicesViewController.accountData = self.accountData;
+
         devicesViewController.preivousPanelType = 0;
-        
-        nc = [[tabBarController childViewControllers] objectAtIndex:2];
-        MyERoomsViewController *roomsViewController = [[nc childViewControllers] objectAtIndex:0];
-        roomsViewController.accountData = self.accountData;
-        
-        
-        nc = [[tabBarController childViewControllers] objectAtIndex:3];
-        MyEScenesViewController *scenesViewController = [[nc childViewControllers] objectAtIndex:0];
-        scenesViewController.accountData = self.accountData;
-        
-        nc = [[tabBarController childViewControllers] objectAtIndex:4];
-        MyESettingsViewController *settingsViewController = [[nc childViewControllers] objectAtIndex:0];
-        settingsViewController.accountData = self.accountData;
     }
     if ([segue.identifier isEqualToString:@"scan"]) {
         UINavigationController *nav = segue.destinationViewController;

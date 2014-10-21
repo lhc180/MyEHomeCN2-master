@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-@class MyEAutoControlProcess;
+#import "MyEAutoControlProcess.h"
+#import "MyEAutoControlPeriod.h"
 
 @interface MyEAutoControlProcessList : NSObject  <NSCopying>
 @property (nonatomic, retain) NSMutableArray *mainArray;

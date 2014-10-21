@@ -16,12 +16,12 @@
 
 - (MyEDeviceStatus *)init {
     if (self = [super init]) {
-        connection = 0;
+        connection = 4;
         powerSwitch = 0;
-        runMode = 0;
-        setpoint = 0;
-        temperature = 0;
-        humidity = 0;
+        runMode = 1;
+        setpoint = 25;
+        temperature = 25;
+        humidity = 50;
         windLevel = 0;
         feedbackToneSwitch = 0;
         currentPower = 0;
@@ -31,6 +31,8 @@
         tempMornitorEnabled = 0;
         acTmax = 0;
         acTmin = 0;
+        _protectionStatus = 0;
+        _alertStatus = 0;
         return self;
     }
     return nil;

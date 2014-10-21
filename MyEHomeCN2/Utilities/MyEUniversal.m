@@ -62,7 +62,7 @@
     DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"检测到此次会话超时，需要重新登录" leftButtonTitle:nil rightButtonTitle:@"确定"];
     alert.rightBlock = ^{
         UIStoryboard *story = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        MyELoginViewController *login = [story instantiateViewControllerWithIdentifier:@"LoginViewController"];
+        MyELoginViewController *login = [story instantiateViewControllerWithIdentifier:IS_IPAD?@"loginForIPad":@"LoginViewController"];
         //这里
         [vc presentViewController:login animated:YES completion:nil];
     };
@@ -111,5 +111,8 @@
     alert.rightBlock = rAction;
     alert.leftBlock = lAction;
     [alert show];
+}
++(void)showPopListWithTitle:(NSString *)title data:(NSArray *)data andVC:(UIViewController *)vc;{
+    
 }
 @end

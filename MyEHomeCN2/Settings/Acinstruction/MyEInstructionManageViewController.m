@@ -19,14 +19,6 @@
 
 @implementation MyEInstructionManageViewController
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
@@ -46,8 +38,6 @@
 
     standard = [self.storyboard instantiateViewControllerWithIdentifier:@"standard"];
     custom = [self.storyboard instantiateViewControllerWithIdentifier:@"custom"];
-    standard.accountData = self.accountData;
-    custom.accountData = self.accountData;
     standard.device = self.device;
     custom.device = self.device;
     

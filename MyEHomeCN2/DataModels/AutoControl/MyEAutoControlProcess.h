@@ -18,7 +18,6 @@
 - (MyEAutoControlProcess *)initWithDictionary:(NSDictionary *)dictionary;
 - (MyEAutoControlProcess *)initWithJSONString:(NSString *)jsonString;
 - (NSDictionary *)JSONDictionary;
--(id)copyWithZone:(NSZone *)zone;
 
 
 // Utilities

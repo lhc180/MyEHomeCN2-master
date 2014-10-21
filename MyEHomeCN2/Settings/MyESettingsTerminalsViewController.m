@@ -21,13 +21,13 @@
 @end
 
 @implementation MyESettingsTerminalsViewController
-@synthesize accountData;
 
 #pragma mark
 #pragma mark - View Lifecycle methods
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    self.tableView.tableFooterView = [[UIView alloc] init];
     UIRefreshControl *rc = [[UIRefreshControl alloc] init];
     rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
     [rc addTarget:self
@@ -38,21 +38,21 @@
 
 -(void)viewWillAppear:(BOOL)animated{
     [self.tableView reloadData];
-    if (!accountData.mId ||[accountData.mId isEqualToString:@""]) {
-        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                    contentText:@"检测到网关已删除,请绑定网关后重试!"
-                                                leftButtonTitle:nil
-                                               rightButtonTitle:@"知道了"];
-        [alert show];
-    }else{
-       if ([accountData.allTerminals count] == 0) {
-           DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
-                                                       contentText:@"没有有效智能终端,请绑定后重试!"
-                                                   leftButtonTitle:nil
-                                                  rightButtonTitle:@"知道了"];
-           [alert show];
-       }
-    }
+//    if (!MainDelegate.accountData.mId ||[MainDelegate.accountData.mId isEqualToString:@""]) {
+//        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
+//                                                    contentText:@"检测到网关已删除,请绑定网关后重试!"
+//                                                leftButtonTitle:nil
+//                                               rightButtonTitle:@"知道了"];
+//        [alert show];
+//    }else{
+//       if ([MainDelegate.accountData.allTerminals count] == 0) {
+//           DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
+//                                                       contentText:@"没有有效智能终端,请绑定后重试!"
+//                                                   leftButtonTitle:nil
+//                                                  rightButtonTitle:@"知道了"];
+//           [alert show];
+//       }
+//    }
 }
 #pragma mark
 #pragma mark - memoryWarning methods
@@ -63,7 +63,7 @@
 #pragma mark
 #pragma mark - private methods
 -(void)doThisWhenDeleteTidSuccessWithIndexPath:(NSIndexPath *)indexPath{
-    [accountData.allTerminals removeObjectAtIndex:indexPath.row];
+    [MainDelegate.accountData.allTerminals removeObjectAtIndex:indexPath.row];
     if (indexPath.row == 0) {
         [self.tableView reloadData];
     }else{
@@ -83,25 +83,25 @@
 #pragma mark - Table view data source
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    if ([accountData.allTerminals count]==0) {
+    if ([MainDelegate.accountData.allTerminals count]==0) {
         return 1;
     }else{
-        return [accountData.allTerminals count];
+        return [MainDelegate.accountData.allTerminals count];
     }
 }
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
-    if (!accountData.mId || [accountData.mId isEqualToString:@""]) {
+    if (!MainDelegate.accountData.mId || [MainDelegate.accountData.mId isEqualToString:@""]) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"none"];
         cell.textLabel.text = @"没有检测到网关,请绑定!";
         return cell;
     }
-    if ([accountData.allTerminals count]==0) {
+    if ([MainDelegate.accountData.allTerminals count]==0) {
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"none"];
         cell.textLabel.text = @"网关没有绑定智能终端,请绑定!";
         return cell;
     }else{
-        MyETerminal *terminal = [self.accountData.allTerminals objectAtIndex:indexPath.row];
+        MyETerminal *terminal = [MainDelegate.accountData.allTerminals objectAtIndex:indexPath.row];
         NSString *identifier = nil;
         if (terminal.irType == 1) {
             identifier = @"zhikongxing";
@@ -134,6 +134,8 @@
             NSArray *array = @[@"ir",@"smoke",@"door",@"slalarm"];
             cell.imageView.image = [UIImage imageNamed:[NSString stringWithFormat:@"%@-off",array[terminal.irType - 4]]];
         }
+        NSArray *nameArray = @[@"智控星",@"智能插座",@"智能开关",@"红外入侵探测器",@"烟雾探测器",@"门窗磁",@"声光报警器"];
+        cell.detailTextLabel.text = nameArray[terminal.irType - 1];
         return cell;
     }
 }
@@ -152,14 +154,9 @@
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
     deleteTerminalIndex = indexPath;
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"警告"
-                                                contentText:@"此操作将导致无法操作绑定到该智控星的所有设备，您确定继续么？"
-                                            leftButtonTitle:@"取消"
-                                           rightButtonTitle:@"确定"];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"此操作将导致无法操作绑定到该智控星的所有设备，您确定继续么？" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+    alert.tag = 100;
     [alert show];
-    alert.rightBlock = ^() {
-        [self deleteTerminalFromServerForRowAtIndexPath:indexPath];
-    };
 }
 
 #pragma mark
@@ -175,7 +172,7 @@
     } else
         [HUD show:YES];
     
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SETTINGS_VIEW), self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SETTINGS_VIEW), MainDelegate.accountData.userId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"settingsLoader" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
@@ -187,7 +184,7 @@
         HUD.delegate = self;
     } else
         [HUD show:YES];
-    MyETerminal *terminal = [accountData.allTerminals objectAtIndex:indexPath.row];
+    MyETerminal *terminal = [MainDelegate.accountData.allTerminals objectAtIndex:indexPath.row];
     
     NSDictionary *dic = @{@"indexPath": indexPath};
     NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_DELETE),terminal.tId];
@@ -201,7 +198,7 @@
     } else
         [HUD show:YES];
     NSIndexPath *indexPath = (NSIndexPath *)_checkTimer.userInfo;
-    MyETerminal *terminal = [accountData.allTerminals objectAtIndex:indexPath.row];
+    MyETerminal *terminal = [MainDelegate.accountData.allTerminals objectAtIndex:indexPath.row];
     NSDictionary *dic = @{@"indexPath": indexPath};
     NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_DELETE_CHECK),terminal.tId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"checkDeleteTerminalFromServer"  userDataDictionary:dic];
@@ -269,7 +266,7 @@
             [MyEUtil showMessageOn:nil withMessage:@"下载设置面板数据时发生错误"];
         } else{
             MyESettings *setting = [[MyESettings alloc] initWithJSONString:string];
-            self.accountData.allTerminals = setting.terminals;
+            MainDelegate.accountData.allTerminals = setting.terminals;
             [self.tableView reloadData];
         }
     }
@@ -292,12 +289,18 @@
 {
     id vc = segue.destinationViewController;
     NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-    MyETerminal *terminal = [accountData.allTerminals objectAtIndex:indexPath.row];
+    MyETerminal *terminal = [MainDelegate.accountData.allTerminals objectAtIndex:indexPath.row];
     [vc setValue:terminal forKey:@"terminal"];
-    if ([vc isKindOfClass:[MyETerminalSettingViewController class]]) {
-        [vc setValue:self.accountData forKey:@"accountData"];
-    }
+//    if ([vc isKindOfClass:[MyETerminalSettingViewController class]]) {
+//        [vc setValue:MainDelegate.accountData forKey:@"accountData"];
+//    }
 //    [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
+#pragma mark - UIAlertView delegate methods
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 1) {
+        [self deleteTerminalFromServerForRowAtIndexPath:deleteTerminalIndex];
+    }
+}
 @end

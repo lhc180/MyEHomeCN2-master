@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "MyEIrDeviceAddKeyModalViewController.h"
 #import "MyEIrStudyEditKeyModalViewController.h"
+#import "MZFormSheetController.h"
 @interface MyEIrUserKeyViewController : UITableViewController<MyEDataLoaderDelegate,MBProgressHUDDelegate, MyEIrDeviceAddKeyModalViewControllerDelegate>{
     MBProgressHUD *HUD;
     NSTimer *tapTimer;
@@ -18,7 +19,6 @@
 }
 // Just for regular ir device(not TV and Audio, which has system default template panel), to tell the VC download key set after viewDidLoad
 @property (nonatomic) BOOL needDownloadKeyset;
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (nonatomic) BOOL jumpFromTv;
 @property (nonatomic) BOOL jumpFromCurtain;

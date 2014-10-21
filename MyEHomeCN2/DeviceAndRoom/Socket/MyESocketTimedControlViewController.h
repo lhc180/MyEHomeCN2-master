@@ -7,18 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MYESocket.h"
 
-@interface MyESocketTimedControlViewController : UIViewController
-<MyEDataLoaderDelegate,MBProgressHUDDelegate,
-UIPickerViewDataSource,UIPickerViewDelegate>{
+@interface MyESocketTimedControlViewController : UIViewController <MyEDataLoaderDelegate,UIPickerViewDataSource,UIPickerViewDelegate>{
     MBProgressHUD *HUD;
     NSInteger _stopTs;
     NSTimer *_timer;
+    NSTimer *_timerToDownloadInfo;
     NSInteger _timingMinutes;//定时的分钟数目.
     BOOL _isTiming;
 }
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
+@property (nonatomic, strong) MYESocket *socket;
 
 @property (strong, nonatomic) IBOutlet UIButton *timerMinutesBtn;
 @property (weak, nonatomic) IBOutlet UIButton *timerSwitchBtn;

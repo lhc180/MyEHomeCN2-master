@@ -64,6 +64,22 @@
     }
 }
 
++(NSArray *)modesWithAction:(NSInteger)action{
+    if (action == 0) {
+        return @[@"自动",@"制热",@"制冷",@"除湿"];
+    }
+    return @[@"自动",@"制热",@"制冷",@"除湿",@"通风"];
+}
++(NSArray *)fans{
+    return @[@"自动",@"一级",@"二级",@"三级"];
+}
++(NSArray *)temps{
+    NSMutableArray *array = [NSMutableArray array];
+    for (int i = 18; i < 31; i ++) {
+        [array addObject:[NSString stringWithFormat:@"%i℃",i]];
+    }
+    return array;
+}
 
 + (NSString *)getFilenameForRunMode:(NSInteger)runMode
 {

@@ -7,11 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+@class MyEAccountData;
 
 @interface MYEAppDelegate : UIResponder <UIApplicationDelegate,UITextFieldDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 @property (strong, nonatomic) NSString *deviceTokenStr,*alias;
 @property (assign, nonatomic) NSInteger dataLength; //用于摄像头传输时的速度
-
+@property (strong, nonatomic) MyEAccountData *accountData;
 @end

@@ -11,7 +11,6 @@
 @interface MyEPasswordResetViewController : UITableViewController <UITextFieldDelegate, MyEDataLoaderDelegate> {
     MBProgressHUD *HUD;
 }
-@property(weak, nonatomic) MyEAccountData *accountData;
 
 @property (weak, nonatomic) IBOutlet UITextField *currentPasswordTextField;
 @property (weak, nonatomic) IBOutlet UITextField *npaswdTextField0;

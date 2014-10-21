@@ -17,7 +17,7 @@
 @protocol MyEAcPeriodViewControllerDelegate;
 
 @interface MyEAutoPeriodViewController : UIViewController
-<UITextFieldDelegate,MyEDataLoaderDelegate,MBProgressHUDDelegate,UIPickerViewDataSource,UIPickerViewDelegate>{
+<UITextFieldDelegate,MyEDataLoaderDelegate,MBProgressHUDDelegate,UIPickerViewDataSource,UIPickerViewDelegate,UIAlertViewDelegate>{
     MBProgressHUD *HUD;
     NSInteger buttonTag;
     
@@ -30,7 +30,6 @@
 }
 @property (strong, nonatomic) id <MyEAcPeriodViewControllerDelegate> delegate;
 @property (nonatomic, retain) MyEAutoControlPeriod *period;
-@property (nonatomic, weak) MyEAccountData *accountData;
 @property (nonatomic, weak) MyEDevice *device;
 @property (weak, nonatomic) IBOutlet UIButton *timePeriodBtn;
 @property (weak, nonatomic) IBOutlet UIButton *instructionButton;

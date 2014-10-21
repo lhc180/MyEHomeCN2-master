@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "MYEActiveBtn.h"
 
-@interface MYESwitchCell : UICollectionViewCell
+@interface MYESwitchCell : UITableViewCell
 @property (strong, nonatomic) IBOutlet MYEActiveBtn *switchBtn;
+@property (strong, nonatomic) IBOutlet UIButton *timeBtn;
 
 @property (nonatomic, setter = isDisable:) BOOL disable;  //这个用于表示该路开关的禁用状态
 @property (nonatomic, setter = isLightOn:) BOOL lightOn;

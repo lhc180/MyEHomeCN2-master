@@ -135,20 +135,20 @@
     self.brandIdArray = brandIds;
 }
 -(void)findModelArrayWithBrandIndex:(NSInteger)index{
-    NSMutableArray *models = [NSMutableArray array];
-    NSMutableArray *modelIds = [NSMutableArray array];
-    MyEAcBrand *brand = self.brandsAndModels.userAcBrands[index];
-    for (int i=0; i<[self.brandsAndModels.userAcModels count]; i++) {
-        MyEAcModel *modle = self.brandsAndModels.userAcModels[i];
-        for (int j=0; j<[brand.models count]; j++) {
-            if (modle.modelId == [brand.models[j] intValue]) {
-                [models addObject:modle.modelName];
-                [modelIds addObject:[NSNumber numberWithInteger:modle.modelId]];
-            }
-        }
-    }
-    self.modelNameArray = models;
-    self.modelIdArray = modelIds;
+//    NSMutableArray *models = [NSMutableArray array];
+//    NSMutableArray *modelIds = [NSMutableArray array];
+//    MyEAcBrand *brand = self.brandsAndModels.userAcBrands[index];
+//    for (int i=0; i<[self.brandsAndModels.userAcModels count]; i++) {
+//        MyEAcModel *modle = self.brandsAndModels.userAcModels[i];
+//        for (int j=0; j<[brand.models count]; j++) {
+//            if (modle.modelId == [brand.models[j] intValue]) {
+//                [models addObject:modle.modelName];
+//                [modelIds addObject:[NSNumber numberWithInteger:modle.modelId]];
+//            }
+//        }
+//    }
+//    self.modelNameArray = models;
+//    self.modelIdArray = modelIds;
 }
 -(void)defineTapGestureRecognizerOnWindow{
     tapGestureToHideHUD = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideHUD)];
@@ -162,11 +162,11 @@
     NSInteger modelId = [modelIdArray[index] integerValue];
     
     MyEAcModel *model = nil;
-    for (int i = 0; i < [self.brandsAndModels.userAcModels count]; i++) {
-        model = [self.brandsAndModels.userAcModels objectAtIndex:i];
-        if(modelId == model.modelId)
-            break;
-    }
+//    for (int i = 0; i < [self.brandsAndModels.userAcModels count]; i++) {
+//        model = [self.brandsAndModels.userAcModels objectAtIndex:i];
+//        if(modelId == model.modelId)
+//            break;
+//    }
     return model;
 }
 
@@ -189,15 +189,15 @@
     NSMutableArray *models = [NSMutableArray array];
     NSMutableArray *modelIds = [NSMutableArray array];
     MyEAcBrand *brand = self.brandsAndModels.userAcBrands[row];
-    for (int i=0; i<[self.brandsAndModels.userAcModels count]; i++) {
-        MyEAcModel *modle = self.brandsAndModels.userAcModels[i];
-        for (int j=0; j<[brand.models count]; j++) {
-            if (modle.modelId == [brand.models[j] intValue]) {
-                [models addObject:modle.modelName];
-                [modelIds addObject:[NSNumber numberWithInteger:modle.modelId]];
-            }
-        }
-    }
+//    for (int i=0; i<[self.brandsAndModels.userAcModels count]; i++) {
+//        MyEAcModel *modle = self.brandsAndModels.userAcModels[i];
+//        for (int j=0; j<[brand.models count]; j++) {
+//            if (modle.modelId == [brand.models[j] intValue]) {
+//                [models addObject:modle.modelName];
+//                [modelIds addObject:[NSNumber numberWithInteger:modle.modelId]];
+//            }
+//        }
+//    }
     self.modelNameArray = models;
     self.modelIdArray = modelIds;
     _selectModelIndex = 0;
@@ -241,7 +241,6 @@
 - (IBAction)editInstruction:(UIButton *)sender {
 //其实这里对于MZFormSheetController有了更为深刻的了解
     MyEAcInstructionListViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"instructionList"];
-    vc.accountData = self.accountData;
     vc.device = self.device;
     vc.moduleId = [modelIdArray[[modelNameArray indexOfObject:modelBtn.titleLabel.text]] intValue];
     vc.brandId = [brandIdArray[[brandNameArray indexOfObject:brandBtn.titleLabel.text]] intValue];
@@ -270,7 +269,6 @@
         UINavigationController *navController = (UINavigationController *)presentedFSViewController;
         navController.topViewController.title = @"请输入新增的空调品牌和型号";
         MyEAcAddNewBrandAndModuleViewController *modalVc = (MyEAcAddNewBrandAndModuleViewController *)navController.topViewController;
-        modalVc.accountData = self.accountData;
         modalVc.brandsAndModules = self.brandsAndModels;
         modalVc.device = self.device;
         modalVc.jumpFromAddBtn = 1;
@@ -368,7 +366,7 @@
 -(void)deleteBrandAndModuleToServer{
     NSString *urlStr = [NSString stringWithFormat:@"%@?gId=%@&action=2&brandId=%i&moduleId=%i&tId=%@",
                         GetRequst(URL_FOR_AC_BRAND_MODEL_EDIT),
-                        self.accountData.userId,
+                        MainDelegate.accountData.userId,
                         [brandIdArray[[brandNameArray indexOfObject:brandBtn.titleLabel.text]] intValue],
                         [modelIdArray[[modelNameArray indexOfObject:modelBtn.titleLabel.text]] intValue],
                         self.device.tId];
@@ -382,7 +380,7 @@
         HUD.delegate = self;
     } else
         [HUD show:YES];
-    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_IR_LIST_AC_MODELS), self.accountData.userId];
+    NSString *urlStr = [NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_IR_LIST_AC_MODELS), MainDelegate.accountData.userId];
     
     MyEDataLoader *downloader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"downloadAcBrandsAndModules" userDataDictionary:nil];
     NSLog(@"%@",downloader.name);
@@ -466,7 +464,7 @@
         }else{
             MyEAcBrandsAndModels *ac = [[MyEAcBrandsAndModels alloc] initWithJSONString:string];
             self.brandsAndModels.userAcBrands = ac.userAcBrands;
-            self.brandsAndModels.userAcModels = ac.userAcModels;
+//            self.brandsAndModels.userAcModels = ac.userAcModels;
             [self findBrandArrayInData];
 //            NSMutableArray *models = [NSMutableArray array];
 //            NSMutableArray *modelIds = [NSMutableArray array];
@@ -666,7 +664,6 @@
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender{
     if ([segue.identifier isEqualToString:@"instructionList"]) {
         MyEAcInstructionListViewController *vc = segue.destinationViewController;
-        vc.accountData = self.accountData;
         vc.device = self.device;
         vc.moduleId = [modelIdArray[[modelNameArray indexOfObject:modelBtn.titleLabel.text]] intValue];
         vc.brandId = [brandIdArray[[brandNameArray indexOfObject:brandBtn.titleLabel.text]] intValue];
