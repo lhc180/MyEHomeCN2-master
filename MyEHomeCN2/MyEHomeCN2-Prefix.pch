@@ -53,8 +53,8 @@
 
 /*-------------------------URL DEFINE-------------------------------*/
 
-#define GetRequst(API) [@"http://www.myenergydomain.com.cn" stringByAppendingFormat:@"%@",API]
-//#define GetRequst(API) [@"http://192.168.0.185:80" stringByAppendingFormat:@"%@",API]
+//#define GetRequst(API) [@"http://www.myenergydomain.com.cn" stringByAppendingFormat:@"%@",API]
+#define GetRequst(API) [@"http://192.168.0.185:80" stringByAppendingFormat:@"%@",API]
 
 //#define GetRequst(API) [@"http://192.168.0.80:8080" stringByAppendingFormat:@"%@",API]
 
@@ -75,6 +75,9 @@
 #define URL_FOR_SETTINGS_SYSTEM_EXIT @"/phone/system_exit.jhtml"
 #define URL_FOR_SETTINGS_CHANGE_PASSWORD  @"/phone/settings_password_save.jhtml"
 #define URL_FOR_SETTINGS_CHANGE_USERNAME @"/phone/system_update_username.jhtml"
+#define URl_FOR_SETTINGS_FIND_MEDIATOR @"/phone/find_mediator_list.jhtml"
+#define URL_FOR_SETTINGS_FIND_MEDIATOR_SECOND @"/phone/find_second_generation_mediator_list.jhtml"
+#define URL_FOR_SETTINGS_MEDIATOR_DETAIL @"/phone/system_terminals_view.jhtml"
 
 /*-------------------------DEVICE  ROOM-------------------------------*/
 #define URL_FOR_DEVICE_ROOM_LIST @ "/phone/device_room_list_view.jhtml"

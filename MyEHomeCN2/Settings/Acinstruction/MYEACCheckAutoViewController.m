@@ -110,8 +110,8 @@
             return;
         }
     }
-        [self refreshUI];
-        [self autoCheckInstructionWithModuleId:_model.modelId];
+    [self refreshUI];
+    [self autoCheckInstructionWithModuleId:_model.modelId];
 }
 
 #pragma mark - IBAction methods
@@ -194,8 +194,8 @@
     
     if (alertView.tag == 100) {   //是否进入精准匹配模式
         if (buttonIndex == 1) {   //进入精准匹配模式
-            if (_index - 5 >= 0) {
-                _index -= 5;
+            if (_index - 3 >= 0) {
+                _index -= 3;
             }else
                 _index = 0;
             _counter = 0;
@@ -211,6 +211,7 @@
     }
     if (alertView.tag == 101) {   //是否确认选择当前匹配的型号
         if (buttonIndex == 1) {   //确认选择当前型号
+            
             [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
         }else{
             self.lblTips.hidden = YES;

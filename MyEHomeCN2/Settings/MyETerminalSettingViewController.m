@@ -101,13 +101,7 @@
     [super didReceiveMemoryWarning];
 }
 #pragma mark - tableView delegate methods
-//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-//    if (IS_IOS6) {
-//        return 10;
-//    }else{
-//        return 1;
-//    }
-//}
+
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
     if (indexPath.section == 0 && indexPath.row == 0) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"请输入终端名称" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];

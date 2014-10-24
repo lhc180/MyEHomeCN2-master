@@ -24,6 +24,6 @@
 
 - (MyEAcBrand *)findBrandByBrandId:(NSInteger)brandId;
 - (MyEAcModel *)findModelByModelId:(NSInteger)modelId inBrand:(MyEAcBrand *)brand;
-- (NSArray *)usefullUserAcBrands;
+//- (NSArray *)usefullUserAcBrands;
 
 @end

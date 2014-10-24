@@ -52,10 +52,10 @@
                                     <constraint firstAttribute="width" secondItem="LCs-KX-L9E" secondAttribute="height" multiplier="1:1" id="Fa6-GH-XsP"/>
                                     <constraint firstAttribute="height" constant="180" id="esn-5c-EVf"/>
                                 </constraints>
-                                <state key="normal" image="device_socket_on">
+                                <state key="normal" image="socket-control-on">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <state key="selected" image="device_socket_off"/>
+                                <state key="selected" image="socket-control-off"/>
                                 <connections>
                                     <action selector="powerSwitchChanged:" destination="y7O-9k-tAe" eventType="touchUpInside" id="6Iy-Tj-fVR"/>
                                 </connections>
@@ -607,8 +607,8 @@
     <resources>
         <image name="clock-on" width="30" height="30"/>
         <image name="date" width="30" height="30"/>
-        <image name="device_socket_off" width="128" height="128"/>
-        <image name="device_socket_on" width="128" height="128"/>
+        <image name="socket-control-off" width="175" height="175"/>
+        <image name="socket-control-on" width="175" height="175"/>
         <image name="tab-acComfort" width="30" height="30"/>
         <image name="tab-socketAutoContro" width="30" height="30"/>
         <image name="tab-socketManualControl" width="30" height="30"/>

@@ -11,6 +11,7 @@
 #import "ZBarReaderView.h"
 #import "APService.h"
 #import "NSString+MD5.h"
+#import "MyEMainTabBarController.h"
 
 
 @implementation MYEAppDelegate
@@ -215,11 +216,40 @@
     //    NSLog(@"%@   %@",userInfo,userInfo[@"aps"][@"alert"]);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"系统消息" message:userInfo[@"aps"][@"alert"] delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
     [alert show];
+    [self handleRemoteNotificationString:userInfo[@"aps"][@"alert"]];
     [APService handleRemoteNotification:userInfo];
     completionHandler(UIBackgroundFetchResultNoData);
 }
 #endif
 
+-(void)handleRemoteNotificationString:(NSString *)str{
+    NSRange left = [str rangeOfString:@"“"];
+    NSRange right = [str rangeOfString:@"”"];
+    NSRange range = NSMakeRange(left.location+1, right.location-left.location-1);
+    NSLog(@"%@",[str substringWithRange:range]);
+//    if ([[str substringToIndex:2] isEqualToString:@"门窗"]) {
+//        
+//    }
+//    if ([[str substringToIndex:2] isEqualToString:@"红外"]) {
+//        
+//    }
+//    if ([[str substringToIndex:2] isEqualToString:@"烟雾"]) {
+//        
+//    }
+    for (MyEDevice *d in self.accountData.devices) {
+        if ([d.name isEqualToString:[str substringWithRange:range]]) {
+            d.status.alertStatus = 1;
+        }
+    }
+    UIViewController *viewController = self.window.rootViewController;
+    if ([viewController isKindOfClass:[UITabBarController class]]) {
+        MyEMainTabBarController *tab = (MyEMainTabBarController *)viewController;
+        UINavigationController *nav = tab.childViewControllers[0];
+        UITableViewController *vc = nav.childViewControllers[0];
+        [vc viewWillAppear:YES];
+    }
+    
+}
 - (void)applicationWillResignActive:(UIApplication *)application
 {
 }

@@ -37,6 +37,7 @@
 }
 
 -(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
     [self.tableView reloadData];
 //    if (!MainDelegate.accountData.mId ||[MainDelegate.accountData.mId isEqualToString:@""]) {
 //        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
@@ -77,7 +78,6 @@
     MyESettingsViewController *setting = [self.navigationController childViewControllers][0];
     setting.needRefresh = YES;
     [MyEUtil showSuccessOn:nil withMessage:@"删除红外终端成功！"];
-
 }
 #pragma mark
 #pragma mark - Table view data source
@@ -142,13 +142,7 @@
 -(NSString *)tableView:(UITableView *)tableView titleForDeleteConfirmationButtonForRowAtIndexPath:(NSIndexPath *)indexPath{
     return @"删除";
 }
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if (IS_IOS6) {
-        return 10;
-    }else{
-        return 1;
-    }
-}
+
 #pragma mark
 #pragma mark - Table view delegate
 

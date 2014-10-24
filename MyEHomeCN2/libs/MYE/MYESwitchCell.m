@@ -9,8 +9,8 @@
 #import "MYESwitchCell.h"
 @interface MYESwitchCell(){
     __weak IBOutlet UILabel *timeSetLbl;
-    
     __weak IBOutlet UILabel *timeDelayLbl;
+    __weak IBOutlet UIActivityIndicatorView *actor;
 }
 
 @end
@@ -72,5 +72,14 @@
         }
     }
 }
-
+-(void)viewShowOrHide:(BOOL)flag{
+    self.switchBtn.hidden = !flag;
+    actor.hidden = flag;
+}
+-(void)show{
+    [self viewShowOrHide:NO];
+}
+-(void)hide{
+    [self viewShowOrHide:YES];
+}
 @end

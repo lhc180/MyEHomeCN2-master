@@ -27,11 +27,14 @@
 @property(nonatomic, strong) NSString *cityName;
 @property(nonatomic) BOOL needRefresh,isFresh;
 
-@property (strong, nonatomic) IBOutlet UILabel *cityLabel;
-@property (strong, nonatomic) IBOutlet UILabel *statusLabel;
+@property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 @property (strong, nonatomic) IBOutlet UISwitch *notification;
+
+@property (strong, nonatomic) IBOutlet UILabel *cityLabel;
+
+@property (strong, nonatomic) IBOutlet UILabel *statusLabel;
+@property (weak, nonatomic) IBOutlet UILabel *lblChange;
 @property (strong, nonatomic) IBOutlet UILabel *terminalsCount;
 @property (weak, nonatomic) IBOutlet UILabel *subSwitchCount;
-@property (strong, nonatomic) IBOutlet UILabel *userNameLabel;
 
 @end

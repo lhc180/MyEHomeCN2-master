@@ -46,15 +46,9 @@
         
         UIButton *btn = [UIButton buttonWithType:UIButtonTypeSystem];
         [btn setFrame:CGRectMake(0, 0, 50, 30)];
+        [btn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
         if (!IS_IOS6) {
-            [btn setBackgroundImage:[UIImage imageNamed:@"back"] forState:UIControlStateNormal];
             [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 20, 0, 0)];
-        }else{
-            [btn setBackgroundImage:[UIImage imageNamed:@"back-ios6"] forState:UIControlStateNormal];
-            [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
-            btn.titleLabel.font = [UIFont boldSystemFontOfSize:12];
-            [btn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-            [btn setTitle:@"返回" forState:UIControlStateNormal];
         }
         [btn addTarget:self action:@selector(dismissVC) forControlEvents:UIControlEventTouchUpInside];
         self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:btn];

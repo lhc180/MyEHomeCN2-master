@@ -19,7 +19,7 @@ instructionMode, acInstructionSet, irKeySet;
     if (self = [super init]) {
         deviceId = 0;
         name = @"新设备";
-        tId = @"未绑定智控星";
+        tId = @"未指定智控星";
         brandId = 0;
         modelId = 0;
         brand = @"";

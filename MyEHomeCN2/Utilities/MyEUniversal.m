@@ -59,13 +59,8 @@
 }
 
 +(void)doThisWhenUserLogOutWithVC:(UIViewController*)vc{
-    DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示" contentText:@"检测到此次会话超时，需要重新登录" leftButtonTitle:nil rightButtonTitle:@"确定"];
-    alert.rightBlock = ^{
-        UIStoryboard *story = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-        MyELoginViewController *login = [story instantiateViewControllerWithIdentifier:IS_IPAD?@"loginForIPad":@"LoginViewController"];
-        //这里
-        [vc presentViewController:login animated:YES completion:nil];
-    };
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"会话超时" message:@"您需要重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"重新登录", nil];
+    alert.tag = 100;
     [alert show];
 }
 +(void)doThisToCloseKeyboardWithVC:(UIViewController *)vc{
@@ -114,5 +109,13 @@
 }
 +(void)showPopListWithTitle:(NSString *)title data:(NSArray *)data andVC:(UIViewController *)vc;{
     
+}
+-(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
+    if (alertView.tag == 100 && buttonIndex == 0) {
+        UIStoryboard *storybord = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+        MyELoginViewController *controller = (MyELoginViewController*)[storybord instantiateViewControllerWithIdentifier: IS_IPAD?@"loginForIPad":@"LoginViewController"];
+        [MainDelegate.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
+        MainDelegate.window.rootViewController = controller;
+    }
 }
 @end

@@ -45,7 +45,7 @@
 //        [_bgView addSubview:_actor];
 //        [self addSubview:_bgView];
 //        //        NSLog(@"%f %f %f %f",_bgView.frame.origin.x,_bgView.frame.origin.y,_bgView.frame.size.width,_bgView.frame.size.height);
-        [self setImage:[UIImage imageNamed:@"switch-on"] forState:UIControlStateNormal];
+        [self setImage:[UIImage imageNamed:@"switch-control-on"] forState:UIControlStateNormal];
     }
     return self;
 }
@@ -62,16 +62,16 @@
 }
 -(void)setEnabled:(BOOL)enabled{
     if (!enabled) {
-        [self setImage:[UIImage imageNamed:@"switch-disable"] forState:UIControlStateNormal];
+        [self setImage:[UIImage imageNamed:@"switch-control-disable"] forState:UIControlStateNormal];
         self.userInteractionEnabled = NO;
     }else
         self.userInteractionEnabled = YES;
 }
 -(void)setSelected:(BOOL)selected{
     if (selected) {
-        [self setImage:[UIImage imageNamed:@"switch-off"] forState:UIControlStateNormal];
+        [self setImage:[UIImage imageNamed:@"switch-control-off"] forState:UIControlStateNormal];
     }else
-        [self setImage:[UIImage imageNamed:@"switch-on"] forState:UIControlStateNormal];
+        [self setImage:[UIImage imageNamed:@"switch-control-on"] forState:UIControlStateNormal];
 }
 /*
  // Only override drawRect: if you perform custom drawing.

@@ -19,4 +19,7 @@
 
 @property (nonatomic, strong) NSString *timeSet;
 @property (nonatomic, strong) NSString *timeDelay;
+
+-(void)show;
+-(void)hide;
 @end

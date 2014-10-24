@@ -48,7 +48,7 @@
         return;
     }
     [HUD show:YES];
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?mainTId=%@&subTId=%@",GetRequst(URL_FOR_SUBSWITCH_BIND),[self.lblMainTid.text isEqualToString:@"解绑"]?@"":self.lblMainTid.text,self.subSwitch.tid] postData:nil delegate:self loaderName:@"save" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?mainTId=%@&subTId=%@&mId=%@",GetRequst(URL_FOR_SUBSWITCH_BIND),[self.lblMainTid.text isEqualToString:@"解绑"]?@"":self.lblMainTid.text,self.subSwitch.tid,self.mediator.mid] postData:nil delegate:self loaderName:@"save" userDataDictionary:nil];
     NSLog(@"%@",loader.name);
 }
 

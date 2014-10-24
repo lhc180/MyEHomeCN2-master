@@ -7,17 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8205212919F9093A00B7BB9B /* MYESettingsMediatorListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8205212819F9093A00B7BB9B /* MYESettingsMediatorListViewController.m */; };
 		8205756619EA547300A96B56 /* MYEACTemMonitorViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8205756519EA547300A96B56 /* MYEACTemMonitorViewController.m */; };
 		820CD1C219EE5E900007393C /* ACInit.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 820CD1C019EE5E900007393C /* ACInit.storyboard */; };
 		820CD1C719EE5FC00007393C /* Hotel.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 820CD1C519EE5FC00007393C /* Hotel.storyboard */; };
 		820CD1CB19EE66CD0007393C /* MYEHotel.m in Sources */ = {isa = PBXBuildFile; fileRef = 820CD1CA19EE66CD0007393C /* MYEHotel.m */; };
 		820CD1CE19EE6E000007393C /* MYEHotelSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 820CD1CD19EE6E000007393C /* MYEHotelSetViewController.m */; };
 		820CD1D119EE71440007393C /* MYEHotelSetDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 820CD1D019EE71440007393C /* MYEHotelSetDetailViewController.m */; };
-		822E7BC619D00B4400C5F789 /* MYEACInstructionManageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 822E7BC519D00B4400C5F789 /* MYEACInstructionManageViewController.m */; };
 		8264644519EA322F0076211B /* MYEACSaveEnergyTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8264644419EA322F0076211B /* MYEACSaveEnergyTableViewController.m */; };
 		82659C4319E4ED56000BDA35 /* IIILocalizedIndex.m in Sources */ = {isa = PBXBuildFile; fileRef = 82659C4219E4ED56000BDA35 /* IIILocalizedIndex.m */; };
 		8291AEE719DA96CD00FBFC01 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8291AEE619DA96CD00FBFC01 /* Security.framework */; };
 		82921E3419D90AC9005E6E0C /* MYEACInitStepViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82921E3319D90AC9005E6E0C /* MYEACInitStepViewController.m */; };
+		8294B6BB19F9F10C0085AACE /* MYESettingsMediatorDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8294B6BA19F9F10C0085AACE /* MYESettingsMediatorDetailViewController.m */; };
+		8294B6BE19FA22820085AACE /* MYESettingsMediatorAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8294B6BD19FA22820085AACE /* MYESettingsMediatorAddViewController.m */; };
 		82956B3E19D3E20A003DE88D /* MYETimePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 82956B3D19D3E20A003DE88D /* MYETimePicker.m */; };
 		82956B4119D3F844003DE88D /* MYECitySetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 82956B4019D3F844003DE88D /* MYECitySetViewController.m */; };
 		829A1BED19D2A93C005ACFE9 /* MYEPickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 829A1BEC19D2A93C005ACFE9 /* MYEPickerView.m */; };
@@ -173,7 +175,6 @@
 		8CBC8237199DFA850067D79F /* MyESocketManualControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC812E199DFA840067D79F /* MyESocketManualControlViewController.m */; };
 		8CBC8238199DFA850067D79F /* MyESocketScheduleSettingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC8130199DFA840067D79F /* MyESocketScheduleSettingViewController.m */; };
 		8CBC8239199DFA850067D79F /* MyESocketTimedControlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC8132199DFA840067D79F /* MyESocketTimedControlViewController.m */; };
-		8CBC823A199DFA850067D79F /* MyEDelayTimeSetViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC8135199DFA840067D79F /* MyEDelayTimeSetViewController.m */; };
 		8CBC823B199DFA850067D79F /* MyEScheduleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC8137199DFA840067D79F /* MyEScheduleCell.m */; };
 		8CBC823C199DFA850067D79F /* MyESwitchAutoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC8139199DFA840067D79F /* MyESwitchAutoViewController.m */; };
 		8CBC823E199DFA850067D79F /* MyESwitchElecInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC813D199DFA840067D79F /* MyESwitchElecInfoViewController.m */; };
@@ -235,7 +236,6 @@
 		8CBC8277199DFA850067D79F /* MyELoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81D5199DFA850067D79F /* MyELoginViewController.m */; };
 		8CBC8278199DFA850067D79F /* MyEMainTabBarController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81D7199DFA850067D79F /* MyEMainTabBarController.m */; };
 		8CBC8279199DFA850067D79F /* MyEQRScanViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81D9199DFA850067D79F /* MyEQRScanViewController.m */; };
-		8CBC827A199DFA850067D79F /* MyESigeUpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81DB199DFA850067D79F /* MyESigeUpViewController.m */; };
 		8CBC827E199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81E4199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.m */; };
 		8CBC827F199DFA850067D79F /* MyEScenesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CBC81E6199DFA850067D79F /* MyEScenesViewController.m */; };
 		8CBC8280199DFA850067D79F /* instructionListCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8CBC81E9199DFA850067D79F /* instructionListCell.xib */; };
@@ -285,6 +285,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8205212719F9093A00B7BB9B /* MYESettingsMediatorListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYESettingsMediatorListViewController.h; sourceTree = "<group>"; };
+		8205212819F9093A00B7BB9B /* MYESettingsMediatorListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYESettingsMediatorListViewController.m; sourceTree = "<group>"; };
 		8205756419EA547300A96B56 /* MYEACTemMonitorViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYEACTemMonitorViewController.h; sourceTree = "<group>"; };
 		8205756519EA547300A96B56 /* MYEACTemMonitorViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYEACTemMonitorViewController.m; sourceTree = "<group>"; };
 		820CD1C119EE5E900007393C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/ACInit.storyboard; sourceTree = "<group>"; };
@@ -295,8 +297,6 @@
 		820CD1CD19EE6E000007393C /* MYEHotelSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYEHotelSetViewController.m; sourceTree = "<group>"; };
 		820CD1CF19EE71440007393C /* MYEHotelSetDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYEHotelSetDetailViewController.h; sourceTree = "<group>"; };
 		820CD1D019EE71440007393C /* MYEHotelSetDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYEHotelSetDetailViewController.m; sourceTree = "<group>"; };
-		822E7BC419D00B4400C5F789 /* MYEACInstructionManageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYEACInstructionManageViewController.h; sourceTree = "<group>"; };
-		822E7BC519D00B4400C5F789 /* MYEACInstructionManageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYEACInstructionManageViewController.m; sourceTree = "<group>"; };
 		8264644319EA322F0076211B /* MYEACSaveEnergyTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYEACSaveEnergyTableViewController.h; sourceTree = "<group>"; };
 		8264644419EA322F0076211B /* MYEACSaveEnergyTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYEACSaveEnergyTableViewController.m; sourceTree = "<group>"; };
 		82659C4119E4ED56000BDA35 /* IIILocalizedIndex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IIILocalizedIndex.h; sourceTree = "<group>"; };
@@ -304,6 +304,10 @@
 		8291AEE619DA96CD00FBFC01 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		82921E3219D90AC9005E6E0C /* MYEACInitStepViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYEACInitStepViewController.h; sourceTree = "<group>"; };
 		82921E3319D90AC9005E6E0C /* MYEACInitStepViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYEACInitStepViewController.m; sourceTree = "<group>"; };
+		8294B6B919F9F10C0085AACE /* MYESettingsMediatorDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYESettingsMediatorDetailViewController.h; sourceTree = "<group>"; };
+		8294B6BA19F9F10C0085AACE /* MYESettingsMediatorDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYESettingsMediatorDetailViewController.m; sourceTree = "<group>"; };
+		8294B6BC19FA22820085AACE /* MYESettingsMediatorAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYESettingsMediatorAddViewController.h; sourceTree = "<group>"; };
+		8294B6BD19FA22820085AACE /* MYESettingsMediatorAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYESettingsMediatorAddViewController.m; sourceTree = "<group>"; };
 		82956B3C19D3E20A003DE88D /* MYETimePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYETimePicker.h; sourceTree = "<group>"; };
 		82956B3D19D3E20A003DE88D /* MYETimePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MYETimePicker.m; sourceTree = "<group>"; };
 		82956B3F19D3F844003DE88D /* MYECitySetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MYECitySetViewController.h; sourceTree = "<group>"; };
@@ -672,8 +676,6 @@
 		8CBC8130199DFA840067D79F /* MyESocketScheduleSettingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESocketScheduleSettingViewController.m; sourceTree = "<group>"; };
 		8CBC8131199DFA840067D79F /* MyESocketTimedControlViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESocketTimedControlViewController.h; sourceTree = "<group>"; };
 		8CBC8132199DFA840067D79F /* MyESocketTimedControlViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESocketTimedControlViewController.m; sourceTree = "<group>"; };
-		8CBC8134199DFA840067D79F /* MyEDelayTimeSetViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEDelayTimeSetViewController.h; sourceTree = "<group>"; };
-		8CBC8135199DFA840067D79F /* MyEDelayTimeSetViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEDelayTimeSetViewController.m; sourceTree = "<group>"; };
 		8CBC8136199DFA840067D79F /* MyEScheduleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEScheduleCell.h; sourceTree = "<group>"; };
 		8CBC8137199DFA840067D79F /* MyEScheduleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEScheduleCell.m; sourceTree = "<group>"; };
 		8CBC8138199DFA840067D79F /* MyESwitchAutoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESwitchAutoViewController.h; sourceTree = "<group>"; };
@@ -812,8 +814,6 @@
 		8CBC81D7199DFA850067D79F /* MyEMainTabBarController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEMainTabBarController.m; sourceTree = "<group>"; };
 		8CBC81D8199DFA850067D79F /* MyEQRScanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEQRScanViewController.h; sourceTree = "<group>"; };
 		8CBC81D9199DFA850067D79F /* MyEQRScanViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEQRScanViewController.m; sourceTree = "<group>"; };
-		8CBC81DA199DFA850067D79F /* MyESigeUpViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyESigeUpViewController.h; sourceTree = "<group>"; };
-		8CBC81DB199DFA850067D79F /* MyESigeUpViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyESigeUpViewController.m; sourceTree = "<group>"; };
 		8CBC81E3199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEScenesDeviceEditOrAddViewController.h; sourceTree = "<group>"; };
 		8CBC81E4199DFA850067D79F /* MyEScenesDeviceEditOrAddViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MyEScenesDeviceEditOrAddViewController.m; sourceTree = "<group>"; };
 		8CBC81E5199DFA850067D79F /* MyEScenesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MyEScenesViewController.h; sourceTree = "<group>"; };
@@ -1656,8 +1656,6 @@
 		8CBC8133199DFA840067D79F /* Switch */ = {
 			isa = PBXGroup;
 			children = (
-				8CBC8134199DFA840067D79F /* MyEDelayTimeSetViewController.h */,
-				8CBC8135199DFA840067D79F /* MyEDelayTimeSetViewController.m */,
 				8CBC8136199DFA840067D79F /* MyEScheduleCell.h */,
 				8CBC8137199DFA840067D79F /* MyEScheduleCell.m */,
 				8CBC813C199DFA840067D79F /* MyESwitchElecInfoViewController.h */,
@@ -1975,8 +1973,6 @@
 				8CBC81D7199DFA850067D79F /* MyEMainTabBarController.m */,
 				8CBC81D8199DFA850067D79F /* MyEQRScanViewController.h */,
 				8CBC81D9199DFA850067D79F /* MyEQRScanViewController.m */,
-				8CBC81DA199DFA850067D79F /* MyESigeUpViewController.h */,
-				8CBC81DB199DFA850067D79F /* MyESigeUpViewController.m */,
 			);
 			path = MainUI;
 			sourceTree = "<group>";
@@ -2026,6 +2022,12 @@
 				820CD1CD19EE6E000007393C /* MYEHotelSetViewController.m */,
 				820CD1CF19EE71440007393C /* MYEHotelSetDetailViewController.h */,
 				820CD1D019EE71440007393C /* MYEHotelSetDetailViewController.m */,
+				8205212719F9093A00B7BB9B /* MYESettingsMediatorListViewController.h */,
+				8205212819F9093A00B7BB9B /* MYESettingsMediatorListViewController.m */,
+				8294B6B919F9F10C0085AACE /* MYESettingsMediatorDetailViewController.h */,
+				8294B6BA19F9F10C0085AACE /* MYESettingsMediatorDetailViewController.m */,
+				8294B6BC19FA22820085AACE /* MYESettingsMediatorAddViewController.h */,
+				8294B6BD19FA22820085AACE /* MYESettingsMediatorAddViewController.m */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -2034,8 +2036,6 @@
 			isa = PBXGroup;
 			children = (
 				82921E3119D8F029005E6E0C /* ACInit */,
-				822E7BC419D00B4400C5F789 /* MYEACInstructionManageViewController.h */,
-				822E7BC519D00B4400C5F789 /* MYEACInstructionManageViewController.m */,
 				82F421BA19D03C2400C8FA5B /* MYEACBrandSelectViewController.h */,
 				82F421BB19D03C2400C8FA5B /* MYEACBrandSelectViewController.m */,
 				8CBC81E9199DFA850067D79F /* instructionListCell.xib */,
@@ -2248,6 +2248,7 @@
 				8CBC8283199DFA850067D79F /* MyEAcInstructionAutoCheckViewController.m in Sources */,
 				8CBC821D199DFA850067D79F /* MyEACManualControlNavController.m in Sources */,
 				8CBC825A199DFA850067D79F /* MZFormSheetBackgroundWindow.m in Sources */,
+				8294B6BB19F9F10C0085AACE /* MYESettingsMediatorDetailViewController.m in Sources */,
 				8CBC809B199DFA320067D79F /* MyECameraAlarmViewController.m in Sources */,
 				8CBC825D199DFA850067D79F /* MZFormSheetSegue.m in Sources */,
 				8CBC8293199DFA850067D79F /* MyETerminalSettingViewController.m in Sources */,
@@ -2257,13 +2258,11 @@
 				8CBC80C3199DFA320067D79F /* MyEProvinceAndCity.m in Sources */,
 				8CBC8291199DFA850067D79F /* MyESubSwitchEditViewController.m in Sources */,
 				8CBC8244199DFA850067D79F /* TableViewWithBlock.m in Sources */,
-				8CBC827A199DFA850067D79F /* MyESigeUpViewController.m in Sources */,
 				8CBC8289199DFA850067D79F /* MyEAboutViewController.m in Sources */,
 				8CBC8298199DFA850067D79F /* NSString+MD5.m in Sources */,
 				8CBC826D199DFA850067D79F /* SUNSlideSwitchView.m in Sources */,
 				8CBC7ECE199DEAC00067D79F /* CameraListMgt.mm in Sources */,
 				8CBC8279199DFA850067D79F /* MyEQRScanViewController.m in Sources */,
-				822E7BC619D00B4400C5F789 /* MYEACInstructionManageViewController.m in Sources */,
 				8CBC80C4199DFA320067D79F /* MyEControlKey.m in Sources */,
 				8CBC8268199DFA850067D79F /* SBJsonStreamTokeniser.m in Sources */,
 				8CBC7EE9199DEAC00067D79F /* SearchDVS.mm in Sources */,
@@ -2280,6 +2279,7 @@
 				820CD1D119EE71440007393C /* MYEHotelSetDetailViewController.m in Sources */,
 				8CBC8297199DFA850067D79F /* MyEUtil.m in Sources */,
 				8CBC826A199DFA850067D79F /* SBJsonStreamWriterAccumulator.m in Sources */,
+				8294B6BE19FA22820085AACE /* MYESettingsMediatorAddViewController.m in Sources */,
 				8CBC8259199DFA850067D79F /* MultiSelectSegmentedControl.m in Sources */,
 				8CBC809C199DFA320067D79F /* MyECameraDateSetViewController.m in Sources */,
 				8CBC826F199DFA850067D79F /* WTReParser.m in Sources */,
@@ -2293,9 +2293,9 @@
 				8CBC8277199DFA850067D79F /* MyELoginViewController.m in Sources */,
 				8CBC80B4199DFA320067D79F /* MyEAutoControlPeriod.m in Sources */,
 				8CBC822A199DFA850067D79F /* MyEIrUserKeyViewController.m in Sources */,
-				8CBC823A199DFA850067D79F /* MyEDelayTimeSetViewController.m in Sources */,
 				8CBC8281199DFA850067D79F /* MyEAcAddNewBrandAndModuleViewController.m in Sources */,
 				8CBC80BA199DFA320067D79F /* MyEDeviceStatus.m in Sources */,
+				8205212919F9093A00B7BB9B /* MYESettingsMediatorListViewController.m in Sources */,
 				82659C4319E4ED56000BDA35 /* IIILocalizedIndex.m in Sources */,
 				8CBC8247199DFA850067D79F /* DXAlertView.m in Sources */,
 				82E01D6919E8DC27000848BB /* MYESocket.m in Sources */,

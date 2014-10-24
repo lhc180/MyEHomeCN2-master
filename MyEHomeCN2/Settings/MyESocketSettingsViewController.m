@@ -105,13 +105,7 @@
     }
     return 1;
 }
-//-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-//    if (IS_IOS6) {
-//        return 10;
-//    }else{
-//        return 1;
-//    }
-//}
+
 #pragma mark - URL delegate method
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     NSLog(@"receive string is %@",string);

@@ -19,33 +19,29 @@
 
 - (MyESettings *)initWithDictionary:(NSDictionary *)dictionary {
     if (self = [super init]) {
-        //这里的加==1和不加==1，有什么区别？
-        self.status = [[dictionary objectForKey:@"status"] intValue];
-        
-        self.mId = [dictionary objectForKey:@"mId"];
-        
         self.enableNotification = [[dictionary objectForKey:@"enableNotification"] intValue];
-        
         self.provinceId = [dictionary objectForKey:@"provinceId"];
-        
         self.cityId = [dictionary objectForKey:@"cityId"];
         
-        //这里定义一个数组，用于接收服务器传过来的字典当中的irTerminals数组
-        NSArray *array = [dictionary objectForKey:@"terminals"];
-        
-        NSMutableArray *irTerminals = [NSMutableArray array];
-        //判断接收到的数据是不是一个数组
-        if ([array isKindOfClass:[NSArray class]]){
-            for (NSDictionary *terminal in array) {
-                //向irTerminals可变数组中添加对象，这些对象是解析过的
-                [irTerminals addObject:[[MyETerminal alloc] initWithDictionary:terminal]];
+        if (dictionary[@"mediators"]) {
+            self.mediators = [NSMutableArray array];
+            for (NSDictionary *d in dictionary[@"mediators"]) {
+                [self.mediators addObject:[[MyEMediator alloc] initWithDictionary:d]];
             }
-        }
-        self.terminals = irTerminals;
-        
-        _subSwitchList = [NSMutableArray array];
-        for (NSDictionary *d in dictionary[@"subSwitchList"]) {
-            [_subSwitchList addObject:[[MyESettingSubSwitch alloc] initWithDictionary:d]];
+        }else{
+            self.status = [[dictionary objectForKey:@"status"] intValue];
+            self.mId = [dictionary objectForKey:@"mId"];
+            self.terminals = [NSMutableArray array];
+            //判断接收到的数据是不是一个数组
+            for (NSDictionary *terminal in [dictionary objectForKey:@"terminals"]) {
+                //向irTerminals可变数组中添加对象，这些对象是解析过的
+                [self.terminals addObject:[[MyETerminal alloc] initWithDictionary:terminal]];
+            }
+            
+            _subSwitchList = [NSMutableArray array];
+            for (NSDictionary *d in dictionary[@"subSwitchList"]) {
+                [_subSwitchList addObject:[[MyESettingSubSwitch alloc] initWithDictionary:d]];
+            }
         }
         return self;
     }

@@ -8,7 +8,6 @@
 
 #import "MYEDeviceEditViewController.h"
 #import "MBProgressHUD.h"
-#import "MYEACInstructionManageViewController.h"
 #import "MyESwitchInfo.h"
 #import "MYEACInitStepViewController.h"
 
@@ -19,6 +18,7 @@
     MyEDeviceType *_deviceTypeCache;
     MyETerminal *_terminalCache;
     MyESwitchInfo *_switchInfo;
+    NSString *_selectedMid;
     
     MBProgressHUD *tips;
     NSTimer *_timer;
@@ -35,7 +35,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *typeLbl;
 @property (weak, nonatomic) IBOutlet UILabel *terminalLbl;     //用于显示设备的TID
 @property (weak, nonatomic) IBOutlet UILabel *terminalTypeLbl; //用于显示[智控星]还是[设备ID]
-
+@property (weak, nonatomic) IBOutlet UILabel *lblMid;
 @property (weak, nonatomic) IBOutlet UILabel *valueLbl;
 
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *saveBtn;
@@ -62,14 +62,9 @@
     if (_deviceCache.type == 7) {
         [self urlLoaderWithUrlString:[NSString stringWithFormat:@"%@?deviceId=%li",GetRequst(URL_FOR_SWITCH_VIEW),(long)self.device.deviceId] loaderName:@"downloadSwitchInfo"];
     }
-    if (IS_IOS6) {
-        UIView *view = [[UIView alloc] init];
-        view.backgroundColor = TableViewGroupBGColor;
-        self.tableView.backgroundView = view;
-    }
+    _validTerminals = [NSMutableArray arrayWithArray:[MainDelegate.accountData validTerminalsForAC]];
     if (!_isAdd) {
         if (_deviceTypeCache.dtId == 1) {
-            _validTerminals = [NSMutableArray arrayWithArray:[MainDelegate.accountData validTerminalsForAC]];
             if (_terminalCache != nil) {
                 [_validTerminals insertObject:_terminalCache atIndex:0];
             }
@@ -104,12 +99,8 @@
     
     if (_deviceTypeCache.dtId < 6) {
         _terminalTypeLbl.text = @"智控星";
-    }else if (_deviceTypeCache.dtId > 11){
-        _terminalTypeLbl.text = @"绑定网关";
-        _terminalLbl.text = MainDelegate.accountData.mId;
     }else
         _terminalTypeLbl.text = @"设备ID";
-    
     if (_isAdd) {
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -118,14 +109,13 @@
             cell0.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
         }else
             cell0.accessoryType = UITableViewCellAccessoryNone;
-        if (_deviceTypeCache.dtId > 7 && _deviceTypeCache.dtId < 12 && _deviceCache.tId.length < 8) {
-            _terminalLbl.text = @"点击进行输入";
-        }
+//        if (_deviceTypeCache.dtId > 7 && _deviceTypeCache.dtId < 12 && _deviceCache.tId.length < 8) {
+//            _terminalLbl.text = _deviceCache.tId;
+//        }
     }else{
         if (_deviceCache.type == 7) {  //如果是[智能开关]
             _valueLbl.text = [_switchInfo changeTypeToString];
             _powerFactorLbl.text = _switchInfo.powerFactor;
-            
         }
         if (_deviceCache.type == 6) {
             _valueLbl.text = [NSString stringWithFormat:@"%ld A", (long)self.device.status.maxElectricCurrent];
@@ -146,7 +136,7 @@
         txt.text = [_deviceCache.name isEqualToString:@"新设备"]?@"":_deviceCache.name;
     }
     if (tag == 101) {
-        txt.text = [_deviceCache.tId isEqualToString:@"未绑定智控星"]?@"":_deviceCache.tId;
+        txt.text = [_deviceCache.tId isEqualToString:@"手动输入ID"]?@"":_deviceCache.tId;
     }
     [alert show];
     
@@ -161,7 +151,7 @@
 }
 
 #pragma mark - IBAction methods
-- (IBAction)getDeviceIdByUseIt:(UIButton *)sender {
+- (void)getDeviceIdByUseIt{
     tips = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     tips.removeFromSuperViewOnHide = YES;
     tips.userInteractionEnabled = YES;
@@ -193,10 +183,10 @@
     tips.dimBackground = YES;
     
     _times = 0; //对times进行初始化
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@",GetRequst(URL_FOR_SAFE_REQUEST)] postData:nil delegate:self loaderName:@"safeDeviceRequest" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@&mId=%@",GetRequst(URL_FOR_SAFE_REQUEST),_selectedMid] postData:nil delegate:self loaderName:@"safeDeviceRequest" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
-- (IBAction)scanCodeToGetDeviceId:(UIButton *)sender {
+- (void)scanCodeToGetDeviceId{
     UINavigationController *nav = [[UIStoryboard storyboardWithName:@"settings" bundle:nil] instantiateViewControllerWithIdentifier:@"QRNav"];
     MyEQRScanViewController *vc = nav.childViewControllers[0];
     vc.delegate = self;
@@ -205,7 +195,10 @@
 }
 
 - (IBAction)save:(UIBarButtonItem *)sender {
-    
+    if (_deviceCache.tId.length < 23) {
+        [MyEUtil showMessageOn:nil withMessage:@"设备ID或智控星有误"];
+        return;
+    }
     if (_deviceCache.name.length == 0 || _deviceCache.name.length > 10) {
         [MyEUtil showMessageOn:nil withMessage:@"名称长度不符合要求"];
         return;
@@ -230,10 +223,10 @@
     NSLog(@"%@",_deviceCache);
 
     if (_deviceTypeCache.dtId > 11) {  //RF设备
-        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&action=%i&name=%@&type=%i&roomId=%i",GetRequst(URL_FOR_RFDEVICE_EDIT),_deviceCache.deviceId,!_isAdd,_deviceCache.name,_deviceCache.type,_deviceCache.roomId] postData:nil delegate:self loaderName:@"deviceEdit" userDataDictionary:nil];
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&action=%i&name=%@&type=%i&roomId=%i&mId=%@",GetRequst(URL_FOR_RFDEVICE_EDIT),_deviceCache.deviceId,!_isAdd,_deviceCache.name,_deviceCache.type,_deviceCache.roomId,_selectedMid] postData:nil delegate:self loaderName:@"deviceEdit" userDataDictionary:nil];
     }else if (_deviceTypeCache.dtId != 6 && _deviceTypeCache.dtId != 7) {   //不是插座,不是开关
-        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&name=%@&tId=%@&roomId=%i&type=%i&action=%i",
-                                                  GetRequst(_deviceTypeCache.dtId == 1?URL_FOR_AC_ADD_EDIT_SAVE:URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),_deviceCache.deviceId,_deviceCache.name,_deviceCache.tId,_deviceCache.roomId,_deviceCache.type,!_isAdd] postData:nil delegate:self loaderName:@"deviceEdit" userDataDictionary:nil];
+        [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&name=%@&tId=%@&roomId=%i&type=%i&action=%i&mId=%@",
+                                                  GetRequst(_deviceTypeCache.dtId == 1?URL_FOR_AC_ADD_EDIT_SAVE:URL_FOR_DEVICE_IR_ADD_EDIT_SAVE),_deviceCache.deviceId,_deviceCache.name,_deviceCache.tId,_deviceCache.roomId,_deviceCache.type,!_isAdd,_selectedMid] postData:nil delegate:self loaderName:@"deviceEdit" userDataDictionary:nil];
     }else if(_deviceTypeCache.dtId == 6){
         [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&name=%@&tId=%@&roomId=%i&maxElectricCurrent=%.0f&action=%i",GetRequst(URL_FOR_DEVICE_SOCKET_ADD_EDIT_SAVE), _deviceCache.deviceId, _deviceCache.name, _deviceCache.tId, _deviceCache.roomId, _deviceCache.status.maxElectricCurrent,_isAdd] postData:nil delegate:self loaderName:@"deviceEdit" userDataDictionary:nil];
     }else{
@@ -256,24 +249,26 @@
             return 3;
         }
     }
+    if (_isAdd && _deviceTypeCache.dtId > 7) {
+        return 3;
+    }
     return 2;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 1) {
-        if (_isAdd && (_deviceTypeCache.dtId > 7 && _deviceTypeCache.dtId < 12)) {
-            return 3;
+        if (_isAdd && _deviceTypeCache.dtId > 7) {
+            return 2;
         }
         return 1;
     }
     if (section == 2) {
         if (!_isAdd && _deviceTypeCache.dtId == 7) return 2;
+        if (_isAdd && _deviceTypeCache.dtId >7) {
+            return 2;
+        }
         return 1;
     }
-    if (section == 3) {
-        return 2;
-    }
-    
     return 3;
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
@@ -309,9 +304,15 @@
                 lplv.delegate = self;
                 [lplv showInView:self.view.window animated:YES];
             }
-            if (_isAdd && (_deviceTypeCache.dtId >7 && _deviceTypeCache.dtId < 12)) {
+            if (_isAdd && _deviceTypeCache.dtId >7) {
                 [self showAlertToEnterWithTitle:@"请输入设备ID" tag:101];
             }
+        }
+        if (indexPath.row == 1) {
+            LeveyPopListView *lplv = [[LeveyPopListView alloc] initWithTitle:@"请选择网关" options:[MainDelegate.accountData validMeditors]];
+            lplv.tag = 107;
+            lplv.delegate = self;
+            [lplv showInView:self.view.window animated:YES];
         }
     }
     if (indexPath.section == 2) {  //只有[空调][插座][开关]才有这个功能
@@ -337,10 +338,16 @@
                 lplv.tag = 105;
                 lplv.delegate = self;
                 [lplv showInView:self.view.window animated:YES];
+            }else{
+                [self getDeviceIdByUseIt];
             }
         }
         if (indexPath.row == 1) {
             if (_switchInfo.type == 1) {
+                return;
+            }
+            if (_isAdd && _deviceTypeCache.dtId > 7) {
+                [self scanCodeToGetDeviceId];
                 return;
             }
             LeveyPopListView *lplv = [[LeveyPopListView alloc] initWithTitle:@"请选择功率因数" options:[_switchInfo powerFactorArray]];
@@ -358,6 +365,10 @@
         _roomCache = MainDelegate.accountData.rooms[index];
     }else if (popListView.tag == 102){
         _deviceTypeCache = _deviceTypeArray[index];
+        if (_deviceTypeCache.dtId < 6) {
+            _deviceCache.tId = @"未指定智控星";
+        }else
+            _deviceCache.tId = @"手动输入ID";
     }else if (popListView.tag == 103){
 //        NSMutableArray *array = _deviceTypeCache.dtId == 1?[[MainDelegate.accountData validTerminalsForAC] mutableCopy]: MainDelegate.accountData.terminals;
 //        if (!_isAdd && _terminalCache != nil) {
@@ -380,6 +391,10 @@
             _switchInfo.powerFactor = @"1";
     }else if (popListView.tag == 106){
         _switchInfo.powerFactor = [_switchInfo powerFactorArray][index];
+    }else if (popListView.tag == 107){
+        MyEMediator *mediator = [MainDelegate.accountData validMeditors][index];
+        _selectedMid = mediator.mid;
+        self.lblMid.text = _selectedMid;
     }
     [self performSelector:@selector(refreshUI) withObject:nil afterDelay:0];
 }
@@ -395,7 +410,7 @@
     if (alertView.tag == 101 && buttonIndex == 1) {
         _deviceCache.tId = txt.text;
     }
-    [self performSelector:@selector(refreshUI) withObject:nil afterDelay:0];
+    [self refreshUI];
 }
 #pragma mark - QRScan delegate method
 -(void)passCameraUID:(NSString *)UID{
@@ -406,7 +421,7 @@
 #pragma mark - URL Loading System methods
 -(void)getResponseFromServer{
     _times++;
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@",GetRequst(URL_FOR_SAFE_RESPONSE)] postData:nil delegate:self loaderName:@"safeDeviceResponse" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@&mId=%@",GetRequst(URL_FOR_SAFE_RESPONSE),_selectedMid] postData:nil delegate:self loaderName:@"safeDeviceResponse" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
 
@@ -426,7 +441,10 @@
             return;
         }
         if (i != 1) {
-            [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
+            if (i == -4) {
+                [MyEUtil showMessageOn:nil withMessage:@"该设备ID已存在"];
+            }else
+                [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
         }else{
             if (_isAdd) {
                 NSDictionary *dic = [string JSONValue];
@@ -462,7 +480,7 @@
             NSString *sufix = dic[@"msgContent"];
             NSArray *array = @[@"08",@"09",@"0A",@"0B"];
             NSString *tid = [NSString stringWithFormat:@"%@-01-00-00-00-%@",array[_deviceTypeCache.dtId - 8],sufix];
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:[NSString stringWithFormat:@"检测到新设备 %@",tid] delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"检测到新设备" message:tid delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
             [alert show];
             _terminalLbl.text = tid;
             _deviceCache.tId = tid;

@@ -152,17 +152,21 @@
         cell.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:0.5];
     }else{
         MyEAcStudyInstruction *instruction = self.list.instructionList[indexPath.row - 1];
-        switch (instruction.status) {
-            case 0:
-                cell.backgroundColor = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:0.5];
-                break;
-            case 1:
-                cell.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:0.5];
-                break;
-            default:
-                cell.backgroundColor = [UIColor colorWithRed:0.2 green:0.4 blue:0.4 alpha:0.5];
-                break;
-        }
+        if (instruction.status > 0) {
+            cell.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:0.3];
+        }else
+            cell.backgroundColor = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:0.3];
+//        switch (instruction.status) {
+//            case 0:
+//                cell.backgroundColor = [UIColor colorWithRed:0.5 green:0 blue:0 alpha:0.5];
+//                break;
+//            case 1:
+//                cell.backgroundColor = [UIColor colorWithRed:0 green:0.5 blue:0 alpha:0.5];
+//                break;
+//            default:
+//                cell.backgroundColor = [UIColor colorWithRed:0.2 green:0.4 blue:0.4 alpha:0.5];
+//                break;
+//        }
     }
 }
 
@@ -212,7 +216,7 @@
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"警告" message:@"当前列表的指令未学习,只有指令学习成功之后才可以添加新的指令" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
     }else{
-        MyEAcInstructionStudyViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@""];
+        MyEAcInstructionStudyViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"instructionStudy"];
         vc.jumpFromBarBtn = YES;
         vc.device = self.device;
         vc.moduleId = self.moduleId;

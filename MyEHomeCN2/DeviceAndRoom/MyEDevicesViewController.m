@@ -53,6 +53,8 @@
 {
     [super viewDidLoad];
     self.tableView.tableFooterView = [[UIView alloc] init];
+    self.tableView.delaysContentTouches = NO;
+
     if (self.preivousPanelType == 0) {
         self.navigationItem.leftBarButtonItem = self.editTableBtn;
     }
@@ -62,6 +64,7 @@
            action:@selector(downloadDeviceAndRoomListFromServer)
  forControlEvents:UIControlEventValueChanged];
     self.refreshControl = rc;
+    
     if (jumpFromMediator == 1) {
         jumpFromMediator = 0;
 //        DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"提示"
@@ -113,9 +116,7 @@
 }
 #pragma mark - private methods
 -(void)refreshUI{
-    if (!self.devices || self.devices == nil) {
-        self.devices = [MainDelegate.accountData allDeviceInRoom:self.preivousPanelType == 1? self.room : nil];
-    }
+    self.devices = [MainDelegate.accountData allDeviceInRoom:self.preivousPanelType == 1? self.room : nil];
     dispatch_async(dispatch_get_main_queue(), ^{
         if ([MainDelegate.accountData alertHappen]) {
             self.tableView.tableHeaderView = self.tableHeaderView;
@@ -483,6 +484,15 @@
 }
 
 #pragma mark - IBAction methods
+- (IBAction)clearAllAlarms:(UIButton *)sender {
+    if(HUD == nil) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    } else
+        [HUD show:YES];
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?action=3",GetRequst(URL_FOR_SCENES_SAFEDEVICE_CONTROL)] postData:nil delegate:self loaderName:@"control" userDataDictionary:nil];
+
+}
+
 - (IBAction)addDeviceAction:(id)sender {
     //如果terminal数组为零，此时不能添加
 //    NSMutableArray *array = [NSMutableArray array];
@@ -878,6 +888,24 @@
         }else
             [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
     }
+    if ([name isEqualToString:@"control"]) {
+        NSLog(@"recieve string is %@",string);
+        NSInteger i = [MyEUtil getResultFromAjaxString:string];
+        if (i == 1) {
+            for (MyEDevice *d in MainDelegate.accountData.devices) {
+                if (d.type >=8 && d.type <= 11) {
+                    d.status.alertStatus = 0;
+                }
+            }
+            [self refreshUI];
+            [MyEUtil showMessageOn:nil withMessage:@"操作成功"];
+        }else if(i == -3){
+            [MyEUtil showMessageOn:nil withMessage:@"用户已断开"];
+        }else{
+            [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
+        }
+    }
+
     [HUD hide:YES];
 }
 - (void) connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{

@@ -43,6 +43,13 @@
                 [self setToolbarItems:@[self.barAutoCheck,self.barFlex,self.barAddBrand] animated:YES];
         }
     }
+    if (IS_IOS6) {
+        self.selectSeg.layer.borderColor = MainColor.CGColor;
+        self.selectSeg.layer.borderWidth = 1.0f;
+        self.selectSeg.layer.cornerRadius = 4.0f;
+        self.selectSeg.layer.masksToBounds = YES;
+    }
+
 //    UIRefreshControl *rc = [[UIRefreshControl alloc] init];
 //    rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
 //    [rc addTarget:self
@@ -105,6 +112,7 @@
         MYEACCheckAutoViewController *vc = (MYEACCheckAutoViewController *)navController.topViewController;
         vc.brand = self.brand;
         vc.device = self.device;
+        [vc viewDidLoad];
     };
     formSheet.didDismissCompletionHandler = ^(UIViewController *presentedFSViewController){
         UINavigationController *navController = (UINavigationController *)presentedFSViewController;
@@ -133,7 +141,7 @@
     formSheet.willPresentCompletionHandler = ^(UIViewController *presentedFSViewController) {
         // Passing data
         UINavigationController *navController = (UINavigationController *)presentedFSViewController;
-        navController.topViewController.title = @"请输入新增的空调品牌和型号";
+        navController.topViewController.title = @"新增空调品牌和型号";
         MyEAcAddNewBrandAndModuleViewController *modalVc = (MyEAcAddNewBrandAndModuleViewController *)navController.topViewController;
         modalVc.brandsAndModules = self.brandAndModels;
         modalVc.device = self.device;

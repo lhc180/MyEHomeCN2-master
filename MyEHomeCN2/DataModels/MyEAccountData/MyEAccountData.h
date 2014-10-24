@@ -15,6 +15,8 @@
 #import "MyERoom.h"
 #import "MyEDevice.h"
 #import "MyEDeviceType.h"
+#import "MyETerminal.h"
+#import "MyESettings.h"
 
 //@class MyEHouseData;
 //@class MyETerminal;
@@ -48,6 +50,7 @@
 @property (nonatomic, strong) NSMutableArray *rooms;
 @property (nonatomic, strong) NSMutableArray *terminals;
 @property (nonatomic, strong) NSMutableArray *allTerminals;
+@property (nonatomic, strong) NSMutableArray *mediators;
 
 - (MyEAccountData *)initWithDictionary:(NSDictionary *)dictionary;
 - (MyEAccountData *)initWithJSONString:(NSString *)jsonString;
@@ -77,6 +80,21 @@
 -(NSArray *)validDeviceTypeToAddWithAC:(BOOL)hasAc;
 -(NSMutableArray *)allDeviceInRoom:(MyERoom *)room;
 -(MyEAccountData *)newAccoutData:(MyEAccountData *)AccountData;
-
+-(NSMutableArray *)validMeditors;
 -(BOOL)alertHappen;
+-(BOOL)hasNoMediator;
+-(BOOL)allMediatorOffLine;
+@end
+
+
+@interface MyEMediator : NSObject
+
+@property (nonatomic, strong) NSString *mid;
+@property (nonatomic, strong) NSString *pin;
+@property (nonatomic, assign) BOOL isOn;
+@property(nonatomic, strong) NSMutableArray *terminals;
+@property(nonatomic, strong) NSMutableArray *subSwitchList;
+
+-(MyEMediator *)initWithJSONString:(NSString *)str;
+-(MyEMediator *)initWithDictionary:(NSDictionary *)dic;
 @end

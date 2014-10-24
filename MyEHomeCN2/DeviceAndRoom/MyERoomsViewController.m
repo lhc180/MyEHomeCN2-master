@@ -38,7 +38,10 @@
 {
     [super didReceiveMemoryWarning];
 }
-
+-(void)viewWillAppear:(BOOL)animated{
+    [super viewWillAppear:YES];
+    [self.tableView reloadData];
+}
 #pragma mark - private methods
 -(void)doThisToAddOrEditRoom{
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:_isAdd?@"添加新房间":@"编辑此房间" message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];

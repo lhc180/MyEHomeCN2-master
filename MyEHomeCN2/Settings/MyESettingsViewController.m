@@ -31,18 +31,11 @@
     
     UIRefreshControl *rc = [[UIRefreshControl alloc] init];
     rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
-    [rc addTarget:self
-                            action:@selector(downloadSettingsDataFromServer)
-                  forControlEvents:UIControlEventValueChanged];
+    [rc addTarget:self action:@selector(downloadSettingsDataFromServer) forControlEvents:UIControlEventValueChanged];
     self.refreshControl = rc;
     
     if (!self.isFresh) {
         [self downloadSettingsDataFromServer];
-    }
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    if ([defaults objectForKey:@"province"] && [defaults objectForKey:@"city"]) {
-        cityLabel.text = [NSString stringWithFormat:@"%@ %@",[defaults objectForKey:@"province"],[defaults objectForKey:@"city"]];
     }
 }
 
@@ -51,10 +44,10 @@
     userNameLabel.text = MainDelegate.accountData.userName;
     if (self.needRefresh) {
         //这里刷新的时候，设备列表也要进行刷新
+        self.needRefresh = NO;
         UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
         MyEDevicesViewController *vc = (MyEDevicesViewController *)[nav childViewControllers][0];
         vc.needRefresh = YES;
-        self.needRefresh = NO;
         [self downloadSettingsDataFromServer];
     }
     if (self.isFresh) {
@@ -74,10 +67,14 @@
     if (section == 0) {
         return 2;
     }else if (section == 3){
-        if ([self.settings.subSwitchList count]) {
-            return 3;
-        }else
-            return 2;
+        if (self.settings.mediators != nil) {
+            return 1;
+        }else{
+            if ([self.settings.subSwitchList count]) {
+                return 3;
+            }else
+                return 2;
+        }
     }else if (section == 4){
         return 2;
     }else
@@ -118,31 +115,13 @@
     }
     return YES;
 }
-#pragma mark
 #pragma mark - memoryWarnig methods
 - (void)didReceiveMemoryWarning{
     [super didReceiveMemoryWarning];
 }
 
-#pragma mark
-#pragma mark - MyECitySettingViewControllerDelegate methods
-
--(void)passProvince:(NSString *)province andCity:(NSString *)city{
-    
-    cityLabel.text = [NSString stringWithFormat:@"%@ %@",province,city];
-
-    NSUserDefaults *prefs = [NSUserDefaults standardUserDefaults];
-    [prefs setObject:province forKey:@"province"];
-    [prefs setObject:city forKey:@"city"];
-    
-}
 #pragma mark tableView delegate methods
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if (section == 3) {
-        return 1;
-    }else
-        return 10;
-}
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
    
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"settings" bundle:nil];
@@ -170,11 +149,16 @@
             break;
         case 3:
             if (indexPath.row == 0) {
-                MyESettingsTerminalsViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"terminal"];
-                [self.navigationController pushViewController:vc animated:YES];
+                if (self.settings.mediators == nil) {
+                    MYESettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"gateway"];
+                    vc.jumpFromSettings = YES;
+                    [self.navigationController pushViewController:vc animated:YES];
+                }else{
+                    UITableViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"mediatorList"];
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
             }else if(indexPath.row == 1){
-                MYESettingsMediatorViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"gateway"];
-                vc.jumpFromSettings = YES;
+                MyESettingsTerminalsViewController *vc = [storyboard instantiateViewControllerWithIdentifier:@"terminal"];
                 [self.navigationController pushViewController:vc animated:YES];
             }else{
                 MyESubSwitchListViewController *vc = [[UIStoryboard storyboardWithName:@"settings" bundle:nil] instantiateViewControllerWithIdentifier:@"subSwitch"];
@@ -239,64 +223,56 @@
         } else{
             MyESettings *setting = [[MyESettings alloc] initWithJSONString:string];
             self.settings = setting;
-            //这里的这个数据会牵扯到整个逻辑
-            MainDelegate.accountData.allTerminals = setting.terminals;
-            MainDelegate.accountData.mStatus = setting.status;
-            if (setting.mId) {
-                MainDelegate.accountData.mId = setting.mId;
+            
+            [notification setOn:settings.enableNotification animated:YES];
+            MainDelegate.accountData.provinceId = self.settings.provinceId;
+            MainDelegate.accountData.cityId = self.settings.cityId;
+            [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
+
+            if (self.settings.mediators != nil ){
+                MainDelegate.accountData.mediators = self.settings.mediators;
+                self.statusLabel.text = [NSString stringWithFormat:@"%i",self.settings.mediators.count];
             }else{
-                MainDelegate.accountData.mId = @"";
+                //更改主数据
+                MainDelegate.accountData.allTerminals = setting.terminals;
+                MainDelegate.accountData.mStatus = setting.status;
+                if (setting.mId) {
+                    MainDelegate.accountData.mId = setting.mId;
+                }else{
+                    MainDelegate.accountData.mId = @"";
+                }
+                
+                //UI更新
+                if (MainDelegate.accountData.mStatus == 1) {
+                    statusLabel.text = @"在线";
+                }else if (MainDelegate.accountData.mStatus == 0 && [MainDelegate.accountData.mId isEqualToString:@""]){
+                    statusLabel.text = @"未注册网关";
+                }else
+                    statusLabel.text = @"离线";
+                
+                terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[MainDelegate.accountData.allTerminals count]];
+                self.subSwitchCount.text = [NSString stringWithFormat:@"%i",self.settings.subSwitchList.count];
+                
             }
             
             //by YY
             // 根据网关情况, 确定是否允许进入其他面板, 如果网关不在线或没有连接,就提示用户刷新, 并不允许转移到其他面板.
             MyEMainTabBarController *mtc = (MyEMainTabBarController *)self.tabBarController;
-            if (!MainDelegate.accountData.mId || [MainDelegate.accountData.mId isEqualToString:@""]) {//先看有没有网关
+            if ([MainDelegate.accountData hasNoMediator]) {//先看有没有网关
                 [mtc setTabbarButtonEnable:NO];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"检测到未绑定智能网关,您将无法操作任何设备,现在需要绑定么?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"绑定网关", nil];
                 alert.tag = 100;
                 [alert show];
-            }else if (MainDelegate.accountData.mStatus == 0 ) { //再看网关在不在线
-//                mtc.selectedIndex = 3;
+            }else if ([MainDelegate.accountData allMediatorOffLine]) { //再看网关在不在线
                 [mtc setTabbarButtonEnable:NO];
                 UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"检测到智能网关离线,您将无法操作任何设备,请检查网络状况或给网关断电后重试!" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"刷新", nil];
                 alert.tag = 110;
                 [alert show];
-
-            }
-//            else if([self.accountData.terminals count] == 0){//再检查有没有智控星
-//                [mtc setTabbarButtonEnable:NO];
-//                DXAlertView *alert = [[DXAlertView alloc] initWithTitle:@"温馨提示"
-//                                                            contentText:@"检测到未绑定任何智能设备,请先绑定!"
-//                                                        leftButtonTitle:@"取消"
-//                                                       rightButtonTitle:@"刷新"];
-//                [alert show];
-//                alert.rightBlock = ^() {
-//                    //这里必须要进行刷新
-//                    UINavigationController *nav = [self.navigationController.tabBarController childViewControllers][0];
-//                    MyEDevicesViewController *vc = (MyEDevicesViewController *)[nav childViewControllers][0];
-//                    NSLog(@"devices needRefresh is %i",vc.needRefresh);
-//                    vc.needRefresh = YES;
-//
-//                    [self downloadSettingsDataFromServer];
-//                };
-//            }
-            else{  //最后允许用户进行任何操作
+            }else{  //最后允许用户进行任何操作
                 [mtc setTabbarButtonEnable:YES];
             }
         }
-        if (MainDelegate.accountData.mStatus == 1) {
-            statusLabel.text = @"在线";
-        }else if (MainDelegate.accountData.mStatus == 0 && [MainDelegate.accountData.mId isEqualToString:@""]){
-            statusLabel.text = @"未注册网关";
-        }else
-            statusLabel.text = @"离线";
-        [notification setOn:settings.enableNotification == 0?NO:YES animated:YES];
-        MainDelegate.accountData.provinceId = self.settings.provinceId;
-        MainDelegate.accountData.cityId = self.settings.cityId;
-        [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
-        terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[MainDelegate.accountData.allTerminals count]];
-        self.subSwitchCount.text = [NSString stringWithFormat:@"%i",self.settings.subSwitchList.count];
+        
         //这里必须要刷新一下tableview，否则有些内容不会显示
         [self.tableView reloadData];
     }

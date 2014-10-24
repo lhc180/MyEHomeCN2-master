@@ -38,7 +38,7 @@
 //        self.edgesForExtendedLayout = UIRectEdgeNone;
     
     //这个用于限制当网关不在线的时候，此时只能进设置面板，不能进入其他面板
-    if (MainDelegate.accountData.mStatus == 0) {
+    if ([MainDelegate.accountData allMediatorOffLine]) {
         self.selectedIndex = 4;
         [self setTabbarButtonEnable:NO];
     } else

@@ -108,6 +108,9 @@
     }else if ([object isKindOfClass:[MyETerminal class]]){
         MyETerminal *t = (MyETerminal *)object;
         cell.textLabel.text = t.tId;
+    }else if ([object isKindOfClass:[MyEMediator class]]){
+        MyEMediator *m = (MyEMediator *)object;
+        cell.textLabel.text = m.mid;
     }else if([object isKindOfClass:[NSString class]]){
         cell.textLabel.text = (NSString *)object;
     }

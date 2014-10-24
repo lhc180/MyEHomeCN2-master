@@ -49,9 +49,9 @@
     self.controlBtn.selected = self.device.status.protectionStatus == 0?YES:NO;
 //    self.alarmBtn.enabled = self.device.status.alertStatus == 0?NO:YES;
     if (_controlBtn.selected) {
-        _tipLbl.text = @"正在布防...";
-    }else
         _tipLbl.text = @"已经撤防";
+    }else
+        _tipLbl.text = @"正在布防...";
     [self addAnimationToButtonLayer];
 }
 -(void)animationInit{
@@ -114,6 +114,9 @@
     if (i == 1) {
         if ([name isEqualToString:@"control"]) {
             _device.status.protectionStatus = 1 - _device.status.protectionStatus;
+            if (_device.status.protectionStatus == 0) {
+                _device.status.alertStatus = 0;
+            }
         }else if ([name isEqualToString:@"info"]){
             NSDictionary *dic = [string JSONValue];
             _device.status.protectionStatus = [dic[@"protectionStatus"] intValue];

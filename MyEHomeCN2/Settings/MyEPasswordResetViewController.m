@@ -88,13 +88,7 @@
     }
 }
 #pragma mark - tableView methods
--(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
-    if (IS_IOS6) {
-        return 10;
-    }else{
-        return 1;
-    }
-}
+
 #pragma mark
 #pragma mark - downloadOrUpload data methods
 - (void)uploadModelToServerWithCurrentPassword:(NSString *)currentPassword newPassword:(NSString *)newPassword {

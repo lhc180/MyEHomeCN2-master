@@ -35,12 +35,18 @@ needDownloadInstructionsForScene = _needDownloadInstructionsForScene;
         self.userId = [dictionary objectForKey:@"gid"];
         self.userName = [dictionary objectForKey:@"userName"];
         self.loginSuccess = [[dictionary objectForKey:@"success"] intValue];
-        self.mId = [dictionary objectForKey:@"mId"];
-        self.mStatus = [[dictionary objectForKey:@"mStatus"] intValue];
         self.needDownloadInstructionsForScene = YES;
         self.provinceId = @"";
         self.cityId = @"";
-        
+        if (dictionary[@"mediatorList"]) {
+            self.mediators = [NSMutableArray array];
+            for (NSDictionary *d in dictionary[@"mediatorList"]) {
+                [self.mediators addObject:[[MyEMediator alloc] initWithDictionary:d]];
+            }
+        }else{
+            self.mId = [dictionary objectForKey:@"mId"];
+            self.mStatus = [[dictionary objectForKey:@"mStatus"] intValue];
+        }
         NSArray *array = [dictionary objectForKey:@"irTypes"];
         NSMutableArray *deviceTypes = [NSMutableArray array];
         if ([array isKindOfClass:[NSArray class]]){
@@ -78,6 +84,7 @@ needDownloadInstructionsForScene = _needDownloadInstructionsForScene;
         self.terminals = terminals;
         
         self.allTerminals = [NSMutableArray array];
+
         return self;
     }
     return nil;
@@ -432,6 +439,88 @@ needDownloadInstructionsForScene = _needDownloadInstructionsForScene;
             }
         }
     }
+   return NO;
+}
+
+-(BOOL)hasNoMediator{
+    if (self.mediators != nil) {
+        if (self.mediators.count == 0) {
+            return YES;
+        }
+    }else{
+        if ([self.mId isEqualToString:@""] || self.mId == nil) {
+            return YES;
+        }
+    }
     return NO;
 }
+-(BOOL)allMediatorOffLine{
+    if (self.mediators != nil) {
+        BOOL allOffLine = YES;
+        for (MyEMediator *m in self.mediators) {
+            if (m.isOn) {
+                allOffLine = NO;
+                break;
+            }
+        }
+        return allOffLine;
+    }else{
+        if (self.mStatus == 0) {
+            return YES;
+        }
+    }
+    return NO;
+}
+-(NSMutableArray *)validMeditors{
+    NSMutableArray *array = [NSMutableArray array];
+    for (MyEMediator *m in self.mediators) {
+        if (m.isOn) {
+            [array addObject:m];
+        }
+    }
+    return array;
+}
+@end
+
+
+@implementation MyEMediator
+-(instancetype)init{
+    if (self = [super init]) {
+        self.mid = @"";
+        self.pin = @"";
+        self.isOn = YES;
+        self.terminals = [NSMutableArray array];
+        self.subSwitchList = [NSMutableArray array];
+    }
+    return self;
+}
+-(MyEMediator *)initWithJSONString:(NSString *)str{
+    NSDictionary *dic = [str JSONValue];
+    return [[MyEMediator alloc] initWithDictionary:dic];
+}
+-(MyEMediator *)initWithDictionary:(NSDictionary *)dic{
+    if (self = [super init]) {
+        self.mid = dic[@"MId"];
+        self.isOn = [dic[@"status"] intValue] == 1;
+        if (dic[@"pin"]) {
+            self.pin = dic[@"pin"];
+        }
+        if (dic[@"terminals"]) {
+            self.terminals = [NSMutableArray array];
+            for (NSDictionary *terminal in [dic objectForKey:@"terminals"]) {
+                //向irTerminals可变数组中添加对象，这些对象是解析过的
+                [self.terminals addObject:[[MyETerminal alloc] initWithDictionary:terminal]];
+            }
+        }
+        if (dic[@"subSwitchList"]) {
+            _subSwitchList = [NSMutableArray array];
+            for (NSDictionary *d in dic[@"subSwitchList"]) {
+                [_subSwitchList addObject:[[MyESettingSubSwitch alloc] initWithDictionary:d]];
+            }
+        }
+        return self;
+    }
+    return nil;
+}
+
 @end

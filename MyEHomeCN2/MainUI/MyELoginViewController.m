@@ -527,7 +527,6 @@
     [HUD hide:YES];
     if([name isEqualToString:@"LoginDownloader"]) {
         MyEAccountData *anAccountData = [[MyEAccountData alloc] initWithJSONString:string];
-#warning 这里保存一份
         MainDelegate.accountData = anAccountData;
         
         //对于多层判断结构，要尽可能将最常见的情况放在前面，这样可以提高判断的速度，优化体验
@@ -536,7 +535,7 @@
         }else if (MainDelegate.accountData.loginSuccess == 1){
             //登录成功之后首要任务就是保存设置内容
             [self saveSettings];
-            if ([MainDelegate.accountData.mId length] == 0) {
+            if ([MainDelegate.accountData hasNoMediator]) {
                 UINavigationController *nav = [[UIStoryboard storyboardWithName:@"settings" bundle:nil] instantiateViewControllerWithIdentifier:@"gatewayNav"];
                 MYESettingsMediatorViewController *vc = nav.childViewControllers[0];
                 vc.jumpFromSettings = NO;

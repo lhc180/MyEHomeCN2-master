@@ -137,7 +137,8 @@
     if (_counter.isValid) {
         [_counter invalidate];
     }
-    UIViewController *vc = [[UIStoryboard storyboardWithName:@"AcDevice" bundle:nil] instantiateViewControllerWithIdentifier:self.device.isSystemDefined?@"standerdControl":@"customControl"];
+    NSString *str = IS_IPAD?@"standerdControlForIPad": @"standerdControl";
+    UIViewController *vc = [[UIStoryboard storyboardWithName:@"AcDevice" bundle:nil] instantiateViewControllerWithIdentifier:self.device.isSystemDefined?str:@"customControl"];
     [vc setValue:self.device forKey:@"device"];
     [vc setValue:@(YES) forKey:@"isPush"];
     [self.navigationController pushViewController:vc animated:YES];
@@ -169,7 +170,7 @@
     [UIApplication sharedApplication].idleTimerDisabled = YES;
     /*---------------初始化cancelBtn---------------*/
     cancelButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    cancelButton.frame = CGRectMake(60, screenHigh-20-44-44, 200, 40);
+    cancelButton.frame = CGRectMake(screenwidth/2-100, screenHigh-20-44-44, 200, 40);
     [cancelButton setTitle:@"取消下载" forState:UIControlStateNormal];
     [cancelButton addTarget:self action:@selector(areYouSureTocancelAcInit) forControlEvents:UIControlEventTouchUpInside];
     cancelButton.userInteractionEnabled = YES;
@@ -246,7 +247,7 @@
 #pragma mark - IBAction methods
 - (void)nextStep{
     if (self.currentBrand == nil || self.currentModel == nil) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"该型号的指令未学习" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"未选择型号或该型号的指令未学习" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
         [alert show];
         return;
     }
