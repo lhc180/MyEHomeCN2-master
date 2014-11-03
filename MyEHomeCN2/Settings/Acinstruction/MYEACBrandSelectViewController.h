@@ -17,9 +17,6 @@
 @property (nonatomic, weak) MyEAcModel *model;
 @property (nonatomic, weak) MyEDevice *device;
 
-@property (nonatomic, assign) NSInteger index;
-
 @property (nonatomic, assign) BOOL isBrand;
 @property (nonatomic, assign) BOOL isACInit;
-
 @end

@@ -10,13 +10,13 @@
 
 #import "MyEUserNameResetViewController.h"
 #import "MyEPasswordResetViewController.h"
-#import "MyECitySettingViewController.h"
 #import "MyESettingFeedbackViewController.h"
 #import "MyESettingsTerminalsViewController.h"
 #import "MyESettingsMediatorViewController.h"
 #import "MyESettings.h"
+#import "MyEProvinceAndCity.h"
 
-@interface MyESettingsViewController : UITableViewController<MyEDataLoaderDelegate,MyECitySettingViewControllerDelegate,UITextFieldDelegate,UIActionSheetDelegate,UIAlertViewDelegate>{
+@interface MyESettingsViewController : UITableViewController<MyEDataLoaderDelegate,UITextFieldDelegate,UIActionSheetDelegate,UIAlertViewDelegate>{
          MBProgressHUD *HUD;
 }
 
@@ -33,7 +33,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *cityLabel;
 
 @property (strong, nonatomic) IBOutlet UILabel *statusLabel;
-@property (weak, nonatomic) IBOutlet UILabel *lblChange;
 @property (strong, nonatomic) IBOutlet UILabel *terminalsCount;
 @property (weak, nonatomic) IBOutlet UILabel *subSwitchCount;
 

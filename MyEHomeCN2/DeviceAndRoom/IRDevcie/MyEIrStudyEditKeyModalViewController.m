@@ -291,6 +291,7 @@
             [self queryStudayProgress];
         }
     }
+
     if([name isEqualToString:IR_DEVICE_QUERY_STUDY_KEY_LOADER_NMAE]) {
         if ([MyEUtil getResultFromAjaxString:string] == 1){
             [learnHUD hide:YES];
@@ -313,7 +314,7 @@
                 //[MyEUtil showErrorOn:self.navigationController.view withMessage:@"学习超时，请重新开始!" ];
                 self.key.status = 0;
             } else {
-                _timer = [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(queryStudayProgressTimerFired:) userInfo:nil repeats:NO];
+                _timer = [NSTimer scheduledTimerWithTimeInterval:self.device.type > 11?2:5 target:self selector:@selector(queryStudayProgressTimerFired:) userInfo:nil repeats:NO];
             }
         }
     }

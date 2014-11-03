@@ -77,6 +77,7 @@
     actor.hidden = flag;
 }
 -(void)show{
+    [actor startAnimating];
     [self viewShowOrHide:NO];
 }
 -(void)hide{

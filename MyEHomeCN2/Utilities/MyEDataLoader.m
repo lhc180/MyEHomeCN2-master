@@ -147,12 +147,16 @@
     {
         responseStringJSONPart = [responseStringJSONPart substringWithRange:NSMakeRange(begin.location + 1, (end.location - begin.location) - 1)];
     }
-    
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+
+    if ([MyEUtil getResultFromAjaxString:responseStringJSONPart] == -3) {
+        [MyEUniversal doThisWhenUserLogOutWithVC:nil];
+        return;
+    }
     // 如果uploader里面带了用户数据，就调用下面函数把用户数据词典传回去
     if ([self.delegate respondsToSelector:@selector(didReceiveString:loaderName:userDataDictionary:)]) {
         [self.delegate didReceiveString:responseStringJSONPart loaderName:self.name userDataDictionary:self.userDataDictionary];
     }
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = NO; 
 }
 -(void)connection:(NSURLConnection *)connection didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge
 {

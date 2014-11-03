@@ -59,9 +59,13 @@
 }
 
 +(void)doThisWhenUserLogOutWithVC:(UIViewController*)vc{
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"会话超时" message:@"您需要重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"重新登录", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"会话超时" message:@"您需要重新登录" delegate:self cancelButtonTitle:nil otherButtonTitles:@"知道了", nil];
     alert.tag = 100;
     [alert show];
+    UIStoryboard *storybord = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    MyELoginViewController *controller = (MyELoginViewController*)[storybord instantiateViewControllerWithIdentifier: IS_IPAD?@"loginForIPad":@"LoginViewController"];
+    [MainDelegate.window.rootViewController dismissViewControllerAnimated:NO completion:nil];
+    MainDelegate.window.rootViewController = controller;
 }
 +(void)doThisToCloseKeyboardWithVC:(UIViewController *)vc{
     UITapGestureRecognizer *tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:vc action:@selector(hideKeyboard:)];
@@ -111,7 +115,7 @@
     
 }
 -(void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (alertView.tag == 100 && buttonIndex == 0) {
+    if (alertView.tag == 100) {
         UIStoryboard *storybord = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         MyELoginViewController *controller = (MyELoginViewController*)[storybord instantiateViewControllerWithIdentifier: IS_IPAD?@"loginForIPad":@"LoginViewController"];
         [MainDelegate.window.rootViewController dismissViewControllerAnimated:NO completion:nil];

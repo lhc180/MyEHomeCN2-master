@@ -590,6 +590,7 @@
                         <outlet property="barAddBrand" destination="fJl-qa-gBS" id="gEe-1e-dDo"/>
                         <outlet property="barAutoCheck" destination="ZG2-9R-Ncz" id="IZv-IU-tnu"/>
                         <outlet property="barFlex" destination="sYH-EE-hGJ" id="Icg-1f-Aav"/>
+                        <outlet property="barRefresh" destination="Qwj-nI-Lq2" id="t6S-Wl-hG7"/>
                         <outlet property="selectSeg" destination="6li-Ao-aBw" id="o3d-kV-ir3"/>
                         <outlet property="tableHeaderView" destination="NYz-dC-KEr" id="nkh-Ta-2gG"/>
                     </connections>
@@ -619,6 +620,11 @@
                         <constraint firstAttribute="centerX" secondItem="6li-Ao-aBw" secondAttribute="centerX" constant="-0.5" id="OM2-EB-SeN"/>
                     </constraints>
                 </view>
+                <barButtonItem systemItem="refresh" id="Qwj-nI-Lq2">
+                    <connections>
+                        <action selector="refreshData:" destination="lB7-RX-DXb" id="wMx-hS-41a"/>
+                    </connections>
+                </barButtonItem>
                 <barButtonItem title="不知道型号?" id="ZG2-9R-Ncz">
                     <connections>
                         <action selector="autoCheck:" destination="lB7-RX-DXb" id="wmi-K1-Cm1"/>

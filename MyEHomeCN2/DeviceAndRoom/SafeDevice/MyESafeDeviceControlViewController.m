@@ -121,8 +121,16 @@
             NSDictionary *dic = [string JSONValue];
             _device.status.protectionStatus = [dic[@"protectionStatus"] intValue];
             _device.status.alertStatus = [dic[@"alertStatus"] intValue];
-        }else
+        }else{
             _device.status.alertStatus = 0;
+//            if (self.device.type == 11) {
+//                for (MyEDevice *d in MainDelegate.accountData.devices) {
+//                    if (d.type == 10) {
+//                        d.status.alertStatus = 0;
+//                    }
+//                }
+//            }
+        }
     }else if (i == -3){
         [MyEUtil showMessageOn:nil withMessage:@"用户已注销"];
     }else

@@ -105,6 +105,7 @@
 //    [keyboardToolbar setItems:[NSArray arrayWithObjects:spaceBarItem, doneBarItem, nil]];
 //    [UITextField appearance].inputAccessoryView = keyboardToolbar;
     [UITextField appearance].delegate = self;
+//    [UITextField appearance].autocorrectionType = UITextAutocorrectionTypeNo;
 }
 - (void)resignKeyboard:(id)sender
 {
@@ -164,7 +165,7 @@
      就用这个VC代替程序原来的self.window.rootViewController，这样程序就略过Startup Introduction ScrollView，
      而直接进入MainNavViewController.
      **/
-    if ([[NSUserDefaults standardUserDefaults] boolForKey:KEY_FOR_APP_HAS_LAUNCHED_ONCE])
+    if ([[NSUserDefaults standardUserDefaults] boolForKey:KEY_FOR_APP_HAS_LAUNCHED_ONCE]  || IS_IPAD)
     {
         UIStoryboard *storybord = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
         //        UIViewController *vc =[storybord instantiateInitialViewController];// 这个是默认的第一个viewController
@@ -237,6 +238,9 @@
 //        
 //    }
     for (MyEDevice *d in self.accountData.devices) {
+//        if (d.type == 11) {
+//            d.status.alertStatus = 1;
+//        }
         if ([d.name isEqualToString:[str substringWithRange:range]]) {
             d.status.alertStatus = 1;
         }

@@ -37,6 +37,7 @@
         self.needRefresh = NO;
         [self getCameraStatus];
     }
+    [self.tableView reloadData];
     if (IS_IOS6) {
         [[UIApplication sharedApplication] setStatusBarHidden:YES];
         [[UIApplication sharedApplication] setStatusBarHidden:NO];
@@ -268,9 +269,9 @@
     MyECameraViewController *viewController = [[UIStoryboard storyboardWithName:@"Camera" bundle:nil] instantiateViewControllerWithIdentifier:@"cameraInfo"];
     viewController.camera = camera;
     viewController.m_PPPPChannelMgt = _m_PPPPChannelMgt;
-    viewController.modalPresentationStyle = UIModalPresentationNone;
-    viewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
-    [self presentViewController:viewController animated:YES completion:nil];
+//    viewController.modalPresentationStyle = UIModalPresentationNone;
+//    viewController.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
+    [self presentViewController:viewController animated:NO completion:nil];
 //    [self.navigationController pushViewController:viewController animated:YES];
 }
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath

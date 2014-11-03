@@ -12,6 +12,7 @@
 #define SOCKET_SWITCH_CONTROL_UPLOADER_NMAE @"SocketSwitchControlUploader"
 
 @interface MyESocketManualControlViewController ()
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *actor;
 
 @end
 
@@ -51,10 +52,12 @@
 }
 
 - (IBAction)powerSwitchChanged:(UIButton *)sender {
-    if(HUD == nil) {
-        HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-    } else
-        [HUD show:YES];
+    self.actor.hidden = NO;
+    sender.hidden = YES;
+//    if(HUD == nil) {
+//        HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
+//    } else
+//        [HUD show:YES];
     
     NSString *urlStr = [NSString stringWithFormat:
                         @"%@?gid=%@&id=%ld&powerSwitch=%d",
@@ -214,12 +217,18 @@
 //    }
     if([name isEqualToString:SOCKET_SWITCH_CONTROL_UPLOADER_NMAE]) {
         if ([MyEUtil getResultFromAjaxString:string] == -3) {
+            self.actor.hidden = YES;
+            self.powerBtn.hidden = NO;
             [MyEUniversal doThisWhenUserLogOutWithVC:self];
         } else if ([MyEUtil getResultFromAjaxString:string] == 1) {
 //            [MyEUtil showSuccessOn:self.view withMessage:[NSString stringWithFormat:self.powerBtn.selected?@"插座已经关闭":@"插座已经打开"]];
+            self.actor.hidden = YES;
+            self.powerBtn.hidden = NO;
             self.powerBtn.selected = !self.powerBtn.selected;
             self.device.status.powerSwitch = !self.powerBtn.selected;
         }else{
+            self.actor.hidden = YES;
+            self.powerBtn.hidden = NO;
             [MyEUtil showErrorOn:self.view withMessage:[NSString stringWithFormat:@"插座控制失败"]];
         }
     }
@@ -239,6 +248,7 @@
     
     [MyEUtil showErrorOn:self.navigationController.view withMessage:msg];
     [HUD hide:YES];
+    self.actor.hidden = YES;
 }
 
 @end

@@ -31,7 +31,7 @@
         tempMornitorEnabled = 0;
         acTmax = 0;
         acTmin = 0;
-        _protectionStatus = 0;
+        _protectionStatus = 1;
         _alertStatus = 0;
         return self;
     }

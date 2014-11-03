@@ -69,8 +69,15 @@
         HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     } else
         [HUD show:YES];
-    MyETerminal *terminal = [self.mediator.terminals objectAtIndex:_selectedIndex.row];
-    NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@&mId=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_DELETE_CHECK),terminal.tId,self.mediator.mid];
+    NSString *str = nil;
+    if (_selectedIndex.section == 0) {
+        MyETerminal *terminal = [self.mediator.terminals objectAtIndex:_selectedIndex.row];
+        str = terminal.tId;
+    }else{
+        MyESettingSubSwitch *subSwitch = [self.mediator.subSwitchList objectAtIndex:_selectedIndex.row];
+        str = subSwitch.tid;
+    }
+    NSString *urlStr= [NSString stringWithFormat:@"%@?tId=%@&mId=%@",GetRequst(URL_FOR_SETTINGS_TERMINAL_DELETE_CHECK),str,self.mediator.mid];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:@"checkDeleteTerminalFromServer"  userDataDictionary:nil];
     NSLog(@"checkDeleteTerminalFromServer is %@",uploader.name);
     
@@ -81,7 +88,7 @@
     }else
         [HUD show:YES];
     MyESettingSubSwitch *subSwitch = self.mediator.subSwitchList[_selectedIndex.row];
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SUBSWITCH_DELETE),subSwitch.gid] postData:nil delegate:self loaderName:@"delete" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?gid=%@",GetRequst(URL_FOR_SUBSWITCH_DELETE),subSwitch.gid] postData:nil delegate:self loaderName:@"deleteTerminalFromServer" userDataDictionary:nil];
     NSLog(@"%@",loader.name);
 }
 #pragma mark - Table view data source
@@ -147,7 +154,7 @@
     if (section == 0 && self.mediator.terminals.count > 0) {
         return @"智能终端";
     }else if (section == 1 && self.mediator.subSwitchList.count > 0){
-        return @"子开关";
+        return @"主从开关";
     }
     return nil;
 }
@@ -195,14 +202,29 @@
             [self.tableView reloadData];
         }
         if([name isEqualToString:@"deleteTerminalFromServer"]){
-#warning 这里要做处理
+            [self.mediator.terminals removeObjectAtIndex:_selectedIndex.row];
+            [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            UINavigationController *nav = self.tabBarController.childViewControllers[0];
+            UITableViewController *vc = nav.childViewControllers[0];
+            [vc setValue:@(YES) forKey:@"needRefresh"];
         }
         if ([name isEqualToString:@"checkDeleteTerminalFromServer"]) {
-            
+            if (_selectedIndex.section == 0) {
+                [self.mediator.terminals removeObjectAtIndex:_selectedIndex.row];
+            }else{
+                [self.mediator.subSwitchList removeObjectAtIndex:_selectedIndex.row];
+            }
+            [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            UINavigationController *nav = self.tabBarController.childViewControllers[0];
+            UITableViewController *vc = nav.childViewControllers[0];
+            [vc setValue:@(YES) forKey:@"needRefresh"];
         }
-        if ([name isEqualToString:@""]) {
+        if ([name isEqualToString:@"delete"]) {
             [self.mediator.subSwitchList removeObjectAtIndex:_selectedIndex.row];
             [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            UINavigationController *nav = self.tabBarController.childViewControllers[0];
+            UITableViewController *vc = nav.childViewControllers[0];
+            [vc setValue:@(YES) forKey:@"needRefresh"];
         }
     }else if (i == 2){
         if([name isEqualToString:@"deleteTerminalFromServer"]){

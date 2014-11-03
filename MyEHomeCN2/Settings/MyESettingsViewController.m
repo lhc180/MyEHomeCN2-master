@@ -59,6 +59,7 @@
         self.settings.cityId = MainDelegate.accountData.cityId;
         [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
     }
+    [self refreshUI];
     [self.tableView reloadData];
 }
 
@@ -72,8 +73,10 @@
         }else{
             if ([self.settings.subSwitchList count]) {
                 return 3;
-            }else
+            }else if (self.settings.terminals.count){
                 return 2;
+            }else
+                return 1;
         }
     }else if (section == 4){
         return 2;
@@ -82,6 +85,32 @@
 }
 #pragma mark
 #pragma mark - provite methods
+-(void)refreshUI{
+    if (MainDelegate.accountData.mediators != nil ){
+        self.statusLabel.text = [NSString stringWithFormat:@"%i",MainDelegate.accountData.mediators.count];
+    }else{
+        //更改主数据
+        MainDelegate.accountData.allTerminals = settings.terminals;
+        MainDelegate.accountData.mStatus = settings.status;
+        if (settings.mId) {
+            MainDelegate.accountData.mId = settings.mId;
+        }else{
+            MainDelegate.accountData.mId = @"";
+        }
+        
+        //UI更新
+        if (MainDelegate.accountData.mStatus == 1) {
+            statusLabel.text = @"在线";
+        }else if (MainDelegate.accountData.mStatus == 0 && [MainDelegate.accountData.mId isEqualToString:@""]){
+            statusLabel.text = @"未注册网关";
+        }else
+            statusLabel.text = @"离线";
+        
+        terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[MainDelegate.accountData.allTerminals count]];
+        self.subSwitchCount.text = [NSString stringWithFormat:@"%i",self.settings.subSwitchList.count];
+        
+    }
+}
 -(void)setCityLabelWithProvinceId:(NSString *)provinceId andCityId:(NSString *)cityId{
     if ([cityId isEqualToString:@""]) {
         cityLabel.text = @"";
@@ -228,33 +257,9 @@
             MainDelegate.accountData.provinceId = self.settings.provinceId;
             MainDelegate.accountData.cityId = self.settings.cityId;
             [self setCityLabelWithProvinceId:self.settings.provinceId andCityId:self.settings.cityId];
+            MainDelegate.accountData.mediators = self.settings.mediators;
 
-            if (self.settings.mediators != nil ){
-                MainDelegate.accountData.mediators = self.settings.mediators;
-                self.statusLabel.text = [NSString stringWithFormat:@"%i",self.settings.mediators.count];
-            }else{
-                //更改主数据
-                MainDelegate.accountData.allTerminals = setting.terminals;
-                MainDelegate.accountData.mStatus = setting.status;
-                if (setting.mId) {
-                    MainDelegate.accountData.mId = setting.mId;
-                }else{
-                    MainDelegate.accountData.mId = @"";
-                }
-                
-                //UI更新
-                if (MainDelegate.accountData.mStatus == 1) {
-                    statusLabel.text = @"在线";
-                }else if (MainDelegate.accountData.mStatus == 0 && [MainDelegate.accountData.mId isEqualToString:@""]){
-                    statusLabel.text = @"未注册网关";
-                }else
-                    statusLabel.text = @"离线";
-                
-                terminalsCount.text = [NSString stringWithFormat:@"%lu",(unsigned long)[MainDelegate.accountData.allTerminals count]];
-                self.subSwitchCount.text = [NSString stringWithFormat:@"%i",self.settings.subSwitchList.count];
-                
-            }
-            
+            [self refreshUI];
             //by YY
             // 根据网关情况, 确定是否允许进入其他面板, 如果网关不在线或没有连接,就提示用户刷新, 并不允许转移到其他面板.
             MyEMainTabBarController *mtc = (MyEMainTabBarController *)self.tabBarController;

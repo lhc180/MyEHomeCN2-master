@@ -86,6 +86,7 @@
             [modalVc.learnBtn setTitle:@"再学习" forState:UIControlStateNormal];
         }else
             modalVc.validateKeyBtn.enabled = NO;
+        [modalVc viewDidLoad];
     };
     
     [self mz_presentFormSheetController:formSheet animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
@@ -110,18 +111,20 @@
         if (key.status>0) {
             [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&deviceId=%i&type=%i",GetRequst(URL_FOR_RFDEVICE_SEND_INSTRUCTION),key.keyId,_device.deviceId,key.type] postData:nil delegate:self loaderName:@"control" userDataDictionary:nil];
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此按键没有学习，请点击右上角【学习模式】学习此按键" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此按键没有学习，请点击右上角【学习】学习此按键" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
             [alert show];
         }
     }else
         [self editStudyKey:key];
 }
 - (IBAction)studyMode:(UIBarButtonItem *)sender {
-    if ([sender.title isEqualToString:@"学习模式"]) {
-        sender.title = @"控制模式";
+    if ([sender.title isEqualToString:@"学习"]) {
+        sender.title = @"退出学习";
+        self.view.backgroundColor = [UIColor colorWithRed:0.84 green:0.93 blue:0.95 alpha:1];
         _isControlMode = NO;
     }else{
-        sender.title = @"学习模式";
+        sender.title = @"学习";
+        self.view.backgroundColor = [UIColor colorWithRed:0.97 green:0.97 blue:0.97 alpha:1];
         _isControlMode = YES;
     }
 }

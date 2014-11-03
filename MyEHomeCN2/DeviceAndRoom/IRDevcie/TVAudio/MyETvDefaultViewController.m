@@ -180,7 +180,7 @@
     // Dispose of any resources that can be recreated.
 }
 - (IBAction)changeMode:(UIBarButtonItem *)sender {
-    if ([sender.title isEqualToString:@"学习模式"]) {
+    if ([sender.title isEqualToString:@"学习"]) {
         sender.title = @"控制模式";
         super.isControlMode = NO;
     }else{

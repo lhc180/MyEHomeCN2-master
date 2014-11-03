@@ -88,6 +88,7 @@
             [modalVc.learnBtn setTitle:@"再学习" forState:UIControlStateNormal];
         }else
             modalVc.validateKeyBtn.enabled = NO;
+        [modalVc viewDidLoad];
     };
     
     [self mz_presentFormSheetController:formSheet animated:YES completionHandler:^(MZFormSheetController *formSheetController) {

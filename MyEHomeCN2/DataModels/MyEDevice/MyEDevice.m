@@ -31,6 +31,7 @@ instructionMode, acInstructionSet, irKeySet;
         acInstructionSet = Nil;
         irKeySet = Nil;
         instructionMode = 1;
+        
         return self;
     }
     return nil;

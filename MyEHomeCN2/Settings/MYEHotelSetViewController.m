@@ -132,6 +132,7 @@
     [vc setValue:self.hotel forKey:@"hotel"];
     [vc setValue:_hotelDetail forKey:@"detail"];
     _needRefresh = YES;
+    
 }
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
     _type = [self.tableView indexPathForCell:sender].section;

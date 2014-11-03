@@ -141,9 +141,9 @@
     [cell show];
 //    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];   //这里有两个方法来指定当前的collectionView
     //    NSIndexPath *indexPath = [(UICollectionView *)self.view.subviews[0] indexPathForCell:cell];
-    MyESwitchChannelStatus *status = self.control.SCList[indexPath.row];
     _selectedIndex = indexPath;
-    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&switchStatus=%li&action=2",GetRequst(URL_FOR_SWITCH_CONTROL),(long)status.channelId,1-(long)status.switchStatus] postData:nil delegate:self loaderName:@"controlSwitch" userDataDictionary:@{@"status": status}];
+    MyESwitchChannelStatus *status = self.control.SCList[indexPath.row];
+    [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%li&switchStatus=%li&action=2",GetRequst(URL_FOR_SWITCH_CONTROL),(long)status.channelId,1-(long)status.switchStatus] postData:nil delegate:self loaderName:@"controlSwitch" userDataDictionary:@{@"status": status,@"index":indexPath}];
 }
 - (IBAction)timeControl:(UIButton *)sender forEvent:(UIEvent *)event{
     UITouch *touch = [[event touchesForView:sender] anyObject];
@@ -191,16 +191,17 @@
     }
     if ([name isEqualToString:@"controlSwitch"]) {
         NSLog(@"controlSwitch string is %@",string);
-        MYESwitchCell *cell = (MYESwitchCell *)[self.tableView cellForRowAtIndexPath:_selectedIndex];
+        NSIndexPath *indexPath = dict[@"index"];
+        MYESwitchCell *cell = (MYESwitchCell *)[self.tableView cellForRowAtIndexPath:indexPath];
         [cell hide];
         if ([MyEUtil getResultFromAjaxString:string] == 1) {
             MyESwitchChannelStatus *status = dict[@"status"];
+            NSInteger i = [self.control.SCList containsObject:status]?[self.control.SCList indexOfObject:status]:0;
             status.switchStatus = 1 - status.switchStatus;
             if (status.switchStatus == 1) {
                 status.remainMinute = status.delayMinute;
             }
             //下面这三句代码主要是为了更改switch在device列表中的状态，这样做的好处就是不需要刷新数据，就可以实时更改开关的状态了
-            NSInteger i = [self.control.SCList indexOfObject:status];
             [self.device.status.switchStatus replaceCharactersInRange:NSMakeRange(i, 1)withString:[NSString stringWithFormat:@"%i",status.switchStatus]];
         }
         if ([MyEUtil getResultFromAjaxString:string] == -3) {

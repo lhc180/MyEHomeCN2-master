@@ -16,6 +16,5 @@
 @property (nonatomic,weak) MyEAcModel *currentModel;
 @property (nonatomic,strong) MyEDevice *device;
 
-@property (nonatomic,assign) NSInteger index;
 @property (nonatomic,assign) NSInteger step;  //1:选择品牌 2:开始下载 3:开始控制
 @end

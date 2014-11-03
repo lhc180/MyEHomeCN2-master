@@ -22,6 +22,7 @@
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *barAutoCheck;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *barFlex;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *barAddBrand;
+@property (strong, nonatomic) IBOutlet UIBarButtonItem *barRefresh;
 @property (strong, nonatomic) IBOutlet UIView *tableHeaderView;
 @property (weak, nonatomic) IBOutlet UISegmentedControl *selectSeg;
 
@@ -36,6 +37,14 @@
     if (_isACInit) {
         if (_isBrand) {
             [self setToolbarItems:@[self.barFlex,self.barAddBrand] animated:YES];
+            self.navigationItem.rightBarButtonItem = self.barRefresh;
+            UIRefreshControl *rc = [[UIRefreshControl alloc] init];
+            rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
+            [rc addTarget:self
+                   action:@selector(downloadAcBrandsAndModules)
+         forControlEvents:UIControlEventValueChanged];
+            self.refreshControl = rc;
+            
         }else{
             if (self.brandAndModels.selectedIndex == 1) {
                 [self setToolbarItems:@[self.barFlex,self.barAddBrand] animated:YES];
@@ -49,14 +58,6 @@
         self.selectSeg.layer.cornerRadius = 4.0f;
         self.selectSeg.layer.masksToBounds = YES;
     }
-
-//    UIRefreshControl *rc = [[UIRefreshControl alloc] init];
-//    rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
-//    [rc addTarget:self
-//           action:@selector(downloadAcBrandsAndModules)
-// forControlEvents:UIControlEventValueChanged];
-//    self.refreshControl = rc;
-
 }
 
 -(void)viewWillAppear:(BOOL)animated{
@@ -93,6 +94,10 @@
 }
 
 #pragma mark - IBAction methods
+- (IBAction)refreshData:(UIBarButtonItem *)sender {
+    [self downloadAcBrandsAndModules];
+}
+
 - (IBAction)autoCheck:(UIBarButtonItem *)sender {
     UIViewController *vc = [[UIStoryboard storyboardWithName:@"AcInstruction" bundle:nil] instantiateViewControllerWithIdentifier:@"check"];
     
@@ -163,7 +168,6 @@
 }
 - (IBAction)changeMode:(UISegmentedControl *)sender {
     self.brandAndModels.selectedIndex = sender.selectedSegmentIndex;
-    self.index = -1;
     [self.tableView reloadData];
 }
 
@@ -181,14 +185,23 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell" forIndexPath:indexPath];
     cell.accessoryType = UITableViewCellAccessoryNone;
+    NSInteger i = -1;
     if (_isBrand) {
-        MyEAcBrand *brand = self.brandAndModels.selectedIndex == 0?self.brandAndModels.sysAcBrands[indexPath.row]:self.brandAndModels.userAcBrands[indexPath.row];
-        cell.textLabel.text = brand.brandName;
+        NSArray *array = self.brandAndModels.selectedIndex == 0?self.brandAndModels.sysAcBrands:self.brandAndModels.userAcBrands;
+        MyEAcBrand *b = array[indexPath.row];
+        cell.textLabel.text = b.brandName;
+        if ([array containsObject:self.brand]) {
+            i = [array indexOfObject:self.brand];
+        }
     }else{
-        MyEAcModel *model = self.brand.models[indexPath.row];
+        NSArray *array = self.brand.models;
+        MyEAcModel *model = array[indexPath.row];
         cell.textLabel.text = model.modelName;
         if (self.brandAndModels.selectedIndex == 1) {
             cell.accessoryType = UITableViewCellAccessoryDetailDisclosureButton;
+        }
+        if ([array containsObject:self.model]) {
+            i = [array indexOfObject:self.model];
         }
     }
     cell.textLabel.numberOfLines = 0;
@@ -198,7 +211,7 @@
     }else
         cell.textLabel.font = [UIFont systemFontOfSize:17];
     if (_isACInit) {
-        if (indexPath.row == _index) {
+        if (indexPath.row == i) {
             cell.imageView.image = [UIImage imageNamed:@"checkMark"];
         }else
             cell.imageView.image = [MyEUtil imageWithColor:[UIColor clearColor] size:CGSizeMake(22, 22)];
@@ -252,15 +265,15 @@
             }
         }
     }
-    _index = indexPath.row;
     UIViewController *vc = self.navigationController.childViewControllers[[self.navigationController.childViewControllers indexOfObject:self] - 1];
-    [vc setValue:@(_index) forKey:@"index"];
-//    if (_isACInit) {
-//        
-//    }else{
-//        MYEACInstructionManageViewController *instruction = (MYEACInstructionManageViewController *)vc;
-//        vc.index = _index;
-//    }
+    if (_isBrand) {
+        NSArray *array = self.brandAndModels.selectedIndex == 0?self.brandAndModels.sysAcBrands:self.brandAndModels.userAcBrands;
+        self.brand = array[indexPath.row];
+        [vc setValue:self.brand forKey:@"currentBrand"];
+    }else{
+        self.model = self.brand.models[indexPath.row];
+        [vc setValue:self.model forKey:@"currentModel"];
+    }
     [self.navigationController popViewControllerAnimated:YES];
 }
 
@@ -341,6 +354,28 @@
         }else
             [MyEUtil showMessageOn:nil withMessage:@"删除失败"];
     }
+    if ([name isEqualToString:@"downloadAcBrandsAndModules"]) {
+        if (self.refreshControl.isRefreshing) {
+            [self.refreshControl endRefreshing];
+            self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
+        }
+        if (i == 1) {
+            //            NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+            //            [def setObject:string forKey:BRANDS_AND_MODELS];
+            MyEAcBrandsAndModels *all = [[MyEAcBrandsAndModels alloc] initWithJSONString:string];
+            self.brandAndModels.userAcBrands = all.userAcBrands;
+            self.brandAndModels.sysAcBrands = all.sysAcBrands;
+            if (self.brandAndModels != nil) {
+                [MyEUtil saveObject:self.brandAndModels withFileName:FILE_FOR_AC_BRANDS];
+                NSUserDefaults *def = [NSUserDefaults standardUserDefaults];
+                [def setObject:[NSDate date] forKey:USERDEFAULT_FOR_AC_BRANDS_DATE];
+            }
+            [self.tableView reloadData];
+        } else {
+            [MyEUtil showMessageOn:nil withMessage:@"指令库下载失败"];
+        }
+    }
+
 }
 -(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
     [MyEUtil showMessageOn:nil withMessage:@"与服务器连接失败"];

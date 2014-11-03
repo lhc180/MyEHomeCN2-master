@@ -102,8 +102,8 @@
     [super viewWillAppear:YES];
     //之前的主数据刷新陷入了一个误区，从正常角度讲应该是谁污染谁治理，谁需要最新数据就应该是谁负责刷新。之前的想法是在别的地方下载并更新数据，然后再把数据传递给VC。现在是谁需要下载谁就自己下载，我只负责给一个特征值就可以了
     if (self.needRefresh) {
-        self.needRefresh = NO;
         [self downloadDeviceAndRoomListFromServer];
+        self.needRefresh = NO;
         //如果开始下载的话那么下面的所有都不必继续运行了，从而加快运行速度
         return;
     }
@@ -730,7 +730,9 @@
     if (self.refreshControl.isRefreshing) {
         self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
     }
-
+    if (self.needRefresh) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }
     NSString *urlStr= [NSString stringWithFormat:@"%@?gid=%@&ver=2",GetRequst(URL_FOR_DEVICE_ROOM_LIST),MainDelegate.accountData.userId];
     MyEDataLoader *uploader = [[MyEDataLoader alloc] initLoadingWithURLString:urlStr postData:nil delegate:self loaderName:DEVICE_HOME_LIST_DOWNLOAD_NAME  userDataDictionary:nil];
     NSLog(@"deviceAndRoomList is %@",uploader.name);

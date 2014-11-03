@@ -33,7 +33,7 @@
     self.txtUID.text = self.camera.UID;
     
     if (self.jumpFromWhere == 1) {
-        self.lblTitle.text = @"检测到当前WIFI环境下存在以下设备";
+        self.lblTitle.text = @"检测到当前局域网存在以下设备";
     }else if (self.jumpFromWhere == 2){
         self.lblTitle.text = @"通过二维码扫描到以下设备";
     }else{

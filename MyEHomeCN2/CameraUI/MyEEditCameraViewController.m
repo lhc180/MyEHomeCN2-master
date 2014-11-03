@@ -122,7 +122,8 @@
         }else
             return 3;
     }else if (section == 1){
-        return 6;
+        return 2;
+//        return 6;
     }else
         return 2;
 }

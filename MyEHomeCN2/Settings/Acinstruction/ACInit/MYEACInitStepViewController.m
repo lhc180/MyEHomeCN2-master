@@ -90,17 +90,10 @@
         _needRefresh = NO;
         if (_isBrand) {
             _isBrand = NO;
-            NSArray *array = self.brandAndModels.selectedIndex == 0?self.brandAndModels.sysAcBrands:self.brandAndModels.userAcBrands;
-            if (_index > array.count) {
-                _currentBrand = array[0];
-            }else
-                _currentBrand = array[_index == -1?0:_index];
             _currentModel = [_currentBrand firstUsefulModel];
-        }else
-            _currentModel = _currentBrand.models[_index == -1?0:_index];
+        }
         [self refreshUI];
     }
-
 }
 -(void)dealloc{
     if (self.step == 2) {
@@ -121,9 +114,11 @@
     [self.navigationController pushViewController:vc animated:YES];
 }
 -(void)refreshUI{
+    if (self.currentBrand == nil) {
+        return;
+    }
     _lblBrand.text = self.currentBrand.brandName;
     _lblModel.text = self.currentModel.modelName;
-    [self.tableView setNeedsDisplay];
 }
 -(void)handleTimer{
     _counterTime --;
@@ -269,6 +264,7 @@
     MYEACBrandSelectViewController *vc = segue.destinationViewController;
     vc.brandAndModels = self.brandAndModels;
     vc.brand = self.currentBrand;
+    vc.model = self.currentModel;
     vc.isACInit = YES;
     vc.device = self.device;
     _needRefresh = YES;
@@ -276,20 +272,20 @@
         vc.isBrand = YES;
         _isBrand = YES;
     }
-    if (_isBrand) {   //选择品牌
-        NSArray *array = self.brandAndModels.selectedIndex == 0? self.brandAndModels.sysAcBrands: self.brandAndModels.userAcBrands;
-        if ([array containsObject:_currentBrand]) {
-            _index = [array indexOfObject:_currentBrand];
-        }else
-            _index = -1;
-    }else{
-        if ([_currentBrand.models containsObject:_currentModel]) {
-            _index = [_currentBrand.models indexOfObject:_currentModel];
-        }else
-            _index = -1;
-    }
-
-    vc.index = self.index;
+//    if (_isBrand) {   //选择品牌
+//        NSArray *array = self.brandAndModels.selectedIndex == 0? self.brandAndModels.sysAcBrands: self.brandAndModels.userAcBrands;
+//        if ([array containsObject:_currentBrand]) {
+//            _index = [array indexOfObject:_currentBrand];
+//        }else
+//            _index = -1;
+//    }else{
+//        if ([_currentBrand.models containsObject:_currentModel]) {
+//            _index = [_currentBrand.models indexOfObject:_currentModel];
+//        }else
+//            _index = -1;
+//    }
+//
+//    vc.index = self.index;
 }
 -(BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(id)sender{
     NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];

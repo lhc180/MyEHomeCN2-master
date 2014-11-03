@@ -54,9 +54,9 @@
 /*-------------------------URL DEFINE-------------------------------*/
 
 //#define GetRequst(API) [@"http://www.myenergydomain.com.cn" stringByAppendingFormat:@"%@",API]
-#define GetRequst(API) [@"http://192.168.0.185:80" stringByAppendingFormat:@"%@",API]
+//#define GetRequst(API) [@"http://192.168.0.119:80" stringByAppendingFormat:@"%@",API]
 
-//#define GetRequst(API) [@"http://192.168.0.80:8080" stringByAppendingFormat:@"%@",API]
+#define GetRequst(API) [@"http://192.168.0.80:8080" stringByAppendingFormat:@"%@",API]
 
 /*-------------------------LOGIN-------------------------------*/
 

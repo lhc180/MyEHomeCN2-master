@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6246" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="LFg-g9-WWz">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6250" systemVersion="14A388a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="LFg-g9-WWz">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6239"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6244"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
@@ -692,8 +692,9 @@
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jbl-bp-HiO">
                                 <rect key="frame" x="85" y="170" width="150" height="75"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="150" id="NRK-Mo-lMn"/>
-                                    <constraint firstAttribute="height" constant="75" id="ol6-oJ-Y0l"/>
+                                    <constraint firstAttribute="width" secondItem="jbl-bp-HiO" secondAttribute="height" multiplier="2:1" id="NKq-ZN-4oe"/>
+                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="75" id="Nel-zN-JLw"/>
+                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="128" id="gVi-5p-Ffn"/>
                                 </constraints>
                                 <state key="normal" title="二维码扫描">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -714,18 +715,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="jbl-bp-HiO" firstAttribute="top" secondItem="2kr-YV-Bv3" secondAttribute="bottom" constant="20" id="284-0O-Gx3"/>
-                            <constraint firstItem="2kr-YV-Bv3" firstAttribute="height" secondItem="5wF-rF-2j8" secondAttribute="height" id="56G-IL-Flp"/>
-                            <constraint firstItem="2kr-YV-Bv3" firstAttribute="width" secondItem="5wF-rF-2j8" secondAttribute="width" id="980-Ut-EVS"/>
-                            <constraint firstItem="5wF-rF-2j8" firstAttribute="top" secondItem="jbl-bp-HiO" secondAttribute="bottom" constant="20" id="ICL-0t-8jF"/>
-                            <constraint firstItem="2kr-YV-Bv3" firstAttribute="trailing" secondItem="jbl-bp-HiO" secondAttribute="trailing" id="U18-NS-z12"/>
-                            <constraint firstItem="2kr-YV-Bv3" firstAttribute="height" secondItem="jbl-bp-HiO" secondAttribute="height" id="XRk-YK-gV2"/>
-                            <constraint firstItem="2kr-YV-Bv3" firstAttribute="leading" secondItem="5wF-rF-2j8" secondAttribute="leading" id="fEn-pc-1J8"/>
-                            <constraint firstAttribute="centerY" secondItem="jbl-bp-HiO" secondAttribute="centerY" constant="0.5" id="gBR-NT-nDV"/>
-                            <constraint firstItem="2kr-YV-Bv3" firstAttribute="trailing" secondItem="5wF-rF-2j8" secondAttribute="trailing" id="k5B-4m-Uwj"/>
-                            <constraint firstItem="2kr-YV-Bv3" firstAttribute="width" secondItem="jbl-bp-HiO" secondAttribute="width" id="kpL-Ls-oeR"/>
-                            <constraint firstItem="2kr-YV-Bv3" firstAttribute="leading" secondItem="jbl-bp-HiO" secondAttribute="leading" id="m5e-v5-nHZ"/>
-                            <constraint firstAttribute="centerX" secondItem="jbl-bp-HiO" secondAttribute="centerX" id="sZs-vH-1rA"/>
+                            <constraint firstItem="jbl-bp-HiO" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="39o-fD-V3g" secondAttribute="leading" constant="85" id="1F4-SJ-PMk"/>
+                            <constraint firstItem="jbl-bp-HiO" firstAttribute="leading" relation="lessThanOrEqual" secondItem="39o-fD-V3g" secondAttribute="leading" constant="256" id="3Ba-au-Obg"/>
+                            <constraint firstItem="5wF-rF-2j8" firstAttribute="width" secondItem="2kr-YV-Bv3" secondAttribute="width" id="786-7W-7nf"/>
+                            <constraint firstItem="5wF-rF-2j8" firstAttribute="leading" secondItem="jbl-bp-HiO" secondAttribute="leading" id="MsU-fq-ejW"/>
+                            <constraint firstItem="jbl-bp-HiO" firstAttribute="top" secondItem="2kr-YV-Bv3" secondAttribute="bottom" constant="20" id="Qev-Zy-1jl"/>
+                            <constraint firstItem="5wF-rF-2j8" firstAttribute="height" secondItem="2kr-YV-Bv3" secondAttribute="height" id="RR5-l5-f1h"/>
+                            <constraint firstItem="5wF-rF-2j8" firstAttribute="leading" secondItem="2kr-YV-Bv3" secondAttribute="leading" id="URI-MF-KoX"/>
+                            <constraint firstItem="5wF-rF-2j8" firstAttribute="top" secondItem="jbl-bp-HiO" secondAttribute="bottom" constant="20" id="dTH-FG-qeD"/>
+                            <constraint firstItem="5wF-rF-2j8" firstAttribute="height" secondItem="jbl-bp-HiO" secondAttribute="height" id="kWv-ce-3In"/>
+                            <constraint firstItem="5wF-rF-2j8" firstAttribute="width" secondItem="jbl-bp-HiO" secondAttribute="width" id="s1D-Y7-8wF"/>
+                            <constraint firstAttribute="centerY" secondItem="jbl-bp-HiO" secondAttribute="centerY" constant="0.5" id="uQ3-kI-cem"/>
+                            <constraint firstAttribute="centerX" secondItem="jbl-bp-HiO" secondAttribute="centerX" id="y73-TS-IaR"/>
                         </constraints>
                     </view>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
@@ -1781,7 +1782,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="VpF-GA-ryF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9937" y="-4735"/>
+            <point key="canvasLocation" x="-9937" y="-4919"/>
         </scene>
         <!--报警设置-->
         <scene sceneID="h36-ux-Aik">
@@ -2019,7 +2020,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="GLl-5H-lct" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-6573" y="-5106"/>
+            <point key="canvasLocation" x="-7029" y="-5346"/>
         </scene>
         <!--日期设置-->
         <scene sceneID="sjf-yP-Ouh">
@@ -2274,7 +2275,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fte-wu-Ysl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9829" y="-3890"/>
+            <point key="canvasLocation" x="-9937" y="-4334"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="4LJ-Ik-Y0v">
@@ -2292,7 +2293,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FKr-ot-O4G" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-9952" y="-6777"/>
+            <point key="canvasLocation" x="-9937" y="-6777"/>
         </scene>
     </scenes>
     <resources>

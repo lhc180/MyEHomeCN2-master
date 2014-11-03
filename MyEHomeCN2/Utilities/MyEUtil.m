@@ -469,7 +469,7 @@ NSInteger getDaysBetweenDates(NSDate *startDate, NSDate *endDate) {
         return;
     }
     //获取文件路径
-    NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES)lastObject];
+    NSString *docPath=[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
     NSString *path=[docPath stringByAppendingPathComponent:name];
     NSLog(@"path=%@",path);
     //将自定义的对象保存到文件中

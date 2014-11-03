@@ -414,19 +414,19 @@ needDownloadInstructionsForScene = _needDownloadInstructionsForScene;
     return array;
 }
 -(MyEAccountData *)newAccoutData:(MyEAccountData *)AccountData{
-    MyEAccountData *accout = [[MyEAccountData alloc] init];
-    accout.userId = [AccountData.userId copy];
-    accout.userName = [AccountData.userName copy];
-    accout.loginSuccess = AccountData.loginSuccess;
-    accout.mId = [AccountData.mId copy];
-    accout.mStatus = AccountData.mStatus;
-    accout.needDownloadInstructionsForScene = YES;
-    accout.deviceTypes = [AccountData.deviceTypes mutableCopy];
-    accout.devices = [AccountData.devices mutableCopy];
-    accout.rooms = [AccountData.rooms mutableCopy];
-    accout.terminals = [AccountData.terminals mutableCopy];
-    accout.allTerminals = [self.allTerminals mutableCopy];
-    return accout;
+//    MyEAccountData *accout = [[MyEAccountData alloc] init];
+//    accout.userId = [AccountData.userId copy];
+//    accout.userName = [AccountData.userName copy];
+//    accout.loginSuccess = AccountData.loginSuccess;
+//    accout.mId = [AccountData.mId copy];
+//    accout.mStatus = AccountData.mStatus;
+    self.needDownloadInstructionsForScene = YES;
+    self.deviceTypes = [AccountData.deviceTypes mutableCopy];
+    self.devices = [AccountData.devices mutableCopy];
+    self.rooms = [AccountData.rooms mutableCopy];
+    self.terminals = [AccountData.terminals mutableCopy];
+    self.allTerminals = [self.allTerminals mutableCopy];
+    return self;
 }
 -(BOOL)alertHappen{
     if ([[self.mId substringToIndex:5] isEqualToString:@"05-00"]) {

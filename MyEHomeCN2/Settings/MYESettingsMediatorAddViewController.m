@@ -57,6 +57,7 @@
 }
 #pragma mark - Table view delegate methods
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
     if (indexPath.section == 1) {
         if (indexPath.row == 0) {
             [self bindMediatorToServer];

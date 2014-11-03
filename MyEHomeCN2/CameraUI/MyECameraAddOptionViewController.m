@@ -47,7 +47,7 @@
 }
 #pragma mark - private methods
 -(void)presentVCToAddDeviceWithTag:(NSInteger)tag{
-    UINavigationController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"addNew"];
+    UIViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"addNew"];
     
     MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:vc];
     

@@ -203,7 +203,7 @@
 }
 -(void)popUpTop{
     [self _stopCamera];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
     //    [self.navigationController popViewControllerAnimated:YES];
 }
 -(void)refreshUIWithArray:(NSArray *)array{
@@ -493,7 +493,7 @@
 }
 - (IBAction)popUp:(UIButton *)sender {
     [self _stopCamera];
-    [self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 - (IBAction)changeView:(UISegmentedControl *)sender {
     self.infoView.hidden = !self.infoView.hidden;

@@ -20,6 +20,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.title = @"网关列表";
+    [self downloadMediatorList];
+    UIRefreshControl *rc = [[UIRefreshControl alloc] init];
+    rc.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
+    [rc addTarget:self
+           action:@selector(downloadMediatorList)
+ forControlEvents:UIControlEventValueChanged];
+    self.refreshControl = rc;
+
 }
 
 - (void)didReceiveMemoryWarning {
@@ -28,6 +36,13 @@
 -(void)viewWillAppear:(BOOL)animated{
     [super viewWillAppear:YES];
     [self.tableView reloadData];
+}
+#pragma mark - private methods
+-(void)downloadMediatorList{
+    if (self.refreshControl.isRefreshing) {
+        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"加载中..."];
+    }
+    [MyEDataLoader startLoadingWithURLString:GetRequst(URL_FOR_SETTINGS_FIND_MEDIATOR_SECOND) postData:nil delegate:self loaderName:@"info" userDataDictionary:nil];
 }
 #pragma mark - Table view data source
 
@@ -94,6 +109,10 @@
 -(void)didReceiveString:(NSString *)string loaderName:(NSString *)name userDataDictionary:(NSDictionary *)dict{
     [HUD hide:YES];
     NSLog(@"%@",string);
+    if (self.refreshControl.isRefreshing) {
+        [self.refreshControl endRefreshing];
+        self.refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"下拉刷新"];
+    }
     NSInteger i = [MyEUtil getResultFromAjaxString:string];
     if (i == -3) {
         [MyEUniversal doThisWhenUserLogOutWithVC:self];
@@ -103,8 +122,24 @@
         if ([name isEqualToString:@"SettingsDeleteMedatorUploader"]) {
             [MainDelegate.accountData.mediators removeObjectAtIndex:_selectedIndex.row];
             [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            UINavigationController *nav = self.tabBarController.childViewControllers[0];
+            UITableViewController *vc = nav.childViewControllers[0];
+            [vc setValue:@(YES) forKey:@"needRefresh"];
+        }
+        if ([name isEqualToString:@"info"]) {
+            NSDictionary *dic = [string JSONValue];
+            NSMutableArray *array = [NSMutableArray array];
+            for (NSDictionary *d in dic[@"mediatorList"]) {
+                [array addObject:[[MyEMediator alloc] initWithDictionary:d]];
+            }
+            MainDelegate.accountData.mediators = array;
+            [self.tableView reloadData];
         }
     }else
         [MyEUtil showMessageOn:nil withMessage:@"操作失败"];
+}
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error loaderName:(NSString *)name{
+    [HUD hide:YES];
+    [MyEUtil showMessageOn:nil withMessage:@"与服务器连接失败"];
 }
 @end

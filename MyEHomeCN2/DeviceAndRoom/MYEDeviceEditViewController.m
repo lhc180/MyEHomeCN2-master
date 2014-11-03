@@ -94,13 +94,18 @@
     _deviceNameLbl.text = _deviceCache.name;
     _roomLbl.text = _roomCache.name;
     _typeLbl.text = _deviceTypeCache.name;
-    _terminalLbl.text = _deviceCache.tId;  //不管什么情况下都显示的设备的TID,这个得注意
-    
     
     if (_deviceTypeCache.dtId < 6) {
         _terminalTypeLbl.text = @"智控星";
-    }else
+        _terminalLbl.text = [_deviceCache.tId isEqualToString:@""]?@"请选择智控星":_deviceCache.tId;  //不管什么情况下都显示的设备的TID,这个得注意
+    }else if(_deviceTypeCache.dtId < 12){
         _terminalTypeLbl.text = @"设备ID";
+        _terminalLbl.text = [_deviceCache.tId isEqualToString:@""]?@"手动输入ID":_deviceCache.tId;  //不管什么情况下都显示的设备的TID,这个得注意
+    }else{
+        _terminalTypeLbl.text = @"网关";
+        _terminalLbl.text = (_selectedMid == nil || [_selectedMid isEqualToString:@""])?@"选择绑定网关":_selectedMid;
+    }
+    
     if (_isAdd) {
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]];
         cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
@@ -145,13 +150,17 @@
 -(void)urlLoaderWithUrlString:(NSString *)url loaderName:(NSString *)name{
     if (HUD == nil) {
         HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-    }
-    [HUD show:YES];
+    }else
+        [HUD show:YES];
     [MyEDataLoader startLoadingWithURLString:url postData:nil delegate:self loaderName:name userDataDictionary:nil];
 }
 
 #pragma mark - IBAction methods
 - (void)getDeviceIdByUseIt{
+    if (_selectedMid == nil || [_selectedMid isEqualToString:@""]) {
+        [MyEUtil showMessageOn:nil withMessage:@"请先选择网关"];
+        return;
+    }
     tips = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
     tips.removeFromSuperViewOnHide = YES;
     tips.userInteractionEnabled = YES;
@@ -183,7 +192,7 @@
     tips.dimBackground = YES;
     
     _times = 0; //对times进行初始化
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@&mId=%@",GetRequst(URL_FOR_SAFE_REQUEST),_selectedMid] postData:nil delegate:self loaderName:@"safeDeviceRequest" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?mId=%@",GetRequst(URL_FOR_SAFE_REQUEST),_selectedMid] postData:nil delegate:self loaderName:@"safeDeviceRequest" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
 - (void)scanCodeToGetDeviceId{
@@ -195,9 +204,11 @@
 }
 
 - (IBAction)save:(UIBarButtonItem *)sender {
-    if (_deviceCache.tId.length < 23) {
-        [MyEUtil showMessageOn:nil withMessage:@"设备ID或智控星有误"];
-        return;
+    if ((_deviceCache.type < 12 && !_isAdd) || (_deviceTypeCache.dtId < 12 && _isAdd)) {
+        if (_deviceCache.tId.length < 23) {
+            [MyEUtil showMessageOn:nil withMessage:@"设备ID或智控星有误"];
+            return;
+        }
     }
     if (_deviceCache.name.length == 0 || _deviceCache.name.length > 10) {
         [MyEUtil showMessageOn:nil withMessage:@"名称长度不符合要求"];
@@ -248,16 +259,21 @@
         if (_deviceCache.type == 7) {
             return 3;
         }
+        if (_deviceCache.type > 11) {
+            return 1;
+        }
     }
-    if (_isAdd && _deviceTypeCache.dtId > 7) {
-        return 3;
+    if (_isAdd) {
+        if (_deviceTypeCache.dtId > 7 && _deviceTypeCache.dtId < 12) {
+            return 3;
+        }
     }
     return 2;
 }
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     if (section == 1) {
-        if (_isAdd && _deviceTypeCache.dtId > 7) {
+        if (_isAdd && (_deviceTypeCache.dtId > 7 && _deviceTypeCache.dtId < 12)) {
             return 2;
         }
         return 1;
@@ -304,8 +320,16 @@
                 lplv.delegate = self;
                 [lplv showInView:self.view.window animated:YES];
             }
-            if (_isAdd && _deviceTypeCache.dtId >7) {
-                [self showAlertToEnterWithTitle:@"请输入设备ID" tag:101];
+            if (_isAdd) {
+                if (_deviceTypeCache.dtId >7 && _deviceTypeCache.dtId < 12) {
+                    [self showAlertToEnterWithTitle:@"请输入设备ID" tag:101];
+                }
+                if (_deviceTypeCache.dtId > 11) {
+                    LeveyPopListView *lplv = [[LeveyPopListView alloc] initWithTitle:@"请选择网关" options:[MainDelegate.accountData validMeditors]];
+                    lplv.tag = 107;
+                    lplv.delegate = self;
+                    [lplv showInView:self.view.window animated:YES];
+                }
             }
         }
         if (indexPath.row == 1) {
@@ -409,6 +433,8 @@
     }
     if (alertView.tag == 101 && buttonIndex == 1) {
         _deviceCache.tId = txt.text;
+        WTReTextField *txtw = (WTReTextField *)[alertView viewWithTag:1000];
+        _deviceCache.tId = txtw.text;
     }
     [self refreshUI];
 }
@@ -421,7 +447,7 @@
 #pragma mark - URL Loading System methods
 -(void)getResponseFromServer{
     _times++;
-    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@&mId=%@",GetRequst(URL_FOR_SAFE_RESPONSE),_selectedMid] postData:nil delegate:self loaderName:@"safeDeviceResponse" userDataDictionary:nil];
+    MyEDataLoader *loader = [[MyEDataLoader alloc] initLoadingWithURLString:[NSString stringWithFormat:@"%@?mId=%@",GetRequst(URL_FOR_SAFE_RESPONSE),_selectedMid] postData:nil delegate:self loaderName:@"safeDeviceResponse" userDataDictionary:nil];
     NSLog(@"loader name is %@",loader.name);
 }
 
@@ -479,6 +505,10 @@
             NSDictionary *dic = [string JSONValue];
             NSString *sufix = dic[@"msgContent"];
             NSArray *array = @[@"08",@"09",@"0A",@"0B"];
+            if (_deviceTypeCache.dtId == 11) {
+                NSString *str = [sufix substringToIndex:5];
+                sufix = [NSString stringWithFormat:@"%@-00",str];
+            }
             NSString *tid = [NSString stringWithFormat:@"%@-01-00-00-00-%@",array[_deviceTypeCache.dtId - 8],sufix];
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"检测到新设备" message:tid delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
             [alert show];

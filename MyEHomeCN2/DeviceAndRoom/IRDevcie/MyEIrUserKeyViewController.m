@@ -130,7 +130,7 @@
         if (key.status >0) {
             [self sendControlKeyToServer:key];
         }else{
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此按键没有学习，请点击右上角【学习模式】学习此按键" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"提示" message:@"此按键没有学习，请点击右上角【学习】学习此按键" delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
             [alert show];
         }
     }else{
@@ -163,8 +163,7 @@
 -(void) sendControlKeyToServer:(MyEIrKey *)key
 {
     if(HUD == nil) {
-        HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        HUD.delegate = self;
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     } else
         [HUD show:YES];
     
@@ -215,7 +214,7 @@
             [modalVc.learnBtn setTitle:@"再学习" forState:UIControlStateNormal];
         }else
             modalVc.validateKeyBtn.enabled = NO;
-        
+        [modalVc viewDidLoad];
     };
     
     
@@ -233,8 +232,7 @@
 - (void) downloadKeySetFromServer
 {
     if(HUD == nil) {
-        HUD = [MBProgressHUD showHUDAddedTo:self.navigationController.view animated:YES];
-        HUD.delegate = self;
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     } else
         [HUD show:YES];
     if (device.type > 12) {
@@ -271,7 +269,7 @@
     if([name isEqualToString:IR_DEVICE_SEND_CONTROL_KEY_UPLOADER_NMAE]) {
         NSLog(@"sendControlKey string is %@",string);
         if ([MyEUtil getResultFromAjaxString:string] == -1) {
-            [MyEUtil showErrorOn:self.navigationController.view withMessage:@"发送按键控制时发生错误！"];
+            [MyEUtil showMessageOn:self.navigationController.view withMessage:@"发送按键控制时发生错误！"];
         } else if ([MyEUtil getResultFromAjaxString:string] == 1){
             if([MyEUtil getResultFromAjaxString:string] == 1){
                 [MyEUtil showMessageOn:nil withMessage:@"指令发送成功"];
@@ -316,7 +314,7 @@
         msg = @"发送按键控制通信错误，请稍后重试.";
     else msg = @"通信错误，请稍后重试.";
     
-    [MyEUtil showErrorOn:self.navigationController.view withMessage:msg];
+    [MyEUtil showMessageOn:self.navigationController.view withMessage:msg];
     [HUD hide:YES];
 }
 @end
