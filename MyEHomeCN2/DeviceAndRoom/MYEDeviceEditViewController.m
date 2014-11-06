@@ -232,7 +232,10 @@
     _deviceCache.type = _deviceTypeCache.dtId;
 
     NSLog(@"%@",_deviceCache);
-
+    if (HUD == nil) {
+        HUD = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    }else
+        [HUD show:YES];
     if (_deviceTypeCache.dtId > 11) {  //RF设备
         [MyEDataLoader startLoadingWithURLString:[NSString stringWithFormat:@"%@?id=%i&action=%i&name=%@&type=%i&roomId=%i&mId=%@",GetRequst(URL_FOR_RFDEVICE_EDIT),_deviceCache.deviceId,!_isAdd,_deviceCache.name,_deviceCache.type,_deviceCache.roomId,_selectedMid] postData:nil delegate:self loaderName:@"deviceEdit" userDataDictionary:nil];
     }else if (_deviceTypeCache.dtId != 6 && _deviceTypeCache.dtId != 7) {   //不是插座,不是开关

@@ -203,7 +203,13 @@
         }
         if([name isEqualToString:@"deleteTerminalFromServer"]){
             [self.mediator.terminals removeObjectAtIndex:_selectedIndex.row];
-            [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            if (_selectedIndex.section == 0) {
+                [self.mediator.terminals removeObjectAtIndex:_selectedIndex.row];
+            }else{
+                [self.mediator.subSwitchList removeObjectAtIndex:_selectedIndex.row];
+            }
+            [self.tableView reloadData];
+//            [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
             UINavigationController *nav = self.tabBarController.childViewControllers[0];
             UITableViewController *vc = nav.childViewControllers[0];
             [vc setValue:@(YES) forKey:@"needRefresh"];
@@ -214,7 +220,8 @@
             }else{
                 [self.mediator.subSwitchList removeObjectAtIndex:_selectedIndex.row];
             }
-            [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
+            [self.tableView reloadData];
+//            [self.tableView deleteRowsAtIndexPaths:@[_selectedIndex] withRowAnimation:UITableViewRowAnimationAutomatic];
             UINavigationController *nav = self.tabBarController.childViewControllers[0];
             UITableViewController *vc = nav.childViewControllers[0];
             [vc setValue:@(YES) forKey:@"needRefresh"];
