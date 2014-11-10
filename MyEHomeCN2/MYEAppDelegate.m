@@ -208,6 +208,7 @@
     //    NSLog(@"%@",userInfo);
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"系统消息" message:userInfo[@"aps"][@"alert"] delegate:nil cancelButtonTitle:@"知道了" otherButtonTitles:nil, nil];
     [alert show];
+    [self handleRemoteNotificationString:userInfo[@"aps"][@"alert"]];
     // Required
     [APService handleRemoteNotification:userInfo];
 }
@@ -227,7 +228,17 @@
     NSRange left = [str rangeOfString:@"“"];
     NSRange right = [str rangeOfString:@"”"];
     NSRange range = NSMakeRange(left.location+1, right.location-left.location-1);
-    NSLog(@"%@",[str substringWithRange:range]);
+    if (str.length > range.length && str.length > range.location) {
+        NSLog(@"%@",[str substringWithRange:range]);
+        for (MyEDevice *d in self.accountData.devices) {
+            //        if (d.type == 11) {
+            //            d.status.alertStatus = 1;
+            //        }
+            if ([d.name isEqualToString:[str substringWithRange:range]]) {
+                d.status.alertStatus = 1;
+            }
+        }
+    }
 //    if ([[str substringToIndex:2] isEqualToString:@"门窗"]) {
 //        
 //    }
@@ -237,14 +248,6 @@
 //    if ([[str substringToIndex:2] isEqualToString:@"烟雾"]) {
 //        
 //    }
-    for (MyEDevice *d in self.accountData.devices) {
-//        if (d.type == 11) {
-//            d.status.alertStatus = 1;
-//        }
-        if ([d.name isEqualToString:[str substringWithRange:range]]) {
-            d.status.alertStatus = 1;
-        }
-    }
     UIViewController *viewController = self.window.rootViewController;
     if ([viewController isKindOfClass:[UITabBarController class]]) {
         MyEMainTabBarController *tab = (MyEMainTabBarController *)viewController;
